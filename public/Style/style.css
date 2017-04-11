@@ -1,0 +1,65 @@
+body {
+    font-family: 'Telugu MN', 'Microsoft YaHei', '微软雅黑', 'Lantinghei SC', Helvetica, Tahoma, Arial, sans-serif, SimSun, 'Hiragino Sans GB', 'Hiragino Sans GB';
+    font-size: 14px;
+    line-height: 20px;
+    overflow-x: hidden;
+    color: #7a7676;
+}
+
+
+/*页面样式文件*/
+
+td>a {
+    margin: 10px;
+}
+
+#databody>tr>td {
+    line-height: 25px;
+    text-align: center;
+    color: #7a7676;
+}
+
+tr>th {
+    text-align: center;
+}
+
+#databody>.tr-cancel>td {
+    color: #ddd;
+}
+
+.tr-cancel>td>a {
+    color: #ddd;
+    disabled: false;
+}
+
+
+/*跳转输入框*/
+
+.topage {
+    display: inline;
+    width: 50px;
+    padding: 6px;
+}
+
+
+/*跳转模块*/
+
+.topage_block {
+    margin: 20px 0 20px 10px;
+}
+
+.pagination-split li {
+    margin-left: 5px;
+    display: inline-block;
+    float: left;
+}
+
+.pagination-split li:first-child {
+    margin-left: 0;
+}
+
+.pagination-split li a {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}

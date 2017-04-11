@@ -1,0 +1,65 @@
+<!--　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　　●●●●●　●●　　　　　　　　●●　　　　　　　　　　　　　　　　　　　　　　　　●●●　　　　　　　　●●●　　　　　　
+　　●●●●●●●●●●●　　　　　　　●●　●●●●●●●●●　　●●●●●●●●●●　　●●●　　　　　　　　●●●　　　　　　　
+　　　●●●●●●●●●　　　　　　　　●●　●●●　　　　●●　　　　　●●●　　　●●●●●●　　●●●●●●●●●●●●●●　　
+　●●●●●●●●●●●●●●●　　　　●●　●●●　　　　●●　　　　●●●　　　　●●●●●●　　　　　　　　●●●　　　　　　　
+　　　●●●●　　●●●　●●　　●●●●●●●●●●●●●●●　　　　●●●●●●●●●●●●●　　　●●●●●●●●●●●●●　　
+　　●●●●●●●●●　●●●　　　　　●●　●●●　●●●　　　　　　●●●　●●●●●●●●●　　　　　　　　●●●　　　　　　　
+　●●●●●●●●●●●●●●　　　　　●●●●●●　●●●　　　　　●●●　　●●●●●●●●●　●●●●●●●●●●●●●●●●　
+　　　　●●●●●●●●●●●　　　　●●●●●●●●●●●●●●　　●●●●　●●　●●●●●●　　　　　　●●●●　　　　　　　　
+　●●●●●●●●　●●●●●　　●●●●●　●●●　●●●　　　　●●●●●●●●　●●●●●●　　　　　●●●●●●　　●●　　　
+　　　●●●●●●　●●●●　　　　●　●●　●●●●●●●●●　　　　　　●●●●　●●●●●●　　　　●●●●　●●●●●●●　　
+　　●●●　●●●　●●●●　　　　　　●●　●●●●　　　●●　　　　　　●●●　　●●●●●●　　　●●●●●　●●●●●　　　　
+　　●●●●●●●　　●●●　　　　　　●●●●●●●　　　●●　　　　　●●●●　　　　　●●●　　●●●　●●●●●●●　　　　　
+　　　　●●●●●●●●●●●　　　　　●●●●●●●　　　●●　　　　●●●●　　　　　　●●●　　　　　　●●●●●●●●●●●　
+　　●●●●　　●●●　　●●●　　●●●●●●　●●●●●●●　　●●●●　　　　　　　●●●●　　　　　●●●●　　　　●●●●　
+　●●●　　　●●●　　　　●●　　　　　　　　●●●　　　　　　　　●●　　　　　　　　●●　　　　　　　　●●　　　　　　　　　　-->
+
+
+<div ng-controller="customersCtrl">
+  <!-- 数据绑定部分 -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <b>表格数据</b>
+    </div>
+    <div class="panel-body" style="padding:0;">
+      <table class="table table-hover tabContent">
+        <!-- 表头 -->
+        <thead>
+          <tr>
+            <th class="text-center" style="width:15%;">序号</th>
+            <th data-order='userName' class="order text-left" ng-click="title='userName';desc=!desc;sort('userName')">
+              昵称
+              <span class="glyphicon glyphicon-sort"></span></th>
+            <th data-order='gender' class="order" ng-click="title='gender';desc=!desc;sort('gender')">
+              性别
+              <span class="glyphicon glyphicon-sort"></span></th>
+            <th data-order='district' class="order" ng-click="title='district';desc=!desc;sort('district')">
+              地区
+              <span class="glyphicon glyphicon-sort"></span></th>
+            <th>
+              注册时间
+          </tr>
+        </thead>
+        <!-- 数据主体部分 -->
+        <tbody id="databody">
+          <tr ng-show="dataLengths" ng-repeat="x in data.content|orderBy:title :desc" ng-cloak>
+            <td class="text-center"> {{x.length=$index+data.page*data.pageNum+1}}</td>
+            <td style="text-align: left;" ng-cloak><img src="{{x.iconUrl}}" alt="">
+              <a href="#/info?id={{x.id}}&type=create">{{ x.userName }}</a></td>
+            <td ng-cloak>{{ x.gender=="M"?"男":"女" }}</td>
+            <td ng-cloak>{{ x.district }}</td>
+            <td ng-cloak>{{ x.time=x.createAt| date:"yyyy/MM/dd HH:mm:ss"}}</td>
+          </tr>
+          <tr ng-show="!dataLengths">
+            <td colspan="100" class="text-center ">暂无结果</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div ng-controller="secondCtrl" class="well">
+  <h2>{{count}}</h2>
+</div>
