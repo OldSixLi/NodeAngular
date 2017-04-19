@@ -6,18 +6,19 @@
  */
 
 var mysql = require('mysql');
+var Q = require('q');
 
 var TEST_DATABASE = 'nodesql';
 var TEST_TABLE = 'user';
 var client = mysql.createConnection({
-  host: '127.0.0.1',
+  host: 'localhost',
   user: 'root',
   password: '123456',
   port: '3306'
 });
 
 client.connect();
-//和哪个数据库建立连接
+// 和哪个数据库建立连接
 client.query("use " + TEST_DATABASE);
 
 
@@ -45,16 +46,16 @@ function finds(id, next) {
     });
   };
 }
-
-function start(model) {
-
+var start = function(model, next) {
+  var deferred = Q.defer();
   //语句 
-  var addSql = 'INSERT INTO  `user`(gender,name,age,regtime)  VALUES(?,?,?,NOW())';
+  var addSql = 'INSERT INTO  `user`(gender,name,age,iconUrl,regtime)  VALUES(?,?,?,?,NOW())';
   //参数
   var addParams = [
     model.gender,
     model.name,
-    model.age
+    model.age,
+    model.iconUrl
   ];
 
   //增 add
@@ -63,12 +64,22 @@ function start(model) {
       console.log('[INSERT ERROR] - ', err.message);
       return;
     } else {
+      next(true);
       console.log('~~~~~~~~~用户:' + model.name + '插入成功~~~~~~~~~~~~~');
     }
   });
 
 }
+
+
+
+
+
+
 //输出函数
 // exports.start = start;
+
+
+
 exports.getDS = finds;
 exports.addModel = start;

@@ -21,8 +21,12 @@
     当前传输过来的参数是:<b>{{datas}}</b>
     <p>用户名:{{data.name}} </p>
     <p>年龄:{{data.age}} </p>
-    <p>性别:{{data.gender}} </p>
-    <p>注册时间:{{data.Regtime| date:"yyyy/MM/dd HH:mm:ss"}} </p>
+    <p ng-if='data.gender=="M"'>性别:男</p>
+    <p ng-if='data.gender=="W"'>性别:女</p>
+    <p ng-if='data.gender!="M"&&data.gender!="W"'>性别:</p>
+    <p>注册时间:{{data.RegTime| date:"yyyy/MM/dd HH:mm:ss"}} </p>
+    <p>
+      <h4>用户头像</h4><img class="icon-img img-responsive img-thumbnail" src="{{data.iconUrl}}" alt="用户头像"></p>
   </div>
 
   <div class="well">

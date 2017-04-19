@@ -25,9 +25,9 @@
     <div class="col-md-4 col-sm-4">
       <!--在此处编辑内容-->
       <!--我日 method="post"开始写成了 action="post",改了一个小时好坑!! ╮(╯▽╰)╭ -->
-      <form role="form" action="/users/add" method="post">
+      <form role="form" action="/users/add" method="post" enctype='multipart/form-data' target="_self">
         <div class="form-group">
-          <label class="control-label" for="name">用户名</label>
+          <label class="control-label" for="name">用户名是</label>
           <input class="form-control" id="name" name="name" placeholder="用户名" type="text" value="">
         </div>
         <div class="form-group">
@@ -38,8 +38,13 @@
           <label class="control-label" for="age">年龄</label>
           <input class="form-control" id="age" name="age" placeholder="年龄" type="text" value="">
         </div>
+        <div class="upload-container">
+          <label class="control-label" for="age">头像</label>
+          <input type="file" name="iconUrl" id="iconUrl" />
+        </div>
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
+
     </div>
 
     <div class="col-md-4 col-sm-4">
@@ -47,4 +52,6 @@
 
     </div>
   </div>
+  <script>
+  </script>
 </div>

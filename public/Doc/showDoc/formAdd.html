@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="row">
+    <!-- 消除外边距 -->
+    <div class="col-md-4 col-md-offset-4">
+      <!--在此处编辑内容-->
+      <!--我日 method="post"开始写成了 action="post",改了一个小时好坑!! ╮(╯▽╰)╭ -->
+      <form role="form" action="/users/infoAdd" method="post" target="_self">
+        <!--用户名-->
+        <div class="form-group">
+          <label class="control-label" for="name">用户名</label>
+          <input class="form-control" id="name" name="name" placeholder="用户名" type="text" value="">
+        </div>
+        <!--性别-->
+        <div class="form-group">
+          <label class="control-label" for="gender">性别</label>
+          <input class="form-control" id="gender" name="gender" placeholder="年龄" type="text" value="">
+        </div>
+        <!--年龄-->
+        <div class="form-group">
+          <label class="control-label" for="age">年龄</label>
+          <input type="text" class="form-control" id="age" name="age" placeholder="年龄" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+        </div>
+        <!--上传图片-->
+        <div class="form-group" id="uplpadBlock">
+          <label class="control-label">上传图片</label>
+          <div class="">
+            <a onclick="uploadPic(this)">
+              <img class="img-responsive img-thumbnail form-img" src="http://om6fr85l4.bkt.clouddn.com/FgUxpJ0TgIesAJtI57C2EKXoLNGV?imageView2/1/q/100|imageslim">
+            </a>
+          </div>
+          <!--图片上传隐藏域 NOTE:id必须为iconUrls-->
+          <input type="text" class="hidden" id="iconUrls" name="iconUrls" value="">
+        </div>
+        <!--提交按钮-->
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </div>
+    <!--表单隐藏域-->
+    <div class="col-md-4">
+      <!--图片上传的表单隐藏域BEGIN↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓-->
+      <input type="hidden" id="iconUrl" name="" value="">
+      <form action="/upload" id="headForm" method="post" enctype="multipart/form-data">
+        <input type="file" style="display:none" name="imageRes" id="imageRes" onchange="uploadImage()" />
+        <input type="hidden" name="type" value="turn" />
+      </form>
+      <!--图片上传的表单隐藏域END↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑-->
+    </div>
+  </div>
+  <script>
+  </script>
+</div>

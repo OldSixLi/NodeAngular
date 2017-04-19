@@ -2,3 +2,9 @@ td>img {
     width: 25px;
     height: 25px;
 }
+
+.form-img {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+}
