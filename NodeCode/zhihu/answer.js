@@ -13,6 +13,7 @@ var https = require("https");
 var fs = require("fs");
 var mysql = require('mysql');
 var Q = require('q');
+var path = require('path');
 
 //变量声明
 var dianzan_MinCount = 0;
@@ -76,9 +77,8 @@ if (!fs.existsSync(date_file)) {
 //     }
 //   });
 // }
-//#endregion
-
-CircleGetAnswer(10, 31159026, "测试");
+//#endregion 
+CircleGetAnswer(10, 30087454, "测试");
 //#region 根据答案总数，循环获取答案
 function CircleGetAnswer(answercount, questionId, anstitle) {
   //因为NodeJs是异步执行的，所以另起函数的话会导致获取不到ans，因为此时异步请求还没有相应
@@ -86,71 +86,69 @@ function CircleGetAnswer(answercount, questionId, anstitle) {
   for (var jsonindex = 0; jsonindex < answercount / 10 + 1; jsonindex++) {
     (function(jsonindex) {
       getAnswer(jsonindex, questionId, anstitle)
+        .then(function(data) { parseResult(data, anstitle) })
         .then(function(data) {
-            try {
-              var obj = JSON.parse(data);
-              var $ = cheerio.load(data);
-              //遍历JSON操作
-              if (obj.msg.length > 0) {
-                var arr = obj.msg;
-                //#region 遍历每个答案的数据，进行对比赞数与下载
-                for (var i = 0; i < 10; i++) {
-                  //获取每个答案点赞数
-                  var dianzan_Count = $(arr[i]).find('.count').text();
-                  //判断点赞数大于条件点赞数
-                  if (dianzan_Count >= dianzan_MinCount) {
-                    lianxu_Count = 0;
-                    var answerid = $(arr[i]).find('.zm-item-rich-text').attr('data-entry-url');
-                    answerid = answerid.substr(answerid.lastIndexOf('/') + 1);
-                    $(arr[i]).find('.zm-editable-content').find('img').each(function(imgindex) {
-                      var url = $(this).attr('src');
-                      if (url.indexOf('https')) {
-                        url = "http" + url.substr(5);
-                      }
-                      var imgName = path.basename(url);
-                      //开始下载图片
-                      startDownloadTask(url, filePath + '/' + answerid + '--' + imgindex + '--' + imgName.substr(-13), anstitle);
-                    });
-                  } else {
-                    //如果连续100个答案都不符合条件
-                    lianxu_Count += 1;
-                    if (lianxu_Count > 100) {
-                      console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                      console.log("连续读取100条记录不符合点赞数！ (｡•ˇ‸ˇ•｡)  \r\n");
-                      console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                      lianxu_Count = 0;
-                    }
-
-                  }
-                };
-
-              };
-            } catch (e) {
-              console.log(e + '转化JSON 失败');
-              return;
-            }
-            // console.log(JSON.stringify(data));
-          },
-          function() {
-
-          });
+          console.log(data);
+        });
     })(jsonindex);
+
+
   };
 }
 
-var startDownloadTask = function(imgSrc, dirName, anstitle) {
-    if (imgSrc.indexOf('http') !== -1) { //判断是否包含完整的地址路径
-      var req = https.request(imgSrc, getHttpReqCallback(imgSrc, dirName, anstitle));
-      req.on('error', function(e) {});
-      req.setTimeout(20 * 1000, function() {
-        console.log("请求 " + imgSrc + " 超时, 结束当前请求！/(ㄒoㄒ)/~~");
-        fs.appendFile(dirName.substr(0, dirName.lastIndexOf('/')) + '/ErrorLog.txt', '请求超时：' + imgSrc + '\r\n');
-        req.abort();
-      })
-      req.end();
+//处理请求
+function parseResult(data, anstitle) {
+  var deferred = Q.defer();
+  try {
+    var obj = JSON.parse(data);
+    var $ = cheerio.load(data);
+    //遍历JSON操作
+    if (obj.msg.length > 0) {
+      var arr = obj.msg;
+      //#region 遍历每个答案的数据，进行对比赞数与下载 
+      console.log(obj.msg.length);
+      var imgArr = [];
+      for (var i = 0; i < 10; i++) {
+        //获取每个答案点赞数
+        var dianzan_Count = $(arr[i]).find('.count').text();
+        //判断点赞数大于条件点赞数
+        if (dianzan_Count >= dianzan_MinCount) {
+          lianxu_Count = 0;
+          var answerid = $(arr[i]).find('.zm-item-rich-text').attr('data-entry-url');
+          answerid = answerid.substr(answerid.lastIndexOf('/') + 1);
+          $(arr[i]).find('.zm-editable-content').find('img').each(function(imgindex) {
+            var url = $(this).attr('src');
+            if (url == "//zhstatic.zhihu.com/assets/zhihu/ztext/whitedot.jpg") {
+              return false; //空图片不处理
+            }
+            if (url.indexOf('https')) {
+              url = "http" + url.substr(5);
+            }
+            var imgName = path.basename(url);
+            //开始下载图片
+            startDownloadTask(url, './NodeCode/zhihu/img/' + answerid + '--' + imgindex + '--' + imgName.substr(-13), anstitle);
+            imgArr.push(url);
+          });
+        } else {
+          //如果连续100个答案都不符合条件
+          lianxu_Count += 1;
+          if (lianxu_Count > 100) {
+            console.log("连续读取100条记录不符合点赞数！ (｡•ˇ‸ˇ•｡)  \r\n");
+            lianxu_Count = 0;
+          }
+        }
+      };
+
+      return deferred.resolve(imgArr);
+    } else {
+      return deferred.reject("未获取到数据");
     };
+  } catch (e) {
+    console.log(e + '转化JSON 失败');
+    return;
   }
-  //#endregion
+  return deferred.promise;
+}
 
 
 //#region 具体的事物操作
@@ -162,33 +160,54 @@ var startDownloadTask = function(imgSrc, dirName, anstitle) {
  * @returns {}
  */
 function getAnswer(index, questionId, anstitle) {
-  //声明需要请求的URL地址路径
+  //URL地址
   var posturl = 'https://www.zhihu.com/node/QuestionAnswerListV2' + '?method=next&params={"url_token":' + questionId + ',"pagesize":10,"offset":' + index * 10 + '}';
-  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-  console.log("当前请求的地址" + posturl);
-  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-
-
   var deferred = Q.defer();
-  //#region 进行JSON数据请求
-  try {
-    nodegrass.post(posturl,
-      function(data, status, headers) {
-        deferred.resolve(data);
-        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        console.log('第' + index + '页：');
-        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-      });
+  try { // 进行JSON数据请求
+    nodegrass.post(posturl, function(data, status, headers) {
+      deferred.resolve(data);
+    });
   } catch (e) {
     deferred.reject(e);
     console.log('[当前错误信息]：' + e + "ID:" + questionId);
   }
-  //#endregion
   return deferred.promise;
-
 }
-//#endregion
 
+function getHttpReqCallback(imgSrc, dirName, anstitle) {
+  var callback = function(res) {
+    var fileBuff = [];
+    res.on('data', function(chunk) {
+      var buffer = new Buffer(chunk);
+      fileBuff.push(buffer);
+    });
+    res.on('end', function() {
+      var totalBuff = Buffer.concat(fileBuff);
+      fs.appendFile(dirName, totalBuff, function(err) {
+        if (err) {
+          console.log('路径：' + imgSrc + '获取答案出错' + err);
+        } else {
+          downloadindexnum += 1;
+          console.log(downloadindexnum + anstitle + '：' + 'download success！ o(*￣︶￣*)o');
+        }
+      });
+    });
+  };
+  return callback;
+}
+
+var startDownloadTask = function(imgSrc, dirName, anstitle) {
+  if (imgSrc.indexOf('http') !== -1) { //判断是否包含完整的地址路径
+    var req = https.request(imgSrc, getHttpReqCallback(imgSrc, dirName, anstitle));
+    req.on('error', function(e) {});
+    req.setTimeout(20 * 1000, function() {
+      console.log("请求 " + imgSrc + " 超时, 结束当前请求！/(ㄒoㄒ)/~~");
+      fs.appendFile(dirName.substr(0, dirName.lastIndexOf('/')) + '/ErrorLog.txt', '请求超时：' + imgSrc + '\r\n');
+      req.abort();
+    })
+    req.end();
+  };
+}
 
 /**
  * 获取当天日期
