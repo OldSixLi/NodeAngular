@@ -1,8 +1,15 @@
 var scoket = require('./webscoket');
-scoket.send('试试数据');
+
+// for (var i = 0; i < 10; i++) {
+//   (function(i) {
+//     setTimeout(function() {
+//       scoket.send(i + '试试数据<br/>');
+//     }, i * 0);
+//   })(i);
+// }
 
 function test() {
 
 }
 
-exports.test = test;
+exports.testr = test;

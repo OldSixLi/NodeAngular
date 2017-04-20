@@ -14,7 +14,9 @@ var fs = require("fs");
 var mysql = require('mysql');
 var Q = require('q');
 var path = require('path');
-var scoket = require('../../routes/webscoket');
+// var scoket = require('../../routes/webscoket.js');
+var io = require('socket.io')();
+var xssEscape = require('xss-escape');
 
 //变量声明
 var dianzan_MinCount = 0;
@@ -22,8 +24,11 @@ var errorMessage = ""; //错误信息记录
 var downloadindexnum = 0; //下载图片数量
 var lianxu_Count = 0; //连续没数据
 
-//#endregion
+//#endregion 
 
+console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+console.log("TODO");
+console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
 //#region创建当天的文件夹
 var imageFile = './images';
 if (!fs.existsSync(imageFile)) {
@@ -78,9 +83,8 @@ function start(queObj) {
     }
   });
 }
-
 //#endregion 
-CircleGetAnswer(10, 24463692, "测试");
+// CircleGetAnswer(10, 24463692, "测试");
 //#region 根据答案总数，循环获取答案
 /**
  * 
@@ -99,15 +103,12 @@ function CircleGetAnswer(answercount, questionId, anstitle) {
         .then(function(data) { return parseResult(data, anstitle); })
         .then(function(data) {
           console.log("长度：" + data.length);
-          data.forEach(function(element, index) {
-            // startDownloadTask(element.url, './NodeCode/zhihu/img/' + element.answerid + '--' + element.imgindex + '--' + element.imgName.substr(-13), element.anstitle);
-
-          }, this);
           for (var j = 0; j < data.length; j++) {
             (function(j) {
               var element = data[j];
               setTimeout(function() {
-                startDownloadTask(element.url, './public/images/zhihu_Down/' + element.answerid + '--' + element.imgindex + '--' + element.imgName.substr(-13), element.anstitle);
+                var absolute = path.resolve(__dirname, '../../public/images/zhihu_Down/') + '/';
+                startDownloadTask(element.url, absolute + element.answerid + '--' + element.imgindex + '--' + element.imgName.substr(-13), element.anstitle);
               }, 3000 * j);
             })(j);
           }
@@ -128,7 +129,7 @@ function parseResult(data, anstitle) {
     if (obj.msg.length > 0) {
       var arr = obj.msg;
 
-      console.log($(arr[0]).find('.zm-editable-content').html());
+      // console.log($(arr[0]).find('.zm-editable-content').html());
       //#region 遍历每个答案的数据，进行对比赞数与下载 
       console.log(obj.msg.length);
       var imgArr = [];
@@ -237,7 +238,7 @@ function getHttpReqCallback(imgSrc, dirName, anstitle) {
         } else {
           downloadindexnum += 1;
           //接口返回
-          scoket.send(dirName);
+          // _socket.emit('ImgData', dirName.substr(dirName.indexOf('public') + 6));
           console.log(downloadindexnum + anstitle + '：||' + dirName + '||' + imgSrc + '||download success！ o(*￣︶￣*)o');
         }
       });
@@ -248,8 +249,11 @@ function getHttpReqCallback(imgSrc, dirName, anstitle) {
 
 var startDownloadTask = function(imgSrc, dirName, anstitle) {
   if (imgSrc.indexOf('http') !== -1) { //判断是否包含完整的地址路径
+    //回调
     var req = https.request(imgSrc, getHttpReqCallback(imgSrc, dirName, anstitle));
+    //报错
     req.on('error', function(e) {});
+    //超时
     req.setTimeout(20 * 1000, function() {
       console.log("请求 " + imgSrc + " 超时, 结束当前请求！/(ㄒoㄒ)/~~");
       fs.appendFile(dirName.substr(0, dirName.lastIndexOf('/')) + '/错误日志.txt', '请求超时：' + imgSrc + '\r\n');
@@ -281,7 +285,25 @@ function getNowFormatDate(dates) {
   return currentdate;
 }
 
+//测试前台向后台传输数据
 
+//   _socket.on('mashaobotest', function(_nickname) {
+//     console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+//     console.log(_nickname);
+//     console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+//   });
+//for循环
+
+//   for (var i = 0; i < 1000; i++) {
+//     (function(i) {
+//       setTimeout(function() {
+//         _socket.emit('ImgData', '../img/qqface/' + (i % 100 + 1) + '.gif');
+//       }, i * 100);
+//     })(i);
+//   }
+// _socket.emit('ImgData', '../img/qqface/1.gif');
+
+exports.getAnswer = CircleGetAnswer;
 // var queobj = {
 //   question_url: 'https://www.zhihu.com/question/31159026',
 //   dianzan_MinCount: 100

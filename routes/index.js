@@ -5,7 +5,8 @@ var fs = require("fs");
 var multiparty = require('multiparty');
 var util = require('util');
 var path = require('path');
-var test = require('./test');
+var answer = require('./test');
+var answer = require('../NodeCode/zhihu/answer');
 
 console.log("当前组合的路径为：" + path.resolve(__dirname, '../public/images/upload/'));
 // console.log(__filename);
@@ -119,4 +120,14 @@ router.get('/token', function(req, res, next) {
     });
   }
 });
+
+//调用爬虫
+router.all('/spider', function(req, res, next) {
+  answer.getAnswer(10, 24463692, "测试");
+  console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+  console.log("开始执行此方法");
+  console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+});
+
+
 module.exports = router;

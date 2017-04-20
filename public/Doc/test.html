@@ -20,7 +20,8 @@
 
 <body>
   <div id="imgBlock">
-
+    <img src="/images/1.jpg" alt="">
+    <button type="button" class="btn btn-primary" id="btnSpider">开始抓取</button>
   </div>
   <!-- 脚本 -->
   <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
@@ -37,18 +38,49 @@
     console.log('server: ' + chat_server);
     var socket = io.connect(chat_server);
     socket.on('mashaobo', function(data) {
-
+      alert(data);
       socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
     });
 
     socket.on('ImgData', function(data) {
-      // $("#imgBlock").append('<img src="' + data + '"></img>') //后台传输成功的数据
-      document.write(data);
+      $("#imgBlock").append('<img src="' + data + '"></img>') //后台传输成功的数据
+        // document.write(data);
+        // $("#imgBlock").append(data)
     });
     $(document).ready(function() {
+
+
       $("#imgBlock").viewer({
         transition: false,
         navbar: false
+      });
+
+      $("#btnSpider").click(function(e) {
+        e.preventDefault();
+        $.ajax({
+          type: "POST",
+          url: "/spider",
+          dataType: "json",
+          success: function(data) {
+            if (data != null && data != "") {
+              if (data.success) {
+                // tool.alert("提示", "成功");
+              } else {
+                // tool.alert("提示", "保存失败");
+              }
+              //获取到数组
+              var json = data;
+              for (var i = 0; i < json.length; i++) {
+                //do something
+              }
+            } else {
+              //failed  do something
+            }
+          },
+          error: function(response) {
+            // tool.alert("提示", "请求服务失败,请重试!");
+          }
+        });
       });
     });
   </script>
