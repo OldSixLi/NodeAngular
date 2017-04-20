@@ -44,13 +44,13 @@ function writeFile(fileName, data) {
   //   fs.writeFile(fileName, data, 'utf-8', complete);
   console.log(data);
 
-  function complete() {
-    console.log("文件生成成功");
-  }
+  // function complete() {
+  //   console.log("文件生成成功");
+  // }
 }
 
 //在此输入路径
-var filesList = geFileList("./");
+var filesList = geFileList("./public/images/zhihu_Down");
 filesList.sort(sortHandler);
 
 function sortHandler(a, b) {
@@ -62,9 +62,10 @@ function sortHandler(a, b) {
 var str = '';
 for (var i = 0; i < filesList.length; i++) {
   var item = filesList[i];
-  var desc = (i + 1) + "文件名:" + chuliStr(item.name, 40) + " " +
-    "Size:" + chuliStr((item.size / 1024).toFixed(2) + "/kb", 20) + " " +
-    "路径:" + item.path;
+  // var desc = (i + 1) + "文件名:" + chuliStr(item.name, 40) + " " +
+  //   "Size:" + chuliStr((item.size / 1024).toFixed(2) + "/kb", 20) + " " +
+  //   "路径:" + item.path;
+  var desc = "<img src='" + item.path + "' >"
   str += desc + "\n"
 }
 
