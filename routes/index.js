@@ -5,12 +5,14 @@ var fs = require("fs");
 var multiparty = require('multiparty');
 var util = require('util');
 var path = require('path');
+var test = require('./test');
 
 console.log("当前组合的路径为：" + path.resolve(__dirname, '../public/images/upload/'));
 // console.log(__filename);
 /* 主页地址的返回 */
 router.get('/', function(req, res, next) {
   //跳转到某个页面
+
   // res.redirect('/Doc/Angularjs/floors.html');
   res.render('index');
 });

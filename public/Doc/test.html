@@ -20,46 +20,7 @@
 
 <body>
   <div id="imgBlock">
-    <img src='../images/zhihu_Down/87577258--7--bca6d5_r.jpeg'>
-    <img src='../images/zhihu_Down/81437402--15--d8b0053_r.png'>
-    <img src='../images/zhihu_Down/81437402--7--e429acf_r.png'>
-    <img src='../images/zhihu_Down/95621001--0--3ce4c32_r.jpg'>
-    <img src='../images/zhihu_Down/95621001--4--5f60d6c_r.jpg'>
-    <img src='../images/zhihu_Down/87577258--8--e0585a_r.jpeg'>
-    <img src='../images/zhihu_Down/81437402--1--b0ca0d1_r.jpg'>
-    <img src='../images/zhihu_Down/87577258--3--093c0a2_r.jpg'>
-    <img src='../images/zhihu_Down/95621001--2--0c432f9_r.jpg'>
-    <img src='../images/zhihu_Down/95621001--1--72c73f4_r.jpg'>
-    <img src='../images/zhihu_Down/87577258--10--d1722f_r.jpeg'>
-    <img src='../images/zhihu_Down/87577258--9--34171e_r.jpeg'>
-    <img src='../images/zhihu_Down/87577258--6--b00f3c_r.jpeg'>
-    <img src='../images/zhihu_Down/95621001--3--821d534_r.jpg'>
-    <img src='../images/zhihu_Down/95621001--5--3e1723c_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--19--8935a38_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--10--d7f2ffc_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--16--8d2d86b_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--17--cc5b3c2_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--8--c83b7ce_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--4--f3027b4_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--12--45f62b8_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--5--62d3b3d_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--2--c37cf6d_r.jpg'>
-    <img src='../images/zhihu_Down/87577258--5--ac3e05_r.jpeg'>
-    <img src='../images/zhihu_Down/81437402--13--779537e_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--14--74c4840_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--9--d94e9b4_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--18--d81ad2e_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--3--3077290_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--0--3f80627_r.jpg'>
-    <img src='../images/zhihu_Down/87577258--11--47f107_r.jpeg'>
-    <img src='../images/zhihu_Down/87577258--0--b053562_r.jpg'>
-    <img src='../images/zhihu_Down/81437402--6--e3a9f63_r.jpg'>
-    <img src='../images/zhihu_Down/87577258--1--4051ca1_r.jpg'>
-    <img src='../images/zhihu_Down/87577258--12--3e3d04_r.jpeg'>
-    <img src='../images/zhihu_Down/87577258--2--015857_r.jpeg'>
-    <img src='../images/zhihu_Down/81437402--11--80480e9_r.jpg'>
-    <img src='../images/zhihu_Down/87577258--13--59f762_r.jpeg'>
-    <img src='../images/zhihu_Down/87577258--4--934f40_r.jpeg'>
+
   </div>
   <!-- 脚本 -->
   <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
@@ -67,9 +28,28 @@
   <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
   <script src='../Script/jquery-viewer/viewer-jquery.min.js'></script>
   <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+  <script src="//cdnjscn.b0.upaiyun.com/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+  <script src="../Script/webscoket/socket.io.js"></script>
+  <script src="../Script/webscoket/desktopnotify.js"></script>
+  <script src="../Script/webscoket/common.js"></script>
   <script>
+    var chat_server = 'http://' + location.hostname + ':3000';
+    console.log('server: ' + chat_server);
+    var socket = io.connect(chat_server);
+    socket.on('mashaobo', function(data) {
+
+      socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
+    });
+
+    socket.on('ImgData', function(data) {
+      // $("#imgBlock").append('<img src="' + data + '"></img>') //后台传输成功的数据
+      document.write(data);
+    });
     $(document).ready(function() {
-      $("#imgBlock").viewer();
+      $("#imgBlock").viewer({
+        transition: false,
+        navbar: false
+      });
     });
   </script>
 </body>

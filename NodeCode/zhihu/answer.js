@@ -14,6 +14,7 @@ var fs = require("fs");
 var mysql = require('mysql');
 var Q = require('q');
 var path = require('path');
+var scoket = require('../../routes/webscoket');
 
 //变量声明
 var dianzan_MinCount = 0;
@@ -81,6 +82,13 @@ function start(queObj) {
 //#endregion 
 CircleGetAnswer(10, 24463692, "测试");
 //#region 根据答案总数，循环获取答案
+/**
+ * 
+ * 
+ * @param {any} answercount 遍历的答案数量
+ * @param {any} questionId 问题ID
+ * @param {any} anstitle 问题名称
+ */
 function CircleGetAnswer(answercount, questionId, anstitle) {
   //因为NodeJs是异步执行的，所以另起函数的话会导致获取不到ans，因为此时异步请求还没有相应
   //所以当前函数必须在上一个函数中被调用
@@ -228,6 +236,8 @@ function getHttpReqCallback(imgSrc, dirName, anstitle) {
           console.log('路径：' + imgSrc + '获取答案出错' + err);
         } else {
           downloadindexnum += 1;
+          //接口返回
+          scoket.send(dirName);
           console.log(downloadindexnum + anstitle + '：||' + dirName + '||' + imgSrc + '||download success！ o(*￣︶￣*)o');
         }
       });
