@@ -237,9 +237,9 @@ function getHttpReqCallback(imgSrc, dirName, anstitle) {
           console.log('路径：' + imgSrc + '获取答案出错' + err);
         } else {
           downloadindexnum += 1;
-          //接口返回
+          //接口返回(图片下载成功后，输出此结果显示到前台项目中)
           // _socket.emit('ImgData', dirName.substr(dirName.indexOf('public') + 6));
-          console.log(downloadindexnum + anstitle + '：||' + dirName + '||' + imgSrc + '||download success！ o(*￣︶￣*)o');
+          console.log(downloadindexnum + anstitle + '：||' + dirName + '||' + imgSrc + '||download success！');
         }
       });
     });
@@ -304,6 +304,7 @@ function getNowFormatDate(dates) {
 // _socket.emit('ImgData', '../img/qqface/1.gif');
 
 exports.getAnswer = CircleGetAnswer;
+
 // var queobj = {
 //   question_url: 'https://www.zhihu.com/question/31159026',
 //   dianzan_MinCount: 100
