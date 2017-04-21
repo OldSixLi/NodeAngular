@@ -8,10 +8,10 @@
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/myapp/public/images/my.ico' />
   <title> 标题</title>
-  <!--<link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>-->
+  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
   <!--<link href='../Script/jquery-viewer/viewer.css' rel='stylesheet'>-->
   <link href="../Script/Masonry/style/chromagallery.min.css" rel='stylesheet'>
-  <style>
+  <!--<style>
     body,
     html {
       height: 100%;
@@ -36,30 +36,94 @@
     .mygallery {
       margin: 25px 0;
     }
+    
+    #imgBlock img {
+      width: 15%;
+      height: auto;
+    }
+  </style>-->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    
+    #contianer {
+      position: relative;
+      font-size: 0;
+      margin: 0 auto;
+    }
+    
+    .box {
+      padding: 5px;
+      float: left;
+      box-sizing: border-box;
+    }
+    
+    .boximg {
+      padding: 5px;
+      box-shadow: 0 0 5px #ccc;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+    }
+    
+    .boximg img {
+      width: 250px;
+      height: auto;
+    }
+    
+    .once {
+      opacity: 0;
+    }
+    
+    #container {
+      /*width: 1300px;
+      margin: 0 auto;*/
+    }
   </style>
 </head>
 
 <body>
-  <!--<img src="/images/1.jpg" alt="">-->
-  <button type="button" class="btn btn-primary" id="btnSpider">开始抓取</button>
+  <div class="container">
+    <div class="input-group">
+      <input type="text" class="form-control input-lg" placeholder="请输入搜索地址">
+      <span class="input-group-btn">
+        <button class="btn btn-primary btn-lg" type="button" onclick="beginSpider('28586345')">　开始抓取　</button>
+      </span>
+    </div>
+    <hr>
+  </div>
+
   <div id="imgBlock">
 
   </div>
-
-  <article class="jq22-container">
-    <div class="content">
-      <div class="chroma-gallery mygallery">
-        <!--<img src="images/thumbs/1.jpg" alt="1111111111111" data-largesrc="images/1.jpg">-->
-
+  <div id="container" class="once" style="padding-top:20px;">
+    <!--<div class="box">
+      <div class="boximg">
+        <img src="/images/zhihu_Down/42511318--13--2df611_r.jpeg">
       </div>
+    </div>-->
+    <div class="box">
+      <div class="boximg"><img src="\images\zhihu_Down\24463692\153831272--0--ab6c4da_r.jpg"></div>
+    </div>
+    <div class="box">
+      <div class="boximg"><img src="\images\zhihu_Down\24463692\157387811--0--3a71563_r.jpg"></div>
+    </div>
+    <div class="box">
+      <div class="boximg"><img src="\images\zhihu_Down\24463692\153831272--1--fdfa436_r.jpg"></div>
+    </div>
+    <div class="box">
+      <div class="boximg"><img src="\images\zhihu_Down\24463692\157387811--1--9155d5c_r.jpg"></div>
+    </div>
+    <div class="box">
+      <div class="boximg"><img src="\images\zhihu_Down\24463692\153831272--2--7a3715d_r.jpg"></div>
     </div>
 
-  </article>
+  </div>
+  <div id="zancun">
+  </div>
   <!-- 脚本 -->
-  <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
-
   <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
-  <!--<script src='../Script/jquery-viewer/viewer-jquery.min.js'></script>-->
   <script src='../Script/Masonry/scripts/chromagallery.pkgd.min.js'></script>
   <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
   <script src="//cdnjscn.b0.upaiyun.com/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
@@ -70,65 +134,124 @@
     var chat_server = 'http://' + location.hostname + ':3000';
     console.log('server: ' + chat_server);
     var socket = io.connect(chat_server);
+    var imgIndex = 1;
+
+    //webscoket相关代码
     socket.on('mashaobo', function(data) {
-      alert(data);
       socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
     });
+    var settime = 0,
+      str = "",
+      ad = 1;
+    socket.on('ImgData', function(data) { // src="/images/1.jpg"
+      if (data) {
+        settime++;
+        // $("#zancun").append('<b data-url="' + data + '" data-index="' + imgIndex + '"></b>');
+        str += "<div class='box once'  ><div class='boximg'><img src=" + data + "></div></div>";
+        imgIndex++;
+      }
+      if (settime % 6 == 0) {
+        $("#container").prepend(str); //向容器内一次性添加12个图片  
+        $("#container").find(".once").slice(6, 12).removeClass('once');
+        waterFlow(); //瀑布流布局
+        str = "";
+        settime = 0;
+      }
 
-    socket.on('ImgData', function(data) {
-      $(".chroma-gallery.mygallery").prepend('<img src="' + data + '"></img>'); //后台传输成功的数据
-      jihuo();
-    });
-    $(document).ready(function() {
+      if ($("#container").find(".box").length >= 12 && ad == 1) {
+        $("#container").removeClass('once');
+        $("#container").find(".box").slice(6, 12).remove();
+        // waterFlow(); //瀑布流布局
+        ad = 2;
 
-      // $(document).ready(function() {
-      //   $(".mygallery").chromaGallery();
-      // });
-      // $("#imgBlock").viewer({
-      //   transition: false,
-      //   navbar: false
-      // });
-
-      $("#btnSpider").click(function(e) {
-        e.preventDefault();
-        $.ajax({
-          type: "POST",
-          url: "/spider",
-          dataType: "json",
-          success: function(data) {
-            if (data != null && data != "") {
-              if (data.success) {
-                // tool.alert("提示", "成功");
-              } else {
-                // tool.alert("提示", "保存失败");
-              }
-              //获取到数组
-              var json = data;
-              for (var i = 0; i < json.length; i++) {
-                //do something
-              }
-            } else {
-              //failed  do something
-            }
-          },
-          error: function(response) {
-            // tool.alert("提示", "请求服务失败,请重试!");
-          }
-        });
-      });
-
-
+      } else {
+        return;
+      }
     });
 
-    function jihuo() {
-      $(".mygallery").chromaGallery({
-        color: '#000',
-        gridMargin: 15,
-        maxColumns: 5,
-        dof: true,
-        screenOpacity: 0.8
-      });
+    function beginSpider(id) {
+      socket.emit('SpiderBegin', id);
     }
+
+    $(function() {
+      var imgWidth = $(".box").innerWidth(); //获得每个div的宽度，包括内边距  
+      var screenWidth = $(window).width(); //获得浏览器可视区域的宽度  
+      var num = Math.floor(screenWidth / imgWidth); //计算一行可以放几个div  
+      $("#container").css({
+        "width": num * imgWidth + "px",
+        "margin": "0 auto"
+      }); //根据每行放的div的总长来给容器一个宽度，然后居中显示  
+      console.log($(document).height())
+      console.log($(window).height())
+      window.onload = function() {
+        // waterFlow(); //图片加载完毕执行  
+
+        window.onscroll = function() { //滚动条滚动执行  
+          // if (checkScrollDirector()) {
+          //   var urlList = [];
+          //   $("#zancun").find('b').slice(0, 12).each(function(index) {
+          //     var url = $(this).attr("data-url");
+          //     urlList.push(url);
+          //   }).remove();
+          //   if (urlList.length == 0) {
+          //     return false;
+          //   }
+          //   for (var i = 0; i < urlList.length; i++) {
+          //     var html = "<div class='box'><div class='boximg'><img src=" + urlList[i] + "></div></div>";
+          //     $("#container").append(html); //向容器内一次性添加12个图片  
+          //     console.log(1);
+          //   }
+          // waterFlow(); //瀑布流布局   
+          // }
+        }
+      }
+    });
+
+    function getMinIndex(arr, min) { //取得数组中最小高度的div的索引  
+      for (var i in arr) {
+        if (arr[i] == min) {
+          return i;
+        }
+      }
+    }
+    // .scrollTop(100);aaaaaaaaaaaaaa
+    function checkScrollDirector() { //判断滚动条是否滑到底部  
+      var flag = 0;
+      if ($(document).scrollTop() + $(window).height() >= $(document).height()) {
+        flag = 1;
+
+      }
+      return flag;
+    }
+
+    function waterFlow() {
+      var imgWidth = $(".box").innerWidth(); //获得每个div的宽度，包括内边距  
+      var screenWidth = $(window).width(); //获得浏览器可视区域的宽度  
+      var num = Math.floor(screenWidth / imgWidth); //计算一行可以放几个div  
+      var arr = []; //定义一个数组  
+      for (var i = 0; i < $(".box").length; i++) {
+        if (i < num) { //一行显示num个div,将第一行的每个div高度写入数组  
+          arr[i] = $(".box").eq(i).innerHeight();
+        } else {
+          var minImgHeight = Math.min.apply(null, arr); //取得数组中最小高度的div  
+          var index = getMinIndex(arr, minImgHeight); //取得数组中最小高度的div的索引  
+          $(".box").eq(i).css({
+            "position": "absolute",
+            "top": minImgHeight + "px",
+            "left": $(".box").eq(index).offset().left + "px"
+          }); //瀑布流布局  
+          arr[index] += $(".box").eq(i).innerHeight(); //将布局好的该div的高度和该div上面的div高度相加，重新放入数组  
+        }
+      }
+    }
+    //页面事件部分
+    $(document).ready(function() {
+      $("#btnSpider").click(function(e) {
+        //开始抓取
+      });
+
+
+    });
   </script>
 </body>
 

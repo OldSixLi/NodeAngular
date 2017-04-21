@@ -14,7 +14,6 @@ var fs = require("fs");
 var mysql = require('mysql');
 var Q = require('q');
 var path = require('path');
-// var scoket = require('../../routes/webscoket.js');
 var io = require('socket.io')();
 var xssEscape = require('xss-escape');
 
@@ -26,20 +25,17 @@ var lianxu_Count = 0; //连续没数据
 
 //#endregion 
 
-console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-console.log("TODO");
-console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
 //#region创建当天的文件夹
-var imageFile = './images';
-if (!fs.existsSync(imageFile)) {
-  fs.mkdirSync(imageFile, 0777); //创建目录
-  console.log(imageFile + '文件夹已成功创建！');
-}
-var date_file = imageFile + "/" + getNowFormatDate('date');
-if (!fs.existsSync(date_file)) {
-  fs.mkdirSync(date_file, 0777); //创建目录
-  console.log(date_file + '文件夹已成功创建！');
-}
+// var imageFile = './public/images/zhihu_Down';
+// if (!fs.existsSync(imageFile)) {
+//   fs.mkdirSync(imageFile, 0777); //创建目录
+//   console.log(imageFile + '文件夹已成功创建！');
+// }
+// var date_file = imageFile + "/" + getNowFormatDate('date');
+// if (!fs.existsSync(date_file)) {
+//   fs.mkdirSync(date_file, 0777); //创建目录
+//   console.log(date_file + '文件夹已成功创建！');
+// }
 //#endregion
 
 //#region 获取点赞数
@@ -73,7 +69,7 @@ function start(queObj) {
           if (ansCount > 200) {
             ansCount = 200;
           }
-          CircleGetAnswer(ansCount, questionId, anstitle);
+          // CircleGetAnswer(ansCount, questionId, anstitle);
 
         });
         break;
@@ -94,6 +90,13 @@ function start(queObj) {
  * @param {any} anstitle 问题名称
  */
 function CircleGetAnswer(answercount, questionId, anstitle, scoket) {
+
+  var filePath = path.resolve(__dirname, '../../public/images/zhihu_Down/' + questionId);
+  if (!fs.existsSync(filePath)) {
+    fs.mkdirSync(filePath, 0777); //创建目录
+    console.log(filePath + '文件夹已成功创建！');
+  }
+
   //因为NodeJs是异步执行的，所以另起函数的话会导致获取不到ans，因为此时异步请求还没有相应
   //所以当前函数必须在上一个函数中被调用
   for (var jsonindex = 0; jsonindex < answercount / 10 + 1; jsonindex++) {
@@ -102,21 +105,19 @@ function CircleGetAnswer(answercount, questionId, anstitle, scoket) {
         //NOTE:这个地方的结果是return 的，否则promise怎么返回/(ㄒoㄒ)/~~
         .then(function(data) { return parseResult(data, anstitle); })
         .then(function(data) {
-          console.log("长度：" + data.length);
           for (var j = 0; j < data.length; j++) {
             (function(j) {
               var element = data[j];
               setTimeout(function() {
-                var absolute = path.resolve(__dirname, '../../public/images/zhihu_Down/') + '/';
+                var absolute = path.resolve(__dirname, filePath) + '\\';
                 startDownloadTask(scoket, element.url, absolute + element.answerid + '--' + element.imgindex + '--' + element.imgName.substr(-13), element.anstitle);
-              }, 3000 * j);
+              }, 1000 * j);
             })(j);
           }
         });
     })(jsonindex);
-
-
   };
+
 }
 var imgIndexNew = 0;
 //处理请求
@@ -285,29 +286,4 @@ function getNowFormatDate(dates) {
   return currentdate;
 }
 
-//测试前台向后台传输数据
-
-//   _socket.on('mashaobotest', function(_nickname) {
-//     console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-//     console.log(_nickname);
-//     console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-//   });
-//for循环
-
-//   for (var i = 0; i < 1000; i++) {
-//     (function(i) {
-//       setTimeout(function() {
-//         _socket.emit('ImgData', '../img/qqface/' + (i % 100 + 1) + '.gif');
-//       }, i * 100);
-//     })(i);
-//   }
-// _socket.emit('ImgData', '../img/qqface/1.gif');
-
 exports.getAnswer = CircleGetAnswer;
-
-// var queobj = {
-//   question_url: 'https://www.zhihu.com/question/31159026',
-//   dianzan_MinCount: 100
-// };
-// start(queobj); //进行图片下载
-// exports.start = start;
