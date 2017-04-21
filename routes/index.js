@@ -123,7 +123,7 @@ router.get('/token', function(req, res, next) {
 
 //调用爬虫
 router.all('/spider', function(req, res, next) {
-  answer.getAnswer(10, 24463692, "测试");
+  // answer.getAnswer(10, 24463692, "测试");
   console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
   console.log("开始执行此方法");
   console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");

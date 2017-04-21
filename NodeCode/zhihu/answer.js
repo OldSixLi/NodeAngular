@@ -35,7 +35,7 @@ if (!fs.existsSync(imageFile)) {
   fs.mkdirSync(imageFile, 0777); //创建目录
   console.log(imageFile + '文件夹已成功创建！');
 }
-var date_file = imageFile + getNowFormatDate('date');
+var date_file = imageFile + "/" + getNowFormatDate('date');
 if (!fs.existsSync(date_file)) {
   fs.mkdirSync(date_file, 0777); //创建目录
   console.log(date_file + '文件夹已成功创建！');
@@ -93,7 +93,7 @@ function start(queObj) {
  * @param {any} questionId 问题ID
  * @param {any} anstitle 问题名称
  */
-function CircleGetAnswer(answercount, questionId, anstitle) {
+function CircleGetAnswer(answercount, questionId, anstitle, scoket) {
   //因为NodeJs是异步执行的，所以另起函数的话会导致获取不到ans，因为此时异步请求还没有相应
   //所以当前函数必须在上一个函数中被调用
   for (var jsonindex = 0; jsonindex < answercount / 10 + 1; jsonindex++) {
@@ -108,7 +108,7 @@ function CircleGetAnswer(answercount, questionId, anstitle) {
               var element = data[j];
               setTimeout(function() {
                 var absolute = path.resolve(__dirname, '../../public/images/zhihu_Down/') + '/';
-                startDownloadTask(element.url, absolute + element.answerid + '--' + element.imgindex + '--' + element.imgName.substr(-13), element.anstitle);
+                startDownloadTask(scoket, element.url, absolute + element.answerid + '--' + element.imgindex + '--' + element.imgName.substr(-13), element.anstitle);
               }, 3000 * j);
             })(j);
           }
@@ -223,7 +223,7 @@ function getAnswer(index, questionId, anstitle) {
   return deferred.promise;
 }
 
-function getHttpReqCallback(imgSrc, dirName, anstitle) {
+function getHttpReqCallback(imgSrc, dirName, anstitle, scoket) {
   var callback = function(res) {
     var fileBuff = [];
     res.on('data', function(chunk) {
@@ -237,9 +237,9 @@ function getHttpReqCallback(imgSrc, dirName, anstitle) {
           console.log('路径：' + imgSrc + '获取答案出错' + err);
         } else {
           downloadindexnum += 1;
-          //接口返回(图片下载成功后，输出此结果显示到前台项目中)
-          // _socket.emit('ImgData', dirName.substr(dirName.indexOf('public') + 6));
           console.log(downloadindexnum + anstitle + '：||' + dirName + '||' + imgSrc + '||download success！');
+          //接口返回(图片下载成功后，输出此结果显示到前台项目中)
+          scoket.emit('ImgData', dirName.substr(dirName.indexOf('public') + 6));
         }
       });
     });
@@ -247,10 +247,10 @@ function getHttpReqCallback(imgSrc, dirName, anstitle) {
   return callback;
 }
 
-var startDownloadTask = function(imgSrc, dirName, anstitle) {
+var startDownloadTask = function(scoket, imgSrc, dirName, anstitle) {
   if (imgSrc.indexOf('http') !== -1) { //判断是否包含完整的地址路径
     //回调
-    var req = https.request(imgSrc, getHttpReqCallback(imgSrc, dirName, anstitle));
+    var req = https.request(imgSrc, getHttpReqCallback(imgSrc, dirName, anstitle, scoket));
     //报错
     req.on('error', function(e) {});
     //超时

@@ -8,26 +8,59 @@
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/myapp/public/images/my.ico' />
   <title> 标题</title>
-  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
-  <link href='../Script/jquery-viewer/viewer.css' rel='stylesheet'>
+  <!--<link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>-->
+  <!--<link href='../Script/jquery-viewer/viewer.css' rel='stylesheet'>-->
+  <link href="../Script/Masonry/style/chromagallery.min.css" rel='stylesheet'>
   <style>
-    img {
-      width: 10%;
-      max-height: 100px;
+    body,
+    html {
+      height: 100%;
+      background-color: #191919;
+    }
+    
+    .content {
+      width: 100%;
+      height: 100%;
+      margin: 10px auto;
+    }
+    
+    @media screen and (min-width: 980px)
+    /* Desktop */
+    
+    {
+      .content {
+        width: 70%;
+      }
+    }
+    
+    .mygallery {
+      margin: 25px 0;
     }
   </style>
 </head>
 
 <body>
+  <!--<img src="/images/1.jpg" alt="">-->
+  <button type="button" class="btn btn-primary" id="btnSpider">开始抓取</button>
   <div id="imgBlock">
-    <img src="/images/1.jpg" alt="">
-    <button type="button" class="btn btn-primary" id="btnSpider">开始抓取</button>
+
   </div>
+
+  <article class="jq22-container">
+    <div class="content">
+      <div class="chroma-gallery mygallery">
+        <!--<img src="images/thumbs/1.jpg" alt="1111111111111" data-largesrc="images/1.jpg">-->
+
+      </div>
+    </div>
+
+  </article>
   <!-- 脚本 -->
   <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
 
   <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
-  <script src='../Script/jquery-viewer/viewer-jquery.min.js'></script>
+  <!--<script src='../Script/jquery-viewer/viewer-jquery.min.js'></script>-->
+  <script src='../Script/Masonry/scripts/chromagallery.pkgd.min.js'></script>
   <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
   <script src="//cdnjscn.b0.upaiyun.com/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
   <script src="../Script/webscoket/socket.io.js"></script>
@@ -43,17 +76,18 @@
     });
 
     socket.on('ImgData', function(data) {
-      $("#imgBlock").append('<img src="' + data + '"></img>') //后台传输成功的数据
-        // document.write(data);
-        // $("#imgBlock").append(data)
+      $(".chroma-gallery.mygallery").prepend('<img src="' + data + '"></img>'); //后台传输成功的数据
+      jihuo();
     });
     $(document).ready(function() {
 
-
-      $("#imgBlock").viewer({
-        transition: false,
-        navbar: false
-      });
+      // $(document).ready(function() {
+      //   $(".mygallery").chromaGallery();
+      // });
+      // $("#imgBlock").viewer({
+      //   transition: false,
+      //   navbar: false
+      // });
 
       $("#btnSpider").click(function(e) {
         e.preventDefault();
@@ -82,7 +116,19 @@
           }
         });
       });
+
+
     });
+
+    function jihuo() {
+      $(".mygallery").chromaGallery({
+        color: '#000',
+        gridMargin: 15,
+        maxColumns: 5,
+        dof: true,
+        screenOpacity: 0.8
+      });
+    }
   </script>
 </body>
 

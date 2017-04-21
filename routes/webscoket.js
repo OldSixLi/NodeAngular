@@ -7,11 +7,19 @@
  */
 var io = require('socket.io')();
 var xssEscape = require('xss-escape');
+var answer = require('../NodeCode/zhihu/answer');
 
 io.on('connection', function(_socket) {
   console.log(_socket.id + ': connection');
   _socket.emit('mashaobo', "连接成功");
   //测试前台向后台传输数据
+  try {
+    answer.getAnswer(10, 24463692, "测试", _socket);
+  } catch (error) {
+    console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+    console.log(error);
+    console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+  }
 
   //   _socket.on('mashaobotest', function(_nickname) {
   //     console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
