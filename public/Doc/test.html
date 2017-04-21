@@ -86,9 +86,9 @@
 <body>
   <div class="container">
     <div class="input-group">
-      <input type="text" class="form-control input-lg" placeholder="请输入搜索地址">
+      <input type="text" class="form-control input-lg" id="questionUrl" placeholder="请输入搜索地址">
       <span class="input-group-btn">
-        <button class="btn btn-primary btn-lg" type="button" onclick="beginSpider('28586345')">　开始抓取　</button>
+        <button class="btn btn-primary btn-lg" type="button" onclick="beginSpider()">　开始抓取　</button>
       </span>
     </div>
     <hr>
@@ -169,11 +169,23 @@
       }
     });
 
-    function beginSpider(id) {
-      socket.emit('SpiderBegin', id);
+    function beginSpider() {
+      var word = $("#questionUrl").val();
+      if (!word) {
+        alert("请输入内容");
+      } else {
+        if (word.indexOf('www.zhihu.com')) {
+          word = word.substr(word.lastIndexOf('/') + 1);
+        }
+        socket.emit('SpiderBegin', word);
+      }
+
     }
 
     $(function() {
+
+
+
       var imgWidth = $(".box").innerWidth(); //获得每个div的宽度，包括内边距  
       var screenWidth = $(window).width(); //获得浏览器可视区域的宽度  
       var num = Math.floor(screenWidth / imgWidth); //计算一行可以放几个div  
