@@ -8,12 +8,13 @@ var path = require('path');
 var answer = require('./test');
 var answer = require('../NodeCode/zhihu/answer');
 
-console.log("当前组合的路径为：" + path.resolve(__dirname, '../public/images/upload/'));
 // console.log(__filename);
 /* 主页地址的返回 */
 router.get('/', function(req, res, next) {
+  console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+  console.log(req);
+  console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
   //跳转到某个页面
-
   // res.redirect('/Doc/Angularjs/floors.html');
   res.render('index');
 });

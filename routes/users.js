@@ -41,6 +41,9 @@ app.use(bodyParser.urlencoded({ //此项必须在 bodyParser.json 下面,为参�
 // 　◆◆◆　　　◆◆◆◆◆◆　　　　◆◆◆◆◆◆◆◆◆　　　　◆◆　　◆◆◆　　　　◆◆◆◆　　　　　　
 /* 获取用户请求,进行相关处理 */
 router.get('/', function(req, res, next) {
+  console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+  console.log("TODO");
+  console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
   res.send('此接口不返回任何有效信息!');
 });
 

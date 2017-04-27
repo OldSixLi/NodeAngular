@@ -94,7 +94,32 @@
   <script src='../../Script/Angularjs/service.js'></script>
   <!--控制器-->
   <script src='../../Script/Angularjs/controller.js'></script>
-
+  <script>
+    //NOTE:这个方法不能用中文参数 
+    $.ajax({
+      type: "POST",
+      url: "http://localhost:3000/users/infoAdd",
+      data: {
+        name: 321123321,
+        gender: 23131,
+        age: '2131',
+        iconUrls: '\images\ upload\gCGTUfRqlkStNOBJfI1TVQ1A.jpg',
+      },
+      dataType: "json",
+      success: function(data, textStatus, jqXHR) {
+        console.log(JSON.stringify(data));
+        console.log(JSON.stringify(status));
+        console.log(JSON.stringify(jqXHR));
+      },
+      error: function(response) {
+        console.log(JSON.stringify(response));
+      },
+      complete: function(xhr, textStatus) {
+        console.log(JSON.stringify(xhr));
+        console.log(JSON.stringify(textStatus));
+      }
+    });
+  </script>
 </body>
 
 </html>

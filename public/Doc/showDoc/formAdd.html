@@ -4,7 +4,7 @@
     <div class="col-md-4 col-md-offset-4">
       <!--在此处编辑内容-->
       <!--我日 method="post"开始写成了 action="post",改了一个小时好坑!! ╮(╯▽╰)╭ -->
-      <form role="form" action="/users/infoAdd" method="post" target="_self">
+      <form role="form" action="/users/infoAdd" method="post" target="id_iframe">
         <!--用户名-->
         <div class="form-group">
           <label class="control-label" for="name">用户名</label>
@@ -33,7 +33,9 @@
         </div>
         <!--提交按钮-->
         <button type="submit" class="btn btn-default">Submit</button>
+
       </form>
+      <iframe id="id_iframe" name="id_iframe" style="display:none;"></iframe>
     </div>
     <!--表单隐藏域-->
     <div class="col-md-4">
