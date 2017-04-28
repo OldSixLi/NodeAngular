@@ -11,20 +11,23 @@ var fs = require('fs');
 var path = require('path');
 
 function watch(scoket) {
-
-
   var filePath = path.resolve(__dirname, '../public/Doc/test.html');
   fs.watch(filePath, function(event, filename) {
-    console.log(getNowFormatDate() + ' event is: ' + event);
+    console.log(getNowFormatDate() + ' 事件类型: ' + event);
     if (filename) {
-      console.log('filename provided: ' + filename);
+      console.log('文件发生变化: ' + filename);
       scoket.emit('FileChange', filename);
     } else {
-      // console.log('filename not provided');
+      console.log('filename not provided');
     }
   });
 }
 
+/**
+ * 获取当前系统时间
+ * 
+ * @returns 自定义时间格式
+ */
 function getNowFormatDate() {
   var date = new Date();
   var seperator1 = "-";

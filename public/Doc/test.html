@@ -94,42 +94,70 @@
     <hr>
   </div>
   sdadsa adsa萨达撒奥所多撒 啊娃娃让我二娃挖sa daa s萨达萨达撒
-  <!--横向form-->
-  <form class="form-horizontal" role="form" name="addForm">
-    <!--输入框-->
-    <div class="form-group">
-      <div class="col-sm-4 text-right"><label for="inputEmail3" class="control-label">姓名</label></div>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" id="name" name="name" placeholder="请输入姓名"></div>
+  <!--table-bordered   边框
+       table-condensed  收缩
+       table-striped    斑马色-->
+  <table class="table table-hover table-bordered table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>第一列</th>
+        <th>第二列</th>
+        <th>第三列</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>数据1</td>
+        <td>数据2</td>
+        <td>数据3</td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- Angularjs 表格相关HTML代码 -->
+  <div class="tab-content container-fluid">
+    <table class="table table-hover">
+      <!-- 表头 -->
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th data-order="name" class="order" ng-click="title='name';desc=!desc;sort('name')">
+            标题1
+            <!--排序字段需设置字段名称以及span标签-->
+            <span class="glyphicon glyphicon-sort"></span>
+          </th>
+          <th> 标题2 </th>
+          <th> 标题3 </th>
+        </tr>
+      </thead>
+      <tbody id="databody">
+        <tr ng-show="dataLengths" ng-repeat="x in data.content | orderBy : title : desc">
+          <td>{{ index+1 }}</td>
+          <td>{{ x.name }}</td>
+          <td>{{ x.prescriptionType=="Sport"?"运动":"营养" }}</td>
+          <td>{{ x.spell}}</td>
+        </tr>
+        <tr ng-show="!dataLengths">
+          <td colspan="100" class="text-center ">没有相关数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div ng-show="dataLengths">
+    <div class="form-group pull-right topage_block">
+      <!-- 跳转至 -->
+      <label>{{totalRecord}}条/{{totalPage}}页</label>
+      <label>跳至</label>
+      <input type="text" onkeyup="this.value=this.value.replace(///D/g,'')" onafterpaste="this.value=this.value.replace(///D/g,'')" class="form-control topage" ng-model="toPageValue" />
+      <label>页</label>
+      <button class="btn btn-primary btn-sm" ng-click="skip()">确定</button>
     </div>
-    <!--radio类型-->
-    <div class="form-group">
-      <div class="col-sm-4 text-right">
-        <label for="inputPassword3" class="control-label">权限</label>
-      </div>
-      <div class="col-sm-8" style="line-height:35px;">
-        <label class="control-label"><input type="radio" name="role" value="1">会籍顾问&nbsp;&nbsp;</label>
-        <label class="control-label"><input type="radio" name="role" value="2">运动专家&nbsp;&nbsp;</label>
-        <label class="control-label"><input type="radio" name="role" value="3">饮食专家&nbsp;&nbsp;</label>
-      </div>
+    <!-- 分页控件 -->
+    <div class="pull-right">
+      <ul class="pagination" id="alreadyPage"></ul>
     </div>
-    <!--checkBox类型-->
-    <div class="form-group">
-      <div class="col-sm-4 text-right">
-        <label for="inputEmail3" class="control-label">水果类型</label>
-      </div>
-      <div class="col-sm-8">
-        <label class="control-label"><input name="fruit" type="checkbox" value="1" />苹果 </label>
-        <label class="control-label"><input name="fruit" type="checkbox" value="2" />桃子 </label>
-        <label class="control-label"><input name="fruit" type="checkbox" value="3" />香蕉 </label>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-12 text-right">
-        <a class="btn btn-primary" href="javascript:save()">保存</a>
-      </div>
-    </div>
-  </form>
+  </div>
   <script>
     function save() {
       var saveInfo = {
@@ -220,26 +248,27 @@
   <script src='../Script/Masonry/scripts/chromagallery.pkgd.min.js'></script>
   <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
   <script src="//cdnjscn.b0.upaiyun.com/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-  <script src="../Script/webscoket/socket.io.js"></script>
-  <script src="../Script/webscoket/desktopnotify.js"></script>
-  <script src="../Script/webscoket/common.js"></script>
+  <!--<script src="../Script/webscoket/socket.io.js"></script>-->
+  <!--<script src="../Script/webscoket/desktopnotify.js"></script>-->
+  <script src="../Script/ScoketByMa.js"></script>
+  <!--<script src="../Script/webscoket/common.js"></script>-->
   <script>
-    var chat_server = 'http://' + location.hostname + ':3000';
-    console.log('server: ' + chat_server);
-    var socket = io.connect(chat_server);
-    var imgIndex = 1;
+    // var chat_server = 'http://' + location.hostname + ':3000';
+    // console.log('server: ' + chat_server);
+    // var socket = io.connect(chat_server);
+    // var imgIndex = 1;
 
-    //webscoket相关代码
-    socket.on('mashaobo', function(data) {
-      socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
-      socket.emit('FileWatch', '前台传输数据成功'); //前台传输数据
+    // //webscoket相关代码
+    // socket.on('mashaobo', function(data) {
+    //   socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
+    //   socket.emit('FileWatch', '前台传输数据成功'); //前台传输数据
 
-    });
-    socket.on('FileChange', function(data) {
-      // socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
-      //刷新当前页面.
-      window.location.reload();
-    });
+    // });
+    // socket.on('FileChange', function(data) {
+    //   // socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
+    //   //刷新当前页面.
+    //   window.location.reload();
+    // });
     // FileChange
     var settime = 0,
       str = "",

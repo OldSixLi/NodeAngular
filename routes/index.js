@@ -11,15 +11,10 @@ var answer = require('../NodeCode/zhihu/answer');
 // console.log(__filename);
 /* 主页地址的返回 */
 router.get('/', function(req, res, next) {
-  console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-  console.log(req);
-  console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
   //跳转到某个页面
   // res.redirect('/Doc/Angularjs/floors.html');
   res.render('index');
-});
-
-　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+});　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 // 　◆◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆◆　　　◆◆◆◆◆◆◆◆◆　　◆◆◆◆◆◆◆◆◆　
 // 　◆◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆◆◆◆　　◆◆◆◆◆◆◆◆◆　
 // 　　　　　◆◆◆　　　　◆◆◆　　　◆◆◆　◆◆◆◆　　　　　　　◆◆◆　　　　　　　
@@ -36,6 +31,7 @@ router.get('/', function(req, res, next) {
 // 　　　　　◆◆◆　　　　◆◆◆　　　◆◆◆◆◆◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆◆◆◆　
 //zTree资源
 router.all('/tree', function(req, res, next) {
+
   var data = fs.readFileSync("/PersonCodes/ListPage/public/JSON/tree.json", "utf-8");
   //控制延时返回数据
   var obj = JSON.parse(data);
