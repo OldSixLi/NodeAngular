@@ -8,7 +8,8 @@
 var io = require('socket.io')();
 var xssEscape = require('xss-escape');
 var answer = require('../NodeCode/zhihu/answer');
-var fileWatch = require('../fs/watch')
+var fileWatch = require('../fs/watch');
+
 
 io.on('connection', function(_socket) {
   console.log(_socket.id + ': connection');
@@ -22,12 +23,9 @@ io.on('connection', function(_socket) {
     console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
   });
   _socket.on('FileWatch', function(_nickname) {
-
     try {
       fileWatch.watch(_socket);
-    } catch (error) {
-
-    }
+    } catch (error) {}
   });
   _socket.on('SpiderBegin', function(questionId) {
     try {
