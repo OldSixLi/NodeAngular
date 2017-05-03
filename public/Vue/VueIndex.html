@@ -17,6 +17,10 @@
     .panel-heading {
       cursor: pointer;
     }
+    
+    .border-right {
+      border-right: 1px solid #ddd;
+    }
   </style>
 </head>
 <!--注意：-->
@@ -78,7 +82,7 @@
         </div>
         <!--指令-->
         <div class="panel panel-default" id="Directives">
-          <div class="panel-heading">4.指令</div>
+          <div class="panel-heading">4.Vue内置指令</div>
           <div class="panel-body">
             <h3>v-if指令</h3>
             <input type="checkbox" name="" v-model="seen" value="" style="float: left;">
@@ -90,17 +94,38 @@
             <h3>v-show指令</h3>
             <input type="checkbox" name="" v-model="isshow" value="" style="float: left;">
             <p>当前v-show的值被设置为{{isshow}}，<span v-show="isshow">无论你能不能看到本字段，都会存在于DOM中，</span>是因为设置了"display: none;"属性
-            </p>
+            </p><br>
+            <blockquote style="font-size: 14px;">
+              v-if 是“真正的”条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。<br> v-if 也是惰性的：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。 <br>相比之下， v-show 就简单得多——不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换。<br> 一般来说， v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。<br>因此，如果需要非常频繁地切换，则使用
+              v-show 较好；如果在运行时条件不太可能改变，则使用 v-if 较好。
+            </blockquote>
+
             <h3>v-else指令<small> v-else 必须跟在v-if/v-show指令之后，不然不起作用；</small></h3>
             <input type="checkbox" name="" v-model="gender" style="float: left;">
             <p>这个小孩是<span v-if="gender"><b>男</b></span><span v-else><b>女</b></span>孩
             </p>
 
+            <h3>v-else-if指令 <small>v-else-if 必须紧跟在 v-if 或者 v-else-if 元素之后。</small></h3>
+            当前type的值是<b>{{type}}</b>,所以当前的值是<b>
+            <span v-if="type === 'A'">
+              A
+            </span>
+            <span v-else-if="type === 'B'">
+              B
+            </span>
+            <span v-else-if="type === 'C'">
+              C
+            </span>
+            <span v-else>
+              Not A/B/C
+            </span></b>
             <h3>v-bind指令 </h3>
             <a v-bind:href="'#?id='+id" v-bind:id="domId">绑定v-bind:href</a>
+
+
+
           </div>
         </div>
-
         <!--V-on指令-->
         <div class="panel panel-default" id="onButton">
           <div class="panel-heading">5.V-on指令</div>
@@ -124,6 +149,40 @@
 
             <p>通过过滤方法：<b>firstToUpper</b>,将原本小写的字符串转化为<b>首字母</b>大写形式：{{str| firstToUpper}}</p>
             <p>时间戳过滤成时间：{{times | time}}</p>
+          </div>
+        </div>
+        <!--列表数据绑定-->
+        <div class="panel panel-default" id="bindList">
+          <div class="panel-heading">7.列表数据绑定</div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-4 border-right">
+                <h3>普通遍历</h3>
+                <ul>
+                  <li v-for="i in ulList">{{i}}</li>
+                </ul>
+                <h3>遍历数字</h3>
+                <div>
+                  <span v-for="n in 10">{{ n }},</span>
+                </div>
+              </div>
+              <div class="col-md-4 border-right">
+                <h3>template包裹</h3>
+                <ul>
+
+                  <template v-for="item in ulList">
+                    <li>{{ item }}</li>
+                    <li class="divider">每次都会出现我</li>
+                  </template>
+                </ul>
+              </div>
+              <div class="col-md-4">
+                <h3>对象遍历</h3>
+                <div v-for="(value, key, index) in object">
+                  {{ index }}. {{ key }} : {{ value }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -222,11 +281,12 @@
         gender: false,
         id: "15645", //绑定ID
         domId: "aLink",
-        ok: true
+        ok: true,
+        type: "阿斯顿"
       }
     });
 
-
+    // *********************************************************
     var button = new Vue({
       el: '#onButton', //el指代选择器如 id，class，tagName
       data: {
@@ -243,6 +303,7 @@
         }
       }
     });
+    // ***********************************************************
     var filt = new Vue({
       el: '#filt', //el指代选择器如 id，class，tagName
       data: {
@@ -285,6 +346,19 @@
         }
       }
     });
+
+    // ***********************************************************
+    var bindList = new Vue({
+      el: "#bindList",
+      data: {
+        ulList: ['oop', 'java', 'lunix', 'cpu'],
+        object: {
+          name: "小米",
+          age: 37,
+          job: '销售'
+        }
+      }
+    })
   </script>
 </body>
 
