@@ -1,0 +1,297 @@
+<!-- 马少博  创建于 Date -->
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/myapp/public/images/my.ico' />
+  <title>Vue页面</title>
+  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+  <style>
+    .nopadding {
+      padding: 0;
+    }
+    
+    .panel-heading {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<!--注意：-->
+<!--1.所有的属性值必须在data中被声明后才可以被双向绑定或在页面中使用-->
+
+<body>
+  <h1 class="text-center">Vue.js入门实践</h1>
+  <div class="container" id="example">
+    <div class="row">
+      <div class="col-md-12">
+        <!--表格-->
+        <div class="panel panel-default">
+          <div class="panel-heading">1.表格数据</div>
+          <div class="panel-body nopadding">
+            <table class="table table-hover" id="table">
+              <thead>
+                <tr>
+                  <th>第一列</th>
+                  <th>添加自定义字符串</th>
+                  <th>{{second}}</th>
+                  <th>{{name}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="x of data">
+                  <!--模板表达式都被放在沙盒中，只能访问全局变量的一个白名单，如 Math 和 Date 。你不应该在模板表达式中试图访问用户定义的全局变量。-->
+                  <td>{{x.userName}}</td>
+                  <!--表达式添加字符串-->
+                  <td>{{x.userName+"~~表达式添加的字符串"}}</td>
+                  <!--表达式操作-->
+                  <td>{{x.userName.split('').reverse().join('')}}</td>
+                  <!--进行表达式赋值-->
+                  <td>{{x.userName=="M"?"男":"女"}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!--双向绑定-->
+        <div class="panel panel-default" id="binding">
+          <div class="panel-heading">2.数据双向绑定</div>
+          <div class="panel-body">
+            <p>{{ message }}　 　　　　<b>倒序值：</b> {{ reversedMessage }}</p>
+            <input class="form-control" v-model="message">
+          </div>
+
+        </div>
+        <!--html字符串绑定-->
+        <div class="panel panel-default" id="BindHtml">
+          <div class="panel-heading">3.绑定HTML</div>
+          <div class="panel-body">
+            <div v-bind:id="dynamicId">本元素当前的ID属性被绑定</div>
+            <p>{{ htmlstr }}</p>
+            <!--<input class="form-control" v-model="message"></div>-->
+
+            <div v-html="htmlstr"></div>
+            <!--<div v-bind:id="htmlstr"> </div>-->
+          </div>
+        </div>
+        <!--指令-->
+        <div class="panel panel-default" id="Directives">
+          <div class="panel-heading">4.指令</div>
+          <div class="panel-body">
+            <h3>v-if指令</h3>
+            <input type="checkbox" name="" v-model="seen" value="" style="float: left;">
+            <p>当前v-if的值被设置为{{seen}}。<span v-if="seen">所以你可以看到本字段</span>
+              <template v-if="ok">
+                <h1>Title</h1>
+                <p>Paragraph 1</p>
+                <p>Paragraph 2</p>
+              </template>
+            </p>
+            <h3>v-show指令</h3>
+            <input type="checkbox" name="" v-model="isshow" value="" style="float: left;">
+            <p>当前v-show的值被设置为{{isshow}}，<span v-show="isshow">无论你能不能看到本字段，都会存在于DOM中，</span>是因为设置了"display: none;"属性
+            </p>
+            <h3>v-else指令<small> v-else 必须跟在v-if/v-show指令之后，不然不起作用；</small></h3>
+            <input type="checkbox" name="" v-model="gender" style="float: left;">
+            <p>这个小孩是<span v-if="gender"><b>男</b></span><span v-else><b>女</b></span>孩
+            </p>
+
+            <h3>v-bind指令 </h3>
+            <a v-bind:href="'#?id='+id" v-bind:id="domId">绑定v-bind:href</a>
+          </div>
+        </div>
+
+        <!--V-on指令-->
+        <div class="panel panel-default" id="onButton">
+          <div class="panel-heading">5.V-on指令</div>
+          <div class="panel-body">
+            <div class="row">
+              <!-- 消除外边距 -->
+              <div class="col-md-4 col-lg-offset-4">
+                <input class="form-control" v-model="message"><br/>
+                <button type="button" class="btn btn-success btn-block" v-on:click="showInfo">
+                  {{msg}} V-on指令事件</button> <button type="button" class="btn btn-success btn-block" @click="showInfo">
+                  @click缩写指令</button></div>
+            </div>
+
+          </div>
+        </div>
+        <!--过滤器-->
+        <div class="panel panel-default" id="filt">
+          <div class="panel-heading">6.过滤器</div>
+          <div class="panel-body">
+            <p>通过过滤方法：<b>capitalize</b>,将原本小写的字符串转化为<b>全部</b>大写形式：{{str| capitalize}}</p>
+
+            <p>通过过滤方法：<b>firstToUpper</b>,将原本小写的字符串转化为<b>首字母</b>大写形式：{{str| firstToUpper}}</p>
+            <p>时间戳过滤成时间：{{times | time}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 脚本 -->
+  <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
+  <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+  <!--Vue框架相关-->
+  <script src='../Script/Vue/vue.js'></script>
+  <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+  <script>
+    var filePath = 'Vue/VueIndex.html'; //此处填写相对于public/的目录
+  </script>
+  <script src='https://rawgit.com/OldSixLi/ResourceOnLine/master/webscoket/ScoketByMa.js'></script>
+  <script>
+    $(document).ready(function() {
+      $(".panel-body").not(":last").hide();
+      $(".panel-heading").each(function() {
+        $(this).on('click', function() {
+          var $body = $(this).next(".panel-body");
+          $body.toggle(400);
+        });
+      });
+    });
+  </script>
+  <script>
+    var table = new Vue({
+      el: '#table',
+      data: {
+        //此处开始为页面数据绑定部分，所有的数据为当前模块元素下变量
+        data: [{
+          userName: "李老666666666六"
+        }, {
+          userName: "李老器"
+        }, {
+          userName: "李老把"
+        }, {
+          userName: "李老就"
+        }, {
+          userName: "M"
+        }],
+
+        name: "绑定的元素", // （被下方代码改变原来的值）
+        second: "表达式翻转字符串",
+      },
+    });
+    //直接访问data中的属性值，可以改变页面中的数据部分
+    table.name = "性别";
+    //在函数外部，也可以访问到相关的属性 
+    console.log(table.$el === $("#table").get(0)); //返回T
+
+    // *******************************************************
+    var app = new Vue({
+      el: '#binding',
+      data: {
+        message: '页面加载时绑定的初始值'
+      },
+      created: function() {
+        // created 这个钩子在实例被创建之后被调用：
+        // alert('message is: ' + this.message)
+        $("#binding input").after("<b>本来没有此DOM，是回调函数执行了才添加到页面中，当前值为：" + this.message + "</b>")
+      },
+      //实时计算的方法
+      computed: {
+        // 只要 message 还没有发生改变，多次访问 reversedMessage 计算属性会立即返回之前的计算结果，而不必再次执行函数。
+        reversedMessage: function() {
+          return this.message.split('').reverse().join('')
+        },
+        //这个方法不会实时更新，因为没有依赖
+        now: function() {
+          return Date.now()
+        }
+      }
+    });
+    //变量监控与回调函数
+    app.$watch('message', function(newVal, oldVal) {
+      console.log("当前值改变为：" + app.message);
+    });
+
+    // ***************************************************************
+    var htmlstr = new Vue({
+      el: '#BindHtml',
+      data: {
+        dynamicId: 1221,
+        htmlstr: '<p><b>我是一段HTML字符串，只有遇到v-html指令才会正常解析</b></p>'
+      }
+    });
+    // ***************************************************************
+
+    var directive = new Vue({
+      el: '#Directives',
+      data: {
+        seen: true,
+        isshow: false,
+        gender: false,
+        id: "15645", //绑定ID
+        domId: "aLink",
+        ok: true
+      }
+    });
+
+
+    var button = new Vue({
+      el: '#onButton', //el指代选择器如 id，class，tagName
+      data: {
+        msg: '点击按钮',
+        message: 'Vue.js'
+      },
+      methods: { //在methods对象中定义方法
+        showInfo: function(e) {
+          //方法中的this，指代new Vue这个实例对象，可以再次验证下
+          console.log(this);
+          //event 是原生DOM事件
+          console.log(e.target); //打印出事件源对象button
+          alert('Hello ' + this.message + '!');
+        }
+      }
+    });
+    var filt = new Vue({
+      el: '#filt', //el指代选择器如 id，class，tagName
+      data: {
+        str: "aaaaaaaaaaaaa",
+        times: 1493716453000
+      },
+      computed: {
+
+      },
+      methods: {
+
+      },
+      filters: {
+        capitalize: function(value) {
+          if (!value) return ''
+          value = value.toString()
+          return value.toUpperCase();
+        },
+        firstToUpper: function(value) {
+          if (!value) return ''
+          value = value.toString()
+          return value.charAt(0).toUpperCase() + value.slice(1)
+        },
+        time: function(value) {
+          //这个过滤器必须是毫秒级别的过滤
+          var tt = new Date(parseInt(value)).toLocaleString('chinese', {
+            hour12: false
+          }).replace(/\//g, "-");
+          return tt;
+
+        }
+      },
+      methods: { //在methods对象中定义方法
+        showInfo: function(e) {
+          //方法中的this，指代new Vue这个实例对象，可以再次验证下
+          console.log(this);
+          //event 是原生DOM事件
+          console.log(e.target); //打印出事件源对象button
+          alert('Hello ' + this.message + '!');
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
+
+</html>
+
+</html>

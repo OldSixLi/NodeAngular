@@ -13,13 +13,13 @@ var app = express();
 var router = express.Router();
 //NOTE 这个地方 也不知道谁设计的，倍儿坑爹，必须要放在其他函数之前才可以执行
 // 弄了半天才弄对，心好累
-app.use(function(req, res, next) {
-  var url = req.url;
-  if (url.indexOf('.html') > 0) {
-    console.log("当前获取到的地址：" + req.url);
-  }
-  next();
-});
+// app.use(function(req, res, next) {
+//   var url = req.url;
+//   if (url.indexOf('.html') > 0) {
+//     console.log("当前获取到的地址：" + req.url);
+//   }
+//   next();
+// });
 
 
 // view engine setup
@@ -37,9 +37,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('*', function(req, res) {
-  res.render('404.jade', {})
-});
+app.use('/', routes);
+app.use('/users', users);
+
 
 // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
@@ -47,9 +47,23 @@ app.get('*', function(req, res) {
 //   err.status = 404;
 //   next(err);
 // });
+// catch 404 and forward to error handler
 
+// *************
+// app.use(function(req, res, next) {
+//   var err = new Error('Not Found');
+//   err.status = 404;
+//   next(err);
+// });
+// **************
 // error handlers
 
+
+app.use(function(req, res, next) {
+  // res.status(404).send('Sorry cant find that!');
+  // res.redirect('404.html');
+  res.render('404', {});
+});
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {

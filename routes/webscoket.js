@@ -8,23 +8,21 @@
 var io = require('socket.io')();
 var xssEscape = require('xss-escape');
 var answer = require('../NodeCode/zhihu/answer');
-var fileWatch = require('../fs/watch');
+var fileWatch = require('./watch');
 
 
 io.on('connection', function(_socket) {
   console.log(_socket.id + ': connection');
   _socket.emit('mashaobo', "连接成功");
-  //测试前台向后台传输数据
 
-  // 
+  //测试前台向后台传输数据
   _socket.on('mashaobotest', function(_nickname) {
-    console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-    console.log(_nickname);
-    console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+    console.log('获取从前台传输的数据：' + _nickname + '***********************');
   });
+
   _socket.on('FileWatch', function(_nickname) {
     try {
-      fileWatch.watch(_socket);
+      fileWatch.watch(_socket, _nickname);
     } catch (error) {}
   });
   _socket.on('SpiderBegin', function(questionId) {
@@ -34,16 +32,6 @@ io.on('connection', function(_socket) {
       console.log(error);
     }
   });
-
-  //for循环
-  //   for (var i = 0; i < 1000; i++) {
-  //     (function(i) {
-  //       setTimeout(function() {
-  //         _socket.emit('ImgData', '../img/qqface/' + (i % 100 + 1) + '.gif');
-  //       }, i * 100);
-  //     })(i);
-  //   }
-  // _socket.emit('ImgData', '../img/qqface/1.gif');
 });
 
 
