@@ -84,9 +84,7 @@
             <input type="checkbox" name="" v-model="seen" value="" style="float: left;">
             <p>当前v-if的值被设置为{{seen}}。<span v-if="seen">所以你可以看到本字段</span>
               <template v-if="ok">
-                <h1>Title</h1>
-                <p>Paragraph 1</p>
-                <p>Paragraph 2</p>
+                <p>如果指令被包含在template中，则DOM中不会出现此标签，并且你也可以看到我</p> 
               </template>
             </p>
             <h3>v-show指令</h3>
@@ -289,9 +287,5 @@
     });
   </script>
 </body>
-
-</html>
-
-</html>
 
 </html>
