@@ -20,7 +20,7 @@ app.factory('httpService',
       // $q是Angular的一种内置服务， 它可以使你异步地执行函数， 并且当函数执行完成时或异常时它允许你使用函数的返回值或返回执行状态通知等。
       var defer = $q.defer();
       if (url == "") {
-        url = "/users/users" + "?" + "page=" + pageindex + "&pageNum=10"; //请求的参数和地址
+        url = "/users/allUser" + "?" + "page=" + pageindex + "&pageNum=10"; //请求的参数和地址
       }
       $http.get(url)
         .success(function(data, status, head, config) {

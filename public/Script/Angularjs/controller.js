@@ -38,7 +38,7 @@ app.controller('customersCtrl', function($scope, httpService, sortService) {
                 //请求成功操作
                 var data = res.data;
                 $scope.data = data;
-                $scope.dataLengths = data.content.length > 0;
+                $scope.dataLengths = data.data.length > 0;
                 break;
               }
             case 404:

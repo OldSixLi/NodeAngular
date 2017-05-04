@@ -57,6 +57,28 @@ router.get('/users', function(req, res, next) {
     res.json(obj);
   }, 0);
 });
+//请求的是/users/users接口才会访问到此处
+router.get('/allUser', function(req, res, next) {
+  var returnObj = {};
+  var result = DBhelper.getAll(function(result) {
+    if (result) {
+      //查询成功dataSuccess = false;
+      returnObj.dataSuccess = true;
+      returnObj.data = result;
+      res.json(returnObj);
+    } else {
+      //查询失败处理操作
+      returnObj.errorMessage = '没数据' + new Date().getSeconds();
+      res.json(returnObj);
+    }
+
+    //控制延时返回数据
+    var obj = JSON.parse(data);
+    setTimeout(function() {
+      res.json(obj);
+    }, 0);
+  });
+});
 
 // /users/name地址
 router.get('/name', function(req, res, next) {

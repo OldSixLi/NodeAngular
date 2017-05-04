@@ -1,4 +1,4 @@
-<!-- 马少博  创建于 Date -->
+<!-- 马少博  创建于 2017年5月2日09:08:42 -->
 <!DOCTYPE html>
 <html lang='en'>
 
@@ -185,6 +185,18 @@
             </div>
           </div>
         </div>
+        <!--props-->
+        <div class="panel panel-default" id="propsBlock">
+          <div class="panel-heading">8.props属性</div>
+          <div class="panel-body">
+            <div id="todo-list-example">
+              <input class="form-control" v-model="newTodoText" v-on:keyup.enter="addNewTodo" placeholder="添加待办事项">
+              <ul>
+                <li is="todo-items" v-for="(todo, index) in todos" v-bind:titles="index+1+'----'+todo" food="食物" v-on:remove="todos.splice(index, 1)"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -234,7 +246,6 @@
     table.name = "性别";
     //在函数外部，也可以访问到相关的属性 
     console.log(table.$el === $("#table").get(0)); //返回T
-
     // *******************************************************
     var app = new Vue({
       el: '#binding',
@@ -262,7 +273,6 @@
     app.$watch('message', function(newVal, oldVal) {
       console.log("当前值改变为：" + app.message);
     });
-
     // ***************************************************************
     var htmlstr = new Vue({
       el: '#BindHtml',
@@ -272,7 +282,6 @@
       }
     });
     // ***************************************************************
-
     var directive = new Vue({
       el: '#Directives',
       data: {
@@ -285,7 +294,6 @@
         type: "阿斯顿"
       }
     });
-
     // *********************************************************
     var button = new Vue({
       el: '#onButton', //el指代选择器如 id，class，tagName
@@ -346,7 +354,6 @@
         }
       }
     });
-
     // ***********************************************************
     var bindList = new Vue({
       el: "#bindList",
@@ -356,6 +363,36 @@
           name: "小米",
           age: 37,
           job: '销售'
+        }
+      }
+    });
+
+    // ***********************************************************
+    // 声明一个模板
+    Vue.component('todo-items', {
+      template: '\
+    <p>\
+      {{ titles }}{{food}}\
+     <button v-on:click="$emit(\'remove\')" class="btn btn-link btn-sm"  >X</button>\
+    </p>\
+  ',
+      props: ['titles', 'food']
+    })
+    var propsBlock = new Vue({
+      el: "#propsBlock",
+      data: {
+        newTodoText: '做一顿饭',
+        todos: [
+          '事项1',
+          '待做事项',
+          '完成代码质量规范'
+        ]
+      },
+      //添加方法
+      methods: {
+        addNewTodo: function() {
+          this.todos.push(this.newTodoText)
+          this.newTodoText = ''
         }
       }
     })

@@ -28,14 +28,14 @@
         <thead>
           <tr>
             <th class="text-center" style="width:15%;">序号</th>
-            <th data-order='userName' class="order text-left" ng-click="title='userName';desc=!desc;sort('userName')">
+            <th data-order='name' class="order text-left" ng-click="title='name';desc=!desc;sort('name')">
               昵称
               <span class="glyphicon glyphicon-sort"></span></th>
             <th data-order='gender' class="order" ng-click="title='gender';desc=!desc;sort('gender')">
               性别
               <span class="glyphicon glyphicon-sort"></span></th>
-            <th data-order='district' class="order" ng-click="title='district';desc=!desc;sort('district')">
-              地区
+            <th data-order='age' class="order" ng-click="title='age';desc=!desc;sort('age')">
+              年龄
               <span class="glyphicon glyphicon-sort"></span></th>
             <th>
               注册时间
@@ -43,13 +43,13 @@
         </thead>
         <!-- 数据主体部分 -->
         <tbody id="databody">
-          <tr ng-show="dataLengths" ng-repeat="x in data.content|orderBy:title :desc" ng-cloak>
-            <td class="text-center"> {{x.length=$index+data.page*data.pageNum+1}}</td>
+          <tr ng-show="dataLengths" ng-repeat="x in data.data|orderBy:title :desc" ng-cloak>
+            <td class="text-center"> {{x.length=$index+1}}</td>
             <td style="text-align: left;" ng-cloak><img src="{{x.iconUrl}}" alt="">
-              <a href="#/info?id={{x.id}}&type=create">{{ x.userName }}</a></td>
+              <a href="#/info?id={{x.ID}}&type=create">{{ x.name }}</a></td>
             <td ng-cloak>{{ x.gender=="M"?"男":"女" }}</td>
-            <td ng-cloak>{{ x.district }}</td>
-            <td ng-cloak>{{ x.time=x.createAt| date:"yyyy/MM/dd HH:mm:ss"}}</td>
+            <td ng-cloak>{{ x.age }}</td>
+            <td ng-cloak>{{ x.time=x.Regtime| date:"yyyy/MM/dd HH:mm:ss"}}</td>
           </tr>
           <tr ng-show="!dataLengths">
             <td colspan="100" class="text-center ">暂无结果</td>

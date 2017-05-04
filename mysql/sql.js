@@ -46,6 +46,7 @@ function finds(id, next) {
     });
   };
 }
+
 var start = function(model, next) {
   var deferred = Q.defer();
   //语句 
@@ -72,6 +73,27 @@ var start = function(model, next) {
 }
 
 
+function getAll(next) {
+  console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+  console.log("进入方法2");
+  console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+
+  var sql = 'select * from  user';
+  client.query(sql, function(err, result) {
+    if (!err) {
+      try {
+        console.log("--当前结果为:" + JSON.stringify(result));
+        var json = JSON.parse(JSON.stringify(result));
+        next(json);
+      } catch (error) {
+        console.log("line-40:当前数据转化的错误为:" + error);
+      }
+    } else {
+      console.log(err);
+    }
+  });
+};
+
 
 
 
@@ -80,6 +102,6 @@ var start = function(model, next) {
 // exports.start = start;
 
 
-
+exports.getAll = getAll;
 exports.getDS = finds;
 exports.addModel = start;
