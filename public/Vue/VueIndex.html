@@ -10,6 +10,10 @@
   <title>Vue页面</title>
   <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
   <style>
+    body {
+      font-family: "Microsoft YaHei"
+    }
+    
     .nopadding {
       padding: 0;
     }
@@ -27,7 +31,7 @@
 <!--1.所有的属性值必须在data中被声明后才可以被双向绑定或在页面中使用-->
 
 <body>
-  <h1 class="text-center">Vue.js入门实践</h1>
+  <h1 class="text-center"> <b>Vue.js入门实践</b></h1>
   <div class="container" id="example">
     <div class="row">
       <div class="col-md-12">
@@ -237,7 +241,26 @@
           </div>
         </div>
 
-        <h1 class="text-center">组件</h1>
+        <h1 class="text-center"><b>组件</b></h1>
+
+        <!--组件处理-->
+        <div class="panel panel-default" id="tools">
+          <div class="panel-heading">1.简单组件</div>
+          <div class="panel-body" id="exampless">
+            <div class="row">
+              <div class="col-md-4">
+                <my-mashaobo></my-mashaobo>
+              </div>
+              <div class="col-md-4">
+                <ht-select></ht-select>
+              </div>
+              <div class="col-md-4">
+                <my-component></my-component>
+              </div>
+            </div>
+
+          </div>
+        </div>
         <!--
   　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
           　◆◆◆　　　◆◆　　　◆◆◆◆◆　◆◆◆　　　　　　　◆◆◆　
@@ -250,302 +273,357 @@
           　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
           　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
           -->
-        <!--组件处理-->
-        <div class="panel panel-default" id="tools">
-          <div class="panel-heading">1.简单组件</div>
-          <div class="panel-body" id="exampless">
+        <!--prop组件处理-->
+        <div class="panel panel-default" id="propsTool">
+          <div class="panel-heading">2.props组件</div>
+          <div class="panel-body">
             <div class="row">
               <div class="col-md-4">
-                <my-mashaobo></my-mashaobo>
+                <h3>自定义组件</h3>
+                <select class="form-control"> 
+                <option 
+                is="ht-bind" 
+                v-for="x in lists" 
+                v-bind:values="x.name"  v-bind:bindtoselect="x.id"></option>
+              </select></div>
+              <div class="col-md-4">
+                <h3>动态Prop</h3>
+                <div>
+                  <input v-model="parentMsg" class="form-control">
+                  <br>
+                  <childer :my-message="parentMsg"></childer>
+                </div>
+
               </div>
               <div class="col-md-4"></div>
-              <div class="col-md-4"></div>
             </div>
-
-
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- 脚本 -->
-  <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
-  <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
-  <!--Vue框架相关-->
-  <script src='../Script/Vue/vue.js'></script>
-  <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
-  <script>
-    var filePath = 'Vue/VueIndex.html'; //此处填写相对于public/的目录
-  </script>
-  <script src='../Script/ScoketByMa.js'></script>
-  <script>
-    $(document).ready(function() {
-      $(".panel-body").not(":last").hide();
-      $(".panel-heading").each(function() {
-        $(this).on('click', function() {
-          var $body = $(this).next(".panel-body");
-          $body.toggle(400);
+    <!-- 脚本 -->
+    <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+    <!--Vue框架相关-->
+    <script src='../Script/Vue/vue.js'></script>
+    <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+    <script src="http://cdn.bootcss.com/require.js/2.3.3/require.min.js"></script>
+    <script>
+      var filePath = 'Vue/VueIndex.html'; //此处填写相对于public/的目录
+    </script>
+    <script src='../Script/ScoketByMa.js'></script>
+    <script>
+      $(document).ready(function() {
+        $(".panel-body").not(":last").hide();
+        $(".panel-heading").each(function() {
+          $(this).on('click', function() {
+            var $body = $(this).next(".panel-body");
+            $body.toggle(400);
+          });
         });
       });
-    });
-  </script>
-  <script>
-    var table = new Vue({
-      el: '#table',
-      data: {
-        //此处开始为页面数据绑定部分，所有的数据为当前模块元素下变量
-        data: [{
-          userName: "李老666666666六"
-        }, {
-          userName: "李老器"
-        }, {
-          userName: "李老把"
-        }, {
-          userName: "李老就"
-        }, {
-          userName: "M"
-        }],
+    </script>
+    <script>
+      // 　◆◆◆　　　◆◆　　　◆◆◆◆◆　◆◆◆　　　　　　　◆◆◆　
+      // 　◆◆◆◆　　◆◆　　◆◆◆　　◆◆◆◆◆　　　　　　　◆◆◆　
+      // 　◆◆◆◆　　◆◆　◆◆◆　　　◆◆◆◆◆◆　◆◆◆　　◆◆　　
+      // 　◆◆◆◆◆　◆◆　◆◆◆　　　　◆◆◆◆◆　◆◆◆　　◆◆　　
+      // 　◆◆◆◆◆◆◆◆　◆◆　　　　　◆◆◆◆◆　◆◆◆◆◆◆◆　　
+      // 　◆◆◆　◆◆◆◆　◆◆◆　　　　◆◆　◆◆◆◆◆◆◆◆◆◆　　
+      // 　◆◆◆　◆◆◆◆　◆◆◆　　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
+      // 　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
+      // 　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
+      // *********************************************************
+      Vue.component('ht-bind', {
+        // 声明 props
+        //NOTE在这要声明自定义的要绑定的属性,然后使用
+        props: ['values', 'bindtoselect'],
+        // 就像 data 一样，prop 可以用在模板内
+        // 同样也可以在 vm 实例中像 “this.message” 这样使用
+        template: '<option v-bind:value="bindtoselect">{{bindtoselect}}--{{ values }}</option>'
+      });
 
-        name: "绑定的元素", // （被下方代码改变原来的值）
-        second: "表达式翻转字符串",
-      },
-    });
-    //直接访问data中的属性值，可以改变页面中的数据部分
-    table.name = "性别";
-    //在函数外部，也可以访问到相关的属性 
-    console.log(table.$el === $("#table").get(0)); //返回T
-    // *******************************************************
-    var app = new Vue({
-      el: '#binding',
-      data: {
-        message: '页面加载时绑定的初始值'
-      },
-      created: function() {
-        // created 这个钩子在实例被创建之后被调用：
-        // alert('message is: ' + this.message)
-        $("#binding input").after("<b>本来没有此DOM，是回调函数执行了才添加到页面中，当前值为：" + this.message + "</b>")
-      },
-      //实时计算的方法
-      computed: {
-        // 只要 message 还没有发生改变，多次访问 reversedMessage 计算属性会立即返回之前的计算结果，而不必再次执行函数。
-        reversedMessage: function() {
-          return this.message.split('').reverse().join('')
+      Vue.component('childer', {
+        props: ['myMessage'],
+        template: '<span>{{ myMessage }}</span>'
+
+      })
+      var propsTool = new Vue({
+        el: "#propsTool",
+        data: {
+          parentMsg: "",
+          lists: [{
+            "name": "张三，李四，王五",
+            id: 1
+          }, {
+            "name": "老六，和尚，老井",
+            id: 2
+          }, {
+            "name": "小涛，小蛇，于洪",
+            id: 3
+          }]
+        }
+      });
+
+      // *************************************************
+      //NOTE:注册了一个全局组件
+      //对于标签起名，最好小写，并且包含一个短杠（不强制）
+      Vue.component('my-mashaobo', {
+        template: '<input type="text" class="form-control" placeholder="我是一个自定义选项" v-model="mine">',
+        //NOTE 在此处返回的DATA，必须是函数
+        data: function() {
+          return {
+            mine: "#CE5BF3" //初始值
+          }
+        }
+      });
+      Vue.component('ht-select', {
+        template: '<select class="form-control">' + '<option>1</option>' + '<option>2</option>' + '<option>3</option>' + '<option>4</option>' + '</select>'
+          // 选项
+      });
+
+      var Child = {
+        template: "<h3>我不是全局组件</h3>"
+      }
+      var tools = new Vue({
+        el: "#tools",
+        components: {
+          // <my-component> 将只在父模板可用
+          'my-component': Child
+        }
+      });
+      // **************************************************
+      var table = new Vue({
+        el: '#table',
+        data: {
+          //此处开始为页面数据绑定部分，所有的数据为当前模块元素下变量
+          data: [{
+            userName: "李老666666666六"
+          }, {
+            userName: "李老器"
+          }, {
+            userName: "李老把"
+          }, {
+            userName: "李老就"
+          }, {
+            userName: "M"
+          }],
+
+          name: "绑定的元素", // （被下方代码改变原来的值）
+          second: "表达式翻转字符串",
         },
-        //这个方法不会实时更新，因为没有依赖
-        now: function() {
-          return Date.now()
-        }
-      }
-    });
-    //变量监控与回调函数
-    app.$watch('message', function(newVal, oldVal) {
-      console.log("当前值改变为：" + app.message);
-    });
-    // ***************************************************************
-    var htmlstr = new Vue({
-      el: '#BindHtml',
-      data: {
-        dynamicId: 1221,
-        htmlstr: '<p><b>我是一段HTML字符串，只有遇到v-html指令才会正常解析</b></p>'
-      }
-    });
-    // ***************************************************************
-    var directive = new Vue({
-      el: '#Directives',
-      data: {
-        seen: true,
-        isshow: false,
-        gender: false,
-        id: "15645", //绑定ID
-        domId: "aLink",
-        ok: true,
-        type: "阿斯顿"
-      }
-    });
-    // *********************************************************
-    var button = new Vue({
-      el: '#onButton', //el指代选择器如 id，class，tagName
-      data: {
-        msg: '点击按钮',
-        message: 'Vue.js'
-      },
-      methods: { //在methods对象中定义方法
-        showInfo: function(e) {
-          //方法中的this，指代new Vue这个实例对象，可以再次验证下
-          console.log(this);
-          //event 是原生DOM事件
-          console.log(e.target); //打印出事件源对象button
-          alert('Hello ' + this.message + '!');
-        }
-      }
-    });
-    // ***********************************************************
-    var filt = new Vue({
-      el: '#filt', //el指代选择器如 id，class，tagName
-      data: {
-        str: "aaaaaaaaaaaaa",
-        times: 1493716453000
-      },
-      computed: {
-
-      },
-      methods: {
-
-      },
-      filters: {
-        capitalize: function(value) {
-          if (!value) return ''
-          value = value.toString()
-          return value.toUpperCase();
+      });
+      //直接访问data中的属性值，可以改变页面中的数据部分
+      table.name = "性别";
+      //在函数外部，也可以访问到相关的属性 
+      console.log(table.$el === $("#table").get(0)); //返回T
+      // *******************************************************
+      var app = new Vue({
+        el: '#binding',
+        data: {
+          message: '页面加载时绑定的初始值'
         },
-        firstToUpper: function(value) {
-          if (!value) return ''
-          value = value.toString()
-          return value.charAt(0).toUpperCase() + value.slice(1)
+        created: function() {
+          // created 这个钩子在实例被创建之后被调用：
+          // alert('message is: ' + this.message)
+          $("#binding input").after("<b>本来没有此DOM，是回调函数执行了才添加到页面中，当前值为：" + this.message + "</b>")
         },
-        time: function(value) {
-          //这个过滤器必须是毫秒级别的过滤
-          var tt = new Date(parseInt(value)).toLocaleString('chinese', {
-            hour12: false
-          }).replace(/\//g, "-");
-          return tt;
+        //实时计算的方法
+        computed: {
+          // 只要 message 还没有发生改变，多次访问 reversedMessage 计算属性会立即返回之前的计算结果，而不必再次执行函数。
+          reversedMessage: function() {
+            return this.message.split('').reverse().join('')
+          },
+          //这个方法不会实时更新，因为没有依赖
+          now: function() {
+            return Date.now()
+          }
+        }
+      });
+      //变量监控与回调函数
+      app.$watch('message', function(newVal, oldVal) {
+        console.log("当前值改变为：" + app.message);
+      });
+      // ***************************************************************
+      var htmlstr = new Vue({
+        el: '#BindHtml',
+        data: {
+          dynamicId: 1221,
+          htmlstr: '<p><b>我是一段HTML字符串，只有遇到v-html指令才会正常解析</b></p>'
+        }
+      });
+      // ***************************************************************
+      var directive = new Vue({
+        el: '#Directives',
+        data: {
+          seen: true,
+          isshow: false,
+          gender: false,
+          id: "15645", //绑定ID
+          domId: "aLink",
+          ok: true,
+          type: "阿斯顿"
+        }
+      });
+      // *********************************************************
+      var button = new Vue({
+        el: '#onButton', //el指代选择器如 id，class，tagName
+        data: {
+          msg: '点击按钮',
+          message: 'Vue.js'
+        },
+        methods: { //在methods对象中定义方法
+          showInfo: function(e) {
+            //方法中的this，指代new Vue这个实例对象，可以再次验证下
+            console.log(this);
+            //event 是原生DOM事件
+            console.log(e.target); //打印出事件源对象button
+            alert('Hello ' + this.message + '!');
+          }
+        }
+      });
+      // ***********************************************************
+      var filt = new Vue({
+        el: '#filt', //el指代选择器如 id，class，tagName
+        data: {
+          str: "aaaaaaaaaaaaa",
+          times: 1493716453000
+        },
+        computed: {
 
-        }
-      },
-      methods: { //在methods对象中定义方法
-        showInfo: function(e) {
-          //方法中的this，指代new Vue这个实例对象，可以再次验证下
-          console.log(this);
-          //event 是原生DOM事件
-          console.log(e.target); //打印出事件源对象button
-          alert('Hello ' + this.message + '!');
-        }
-      }
-    });
-    // ***********************************************************
-    var bindList = new Vue({
-      el: "#bindList",
-      data: {
-        ulList: ['oop', 'java', 'lunix', 'cpu'],
-        object: {
-          name: "小米",
-          age: 37,
-          job: '销售'
-        }
-      }
-    });
+        },
+        methods: {
 
-    // ***********************************************************
-    // 声明一个模板
-    Vue.component('todo-items', {
-      //NOTE 这个地方本人理解就是写个什么东西，模板名字一对上，就把那个原来的父节点给套路（取代）了，完以后自己这边声明变量，然后再获取父节点的变量的值，然后生成，暂时只看出来了复杂，根本不知道有鸡毛用/(ㄒoㄒ)/~~
-      // titles 和food这两个变量都需要去父节点里边寻找
-      // 神TM知道原来的节点是不是父节点
-      // 具体这个click和那个remove如何联系起来的，暂时闹不懂
-      template: '\
+        },
+        filters: {
+          capitalize: function(value) {
+            if (!value) return ''
+            value = value.toString()
+            return value.toUpperCase();
+          },
+          firstToUpper: function(value) {
+            if (!value) return ''
+            value = value.toString()
+            return value.charAt(0).toUpperCase() + value.slice(1)
+          },
+          time: function(value) {
+            //这个过滤器必须是毫秒级别的过滤
+            var tt = new Date(parseInt(value)).toLocaleString('chinese', {
+              hour12: false
+            }).replace(/\//g, "-");
+            return tt;
+
+          }
+        },
+        methods: { //在methods对象中定义方法
+          showInfo: function(e) {
+            //方法中的this，指代new Vue这个实例对象，可以再次验证下
+            console.log(this);
+            //event 是原生DOM事件
+            console.log(e.target); //打印出事件源对象button
+            alert('Hello ' + this.message + '!');
+          }
+        }
+      });
+      // ***********************************************************
+      var bindList = new Vue({
+        el: "#bindList",
+        data: {
+          ulList: ['oop', 'java', 'lunix', 'cpu'],
+          object: {
+            name: "小米",
+            age: 37,
+            job: '销售'
+          }
+        }
+      });
+
+      // ***********************************************************
+      // 声明一个模板
+      Vue.component('todo-items', {
+        //NOTE 这个地方本人理解就是写个什么东西，模板名字一对上，就把那个原来的父节点给套路（取代）了，完以后自己这边声明变量，然后再获取父节点的变量的值，然后生成，暂时只看出来了复杂，根本不知道有鸡毛用/(ㄒoㄒ)/~~
+        // titles 和food这两个变量都需要去父节点里边寻找
+        // 神TM知道原来的节点是不是父节点
+        // 具体这个click和那个remove如何联系起来的，暂时闹不懂
+        template: '\
     <p>\
       {{ titles }}{{food}}\
      <button v-on:click="$emit(\'remove\')" class="btn btn-link btn-sm"  >X</button>\
     </p>\
   ',
-      props: ['titles', 'food']
-    })
-    var propsBlock = new Vue({
-      el: "#propsBlock",
-      data: {
-        newTodoText: '做一顿饭',
-        todos: [
-          '事项1',
-          '待做事项',
-          '完成代码质量规范'
-        ],
-        person: [
-          "小何",
-          "小李",
-          "小清",
-          "小王",
-          "本来我们有六个，但是利用propsBlock.person.splice(5)方法截取只剩下五个",
-          "小生"
-        ],
-        numbers: [1, 2, 3, 4, 5]
-      },
-      //添加方法
-      methods: {
-        addNewTodo: function() {
-          this.todos.push(this.newTodoText)
-          this.newTodoText = ''
-        }
-      },
-      computed: {
-        evenNumbers: function() {
-          return this.numbers.filter(function(number) {
-            return number % 2 === 0
-          })
-        }
-      },
-      methods: {
-        even: function(numbers) {
-          return numbers.filter(function(number) {
-            return number % 2 === 0
-          })
-        }
-      }
-    });
-    // 关于数组的方法push()pop()shift()unshift()splice()sort()reverse()这些会改变原始值，所有叫做NOTE变异方法
-    propsBlock.todos.push("买菜做好吃的");
-
-    //  filter(), concat(), slice()这些不会修改原来数组，叫做NOTE非变异方法
-    propsBlock.todos.concat(["跑步", "锻炼"]);
-
-    // NOTE 在原生的JS中arr[i]=1，arr.length=1都会改变原来数组的值，但是Vue里不能触发更新("由于 JavaScript 的限制， Vue 不能检测这些变动的数组：")
-    Vue.set(propsBlock.person, 1, "我是利用Vue.set修改后的名称，否则你看不到我");
-    //或者
-    propsBlock.person.splice(2, 1, "我是利用splice方法修改后的名字");
-    //
-    propsBlock.person.splice(5);　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
-
-    var handle = new Vue({
-      el: "#eventsHandle",
-      data: {
-        num: 10,
-      },
-      methods: {
-        tip: function() {
-          $(".forbutton").toggleClass('alert-danger');
+        props: ['titles', 'food']
+      })
+      var propsBlock = new Vue({
+        el: "#propsBlock",
+        data: {
+          newTodoText: '做一顿饭',
+          todos: [
+            '事项1',
+            '待做事项',
+            '完成代码质量规范'
+          ],
+          person: [
+            "小何",
+            "小李",
+            "小清",
+            "小王",
+            "本来我们有六个，但是利用propsBlock.person.splice(5)方法截取只剩下五个",
+            "小生"
+          ],
+          numbers: [1, 2, 3, 4, 5]
         },
-        say: function(str) {
-          alert(str);
-        }
-      }
-    });
-    //在外部可以调用本方法
-    handle.tip();
-    // 　◆◆◆　　　◆◆　　　◆◆◆◆◆　◆◆◆　　　　　　　◆◆◆　
-    // 　◆◆◆◆　　◆◆　　◆◆◆　　◆◆◆◆◆　　　　　　　◆◆◆　
-    // 　◆◆◆◆　　◆◆　◆◆◆　　　◆◆◆◆◆◆　◆◆◆　　◆◆　　
-    // 　◆◆◆◆◆　◆◆　◆◆◆　　　　◆◆◆◆◆　◆◆◆　　◆◆　　
-    // 　◆◆◆◆◆◆◆◆　◆◆　　　　　◆◆◆◆◆　◆◆◆◆◆◆◆　　
-    // 　◆◆◆　◆◆◆◆　◆◆◆　　　　◆◆　◆◆◆◆◆◆◆◆◆◆　　
-    // 　◆◆◆　◆◆◆◆　◆◆◆　　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
-    // 　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
-    // 　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
-    // **************************************
-    Vue.component('my-mashaobo', {
-      template: '<input type="text" class="form-control" placeholder="我是一个自定义选项" v-model="mine">'
-        // 选项
-    });
-    var tools = new Vue({
-      el: "#tools",
-      data: {
-        function() {
-          return {
-            mine: "#CE5BF3"
+        //添加方法
+        methods: {
+          addNewTodo: function() {
+            this.todos.push(this.newTodoText)
+            this.newTodoText = ''
+          }
+        },
+        computed: {
+          evenNumbers: function() {
+            return this.numbers.filter(function(number) {
+              return number % 2 === 0
+            })
+          }
+        },
+        methods: {
+          even: function(numbers) {
+            return numbers.filter(function(number) {
+              return number % 2 === 0
+            })
           }
         }
+      });
+      // 关于数组的方法push()pop()shift()unshift()splice()sort()reverse()这些会改变原始值，所有叫做NOTE变异方法
+      propsBlock.todos.push("买菜做好吃的");
 
-      }
-    });
-  </script>
+      //  filter(), concat(), slice()这些不会修改原来数组，叫做NOTE非变异方法
+      propsBlock.todos.concat(["跑步", "锻炼"]);
+
+      // NOTE 在原生的JS中arr[i]=1，arr.length=1都会改变原来数组的值，但是Vue里不能触发更新("由于 JavaScript 的限制， Vue 不能检测这些变动的数组：")
+      Vue.set(propsBlock.person, 1, "我是利用Vue.set修改后的名称，否则你看不到我");
+      //或者
+      propsBlock.person.splice(2, 1, "我是利用splice方法修改后的名字");
+      //
+      propsBlock.person.splice(5);　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+
+      var handle = new Vue({
+        el: "#eventsHandle",
+        data: {
+          num: 10,
+        },
+        methods: {
+          tip: function() {
+            $(".forbutton").toggleClass('alert-danger');
+          },
+          say: function(str) {
+            alert(str);
+          }
+        }
+      });
+      //在外部可以调用本方法
+      handle.tip();
+    </script>
 </body>
 
 </html>
