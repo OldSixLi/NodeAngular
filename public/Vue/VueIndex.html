@@ -189,12 +189,80 @@
         <div class="panel panel-default" id="propsBlock">
           <div class="panel-heading">8.props属性</div>
           <div class="panel-body">
-            <div id="todo-list-example">
-              <input class="form-control" v-model="newTodoText" v-on:keyup.enter="addNewTodo" placeholder="添加待办事项">
-              <ul>
-                <li is="todo-items" v-for="(todo, index) in todos" v-bind:titles="index+1+'----'+todo" food="食物" v-on:remove="todos.splice(index, 1)"></li>
-              </ul>
+            <div class="row">
+              <div id="todo-list-example " class="col-md-6">
+                <input class="form-control" v-model="newTodoText" v-on:keyup.enter="addNewTodo" placeholder="添加待办事项">
+                <ul>
+                  <li is="todo-items" v-for="(todo, index) in todos" v-bind:titles="index+1+'----'+todo" food="食物" v-on:remove="todos.splice(index, 1)"></li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <ul>
+                  <li v-for="x in person">{{x}}</li>
+                </ul>
+                <p>以下利用实时监控方法对数组进行了过滤</p>
+                <ul>
+                  <li v-for="n in evenNumbers">{{ n }}</li>
+                </ul>
+                <p>以下利用了methods的方法计算对数组进行了过滤</p>
+                <ul>
+                  <li v-for="n in even(numbers)">{{ n }}</li>
+                </ul>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <!--事件处理-->
+        <div class="panel panel-default" id="eventsHandle">
+          <div class="panel-heading">9.事件处理</div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-4">
+                <button type="button" class="btn btn-primary btn-block" v-on:click="num++">点击加1</button>
+                <p>{{num}}</p>
+              </div>
+              <div class="col-md-4">
+                <button type="button" class="btn btn-block btn-success" v-on:click="tip">BUTTON事件方法</button>
+                <div class="alert alert-danger forbutton">
+                  <strong>你看!</strong> 我状态发生了变化
+                </div>
+              </div>
+              <div class="col-md-4">
+
+                <button type="button" class="btn btn-block btn-success" v-on:click="say('Say hi')">Say hi</button>
+                <h4>内联处理方法<small>该方法利用内置函数传值</small></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h1 class="text-center">组件</h1>
+        <!--
+  　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+          　◆◆◆　　　◆◆　　　◆◆◆◆◆　◆◆◆　　　　　　　◆◆◆　
+          　◆◆◆◆　　◆◆　　◆◆◆　　◆◆◆◆◆　　　　　　　◆◆◆　
+          　◆◆◆◆　　◆◆　◆◆◆　　　◆◆◆◆◆◆　◆◆◆　　◆◆　　
+          　◆◆◆◆◆　◆◆　◆◆◆　　　　◆◆◆◆◆　◆◆◆　　◆◆　　
+          　◆◆◆◆◆◆◆◆　◆◆　　　　　◆◆◆◆◆　◆◆◆◆◆◆◆　　
+          　◆◆◆　◆◆◆◆　◆◆◆　　　　◆◆　◆◆◆◆◆◆◆◆◆◆　　
+          　◆◆◆　◆◆◆◆　◆◆◆　　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
+          　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
+          　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
+          -->
+        <!--组件处理-->
+        <div class="panel panel-default" id="tools">
+          <div class="panel-heading">1.简单组件</div>
+          <div class="panel-body" id="exampless">
+            <div class="row">
+              <div class="col-md-4">
+                <my-mashaobo></my-mashaobo>
+              </div>
+              <div class="col-md-4"></div>
+              <div class="col-md-4"></div>
+            </div>
+
+
           </div>
         </div>
       </div>
@@ -209,7 +277,7 @@
   <script>
     var filePath = 'Vue/VueIndex.html'; //此处填写相对于public/的目录
   </script>
-  <script src='https://rawgit.com/OldSixLi/ResourceOnLine/master/webscoket/ScoketByMa.js'></script>
+  <script src='../Script/ScoketByMa.js'></script>
   <script>
     $(document).ready(function() {
       $(".panel-body").not(":last").hide();
@@ -370,6 +438,10 @@
     // ***********************************************************
     // 声明一个模板
     Vue.component('todo-items', {
+      //NOTE 这个地方本人理解就是写个什么东西，模板名字一对上，就把那个原来的父节点给套路（取代）了，完以后自己这边声明变量，然后再获取父节点的变量的值，然后生成，暂时只看出来了复杂，根本不知道有鸡毛用/(ㄒoㄒ)/~~
+      // titles 和food这两个变量都需要去父节点里边寻找
+      // 神TM知道原来的节点是不是父节点
+      // 具体这个click和那个remove如何联系起来的，暂时闹不懂
       template: '\
     <p>\
       {{ titles }}{{food}}\
@@ -386,7 +458,16 @@
           '事项1',
           '待做事项',
           '完成代码质量规范'
-        ]
+        ],
+        person: [
+          "小何",
+          "小李",
+          "小清",
+          "小王",
+          "本来我们有六个，但是利用propsBlock.person.splice(5)方法截取只剩下五个",
+          "小生"
+        ],
+        numbers: [1, 2, 3, 4, 5]
       },
       //添加方法
       methods: {
@@ -394,8 +475,76 @@
           this.todos.push(this.newTodoText)
           this.newTodoText = ''
         }
+      },
+      computed: {
+        evenNumbers: function() {
+          return this.numbers.filter(function(number) {
+            return number % 2 === 0
+          })
+        }
+      },
+      methods: {
+        even: function(numbers) {
+          return numbers.filter(function(number) {
+            return number % 2 === 0
+          })
+        }
       }
-    })
+    });
+    // 关于数组的方法push()pop()shift()unshift()splice()sort()reverse()这些会改变原始值，所有叫做NOTE变异方法
+    propsBlock.todos.push("买菜做好吃的");
+
+    //  filter(), concat(), slice()这些不会修改原来数组，叫做NOTE非变异方法
+    propsBlock.todos.concat(["跑步", "锻炼"]);
+
+    // NOTE 在原生的JS中arr[i]=1，arr.length=1都会改变原来数组的值，但是Vue里不能触发更新("由于 JavaScript 的限制， Vue 不能检测这些变动的数组：")
+    Vue.set(propsBlock.person, 1, "我是利用Vue.set修改后的名称，否则你看不到我");
+    //或者
+    propsBlock.person.splice(2, 1, "我是利用splice方法修改后的名字");
+    //
+    propsBlock.person.splice(5);　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+
+    var handle = new Vue({
+      el: "#eventsHandle",
+      data: {
+        num: 10,
+      },
+      methods: {
+        tip: function() {
+          $(".forbutton").toggleClass('alert-danger');
+        },
+        say: function(str) {
+          alert(str);
+        }
+      }
+    });
+    //在外部可以调用本方法
+    handle.tip();
+    // 　◆◆◆　　　◆◆　　　◆◆◆◆◆　◆◆◆　　　　　　　◆◆◆　
+    // 　◆◆◆◆　　◆◆　　◆◆◆　　◆◆◆◆◆　　　　　　　◆◆◆　
+    // 　◆◆◆◆　　◆◆　◆◆◆　　　◆◆◆◆◆◆　◆◆◆　　◆◆　　
+    // 　◆◆◆◆◆　◆◆　◆◆◆　　　　◆◆◆◆◆　◆◆◆　　◆◆　　
+    // 　◆◆◆◆◆◆◆◆　◆◆　　　　　◆◆◆◆◆　◆◆◆◆◆◆◆　　
+    // 　◆◆◆　◆◆◆◆　◆◆◆　　　　◆◆　◆◆◆◆◆◆◆◆◆◆　　
+    // 　◆◆◆　◆◆◆◆　◆◆◆　　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
+    // 　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
+    // 　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
+    // **************************************
+    Vue.component('my-mashaobo', {
+      template: '<input type="text" class="form-control" placeholder="我是一个自定义选项" v-model="mine">'
+        // 选项
+    });
+    var tools = new Vue({
+      el: "#tools",
+      data: {
+        function() {
+          return {
+            mine: "#CE5BF3"
+          }
+        }
+
+      }
+    });
   </script>
 </body>
 

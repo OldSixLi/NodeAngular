@@ -6422,12 +6422,15 @@ var imgIndex = 1;
 
 //webscoket相关代码
 socket.on('mashaobo', function(data) {
-  socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
-  socket.emit('FileWatch', '前台传输数据成功'); //前台传输数据
+  socket.emit('mashaobotest', '当前传过来的地址是' + filePath); //前台传输数据
+  socket.emit('FileWatch', filePath); //前台传输数据
 
 });
 socket.on('FileChange', function(data) {
   // socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
   //刷新当前页面.
+
   window.location.reload();
+
+
 });

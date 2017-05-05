@@ -9,13 +9,17 @@
 
 var fs = require('fs');
 var path = require('path');
+var timestamp = 0;
 
 function watch(scoket, file) {
   var filePath = path.resolve(__dirname, '../public/' + file);
   fs.watch(filePath, function(event, filename) {
     console.log(getNowFormatDate() + ' 事件类型: ' + event);
+
+
     if (filename) {
       console.log('文件发生变化: ' + filename);
+      // Date.parse(new Date())
       scoket.emit('FileChange', filename);
     } else {
       console.log('filename not provided');
