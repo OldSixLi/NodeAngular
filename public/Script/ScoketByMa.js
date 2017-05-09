@@ -6413,7 +6413,7 @@ var Notify = {
 
 };
 
-
+// $(document).ready(function() {
 
 var chat_server = 'http://' + location.hostname + ':3000';
 console.log('server: ' + chat_server);
@@ -6429,8 +6429,8 @@ socket.on('mashaobo', function(data) {
 socket.on('FileChange', function(data) {
   // socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
   //刷新当前页面.
+  // window.location.reload();
 
-  window.location.reload();
-
-
+  window.location = window.location;
 });
+// });

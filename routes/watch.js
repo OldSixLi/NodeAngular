@@ -15,12 +15,15 @@ function watch(scoket, file) {
   var filePath = path.resolve(__dirname, '../public/' + file);
   fs.watch(filePath, function(event, filename) {
     console.log(getNowFormatDate() + ' 事件类型: ' + event);
-
-
+    var currentTime = getNowFormatDate();
     if (filename) {
       console.log('文件发生变化: ' + filename);
       // Date.parse(new Date())
+      // if (timestamp != currentTime) {
+      timestamp = currentTime;
       scoket.emit('FileChange', filename);
+      // }
+
     } else {
       console.log('filename not provided');
     }

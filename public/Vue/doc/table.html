@@ -1,0 +1,145 @@
+<!-- 马少博  创建于 2017年5月8日14:08:44 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+  <title> Vue表格</title>
+  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+  <style>
+    td>img {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+    }
+    
+    .order {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="vueContent">
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-10">
+        <div class="panel panel-default">
+          <div class="panel-heading">表格遍历</div>
+          <table class="table table-hover ">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th @click="sortBy('name')" 　class="name order text-left">名称
+                  <span class="glyphicon glyphicon-resize-vertical"></span>
+                </th>
+                <th @click="sortBy('gender')" class="gender order text-center">性别
+                  <span class="glyphicon glyphicon-resize-vertical"></span>
+                </th>
+                <th @click="sortBy('Regtime')" 　class="Regtime order text-center">注册时间
+                  <span class="glyphicon glyphicon-resize-vertical"></span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(x,index) in tabledata">
+                <td>{{index+1}}</td>
+                <td>
+                  <img :src="x.iconUrl" alt="">
+                  <a :href="'userinfo.html?id='+x.ID" :title="'xxd'+x.name">
+                      {{x.name}}
+                  </a>
+                </td>
+                <td class="text-center">{{x.gender=="M"?"男":"女"}}</td>
+                <td class="text-center">{{x.Regtime|time}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <!--<div class="col-md-1">{{msg}}</div>-->
+    </div>
+  </div>
+
+
+  <!-- 脚本 -->
+  <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
+  <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+  <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+  <script src='../../Script/Vue/vue.js'></script>
+  <script src="https://cdn.bootcss.com/vue-resource/1.3.1/vue-resource.min.js"></script>
+  <script>
+    var filePath = 'Vue/doc/table.html'; //此处填写相对于public/的目录
+  </script>
+  <script src='../../Script/ScoketByMa.js'></script>
+  <script>
+    var vuecontent = new Vue({
+      el: "#vueContent",
+      data: {
+        msg: "数据",
+        tabledata: [],
+        isDesc: false
+
+      },
+      methods: {
+        //分页请求方法
+        paging: function(url, pageindex) {
+          var that = this;
+          that.$http({
+            method: "GET",
+            url: "/users/allUser",
+            data: {
+              pageindex: pageindex
+            }
+          }).then(function(data) {
+            this.tabledata = data.body.data;
+          }, function() {
+
+          });
+        },
+        sortBy: function(value) {
+          this.isDesc = !this.isDesc;
+          var val = this.isDesc;　
+          var className = val ? "glyphicon-arrow-up" : "glyphicon-arrow-down";
+          $("table span").removeClass("glyphicon-arrow-down glyphicon-arrow-up").addClass("glyphicon-resize-vertical");
+          $('.' + value).find('span').removeClass("glyphicon-resize-vertical").addClass(className);
+          this.tabledata.sort(function(a, b) {
+            if (val) {
+              return (a[value] > b[value])
+            } else {
+              return (a[value] < b[value])
+            }
+          })
+        }
+      },
+      filters: {
+        time: function(value) {
+          //这个过滤器必须是毫秒级别的过滤
+          var tm = Date.parse(value);
+          var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
+            hour12: false
+          }).replace(/\//g, "-");
+          return tt;
+
+        }
+      },
+      computed: {
+
+      }
+    });
+
+    vuecontent.paging("", 1);
+    // vuecontent.tabledata = ["1", "2"];
+    // Vue.set(vuecontent.tabledata, 1, "我是利用Vue.set修改后的名称，否则你看不到我");
+    // $.getJSON("/users/allUser", function(data) {
+    //   console.log(data.data);
+    //   vuecontent.tabledata = data.data;
+    // });
+  </script>
+</body>
+
+</html>

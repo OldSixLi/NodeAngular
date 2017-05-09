@@ -6,7 +6,9 @@
   <meta charset='utf-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/myapp/public/images/my.ico' />
+  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+
+
   <title>Vue页面</title>
   <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
   <style>
@@ -31,8 +33,10 @@
 <!--1.所有的属性值必须在data中被声明后才可以被双向绑定或在页面中使用-->
 
 <body>
+  <h5><a href="doc/table.html">表格数据</a></h5>
   <h1 class="text-center"> <b>Vue.js入门实践</b></h1>
   <div class="container" id="example">
+
     <div class="row">
       <div class="col-md-12">
         <!--表格-->
@@ -275,7 +279,7 @@
           -->
         <!--prop组件处理-->
         <div class="panel panel-default" id="propsTool">
-          <div class="panel-heading">2.props组件</div>
+          <div class="panel-heading">2.props组件的处理方法</div>
           <div class="panel-body">
             <div class="row">
               <div class="col-md-4">
@@ -292,9 +296,26 @@
                   <input v-model="parentMsg" class="form-control">
                   <br>
                   <childer :my-message="parentMsg"></childer>
+
                 </div>
 
               </div>
+              <div class="col-md-4">
+                <h3>组件事件传递</h3>
+                <p>父元素事件控制:{{otherNum}}</p>
+
+                <button-zidingyi type="button" class="btn btn-warning" v-on:chuandi="addNum">点击</button-zidingyi>
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <h3>自定义INPUT组件</h3>
+                <currency-input v-model="price"></currency-input>
+
+                <p id="price"></p>
+              </div>
+              <div class="col-md-4"></div>
               <div class="col-md-4"></div>
             </div>
           </div>
@@ -307,9 +328,9 @@
     <!--Vue框架相关-->
     <script src='../Script/Vue/vue.js'></script>
     <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
-    <script src="http://cdn.bootcss.com/require.js/2.3.3/require.min.js"></script>
+    <!--<script src="http://cdn.bootcss.com/require.js/2.3.3/require.min.js"></script>-->
     <script>
-      var filePath = 'Vue/VueIndex.html'; //此处填写相对于public/的目录
+      var filePath = 'Vue/VueIndex.html'; //此处填写相对于public/的目录ds
     </script>
     <script src='../Script/ScoketByMa.js'></script>
     <script>
@@ -333,70 +354,7 @@
       // 　◆◆◆　◆◆◆◆　◆◆◆　　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
       // 　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
       // 　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
-      // *********************************************************
-      Vue.component('ht-bind', {
-        // 声明 props
-        //NOTE在这要声明自定义的要绑定的属性,然后使用
-        props: ['values', 'bindtoselect'],
-        // 就像 data 一样，prop 可以用在模板内
-        // 同样也可以在 vm 实例中像 “this.message” 这样使用
-        template: '<option v-bind:value="bindtoselect">{{bindtoselect}}--{{ values }}</option>'
-      });
 
-      Vue.component('childer', {
-        props: ['myMessage'],
-        template: '<span>{{ myMessage }}</span>'
-
-      })
-      var propsTool = new Vue({
-        el: "#propsTool",
-        data: {
-          parentMsg: "",
-          lists: [{
-            "name": "张三，李四，王五",
-            id: 1
-          }, {
-            "name": "老六，和尚，老井",
-            id: 2
-          }, {
-            "name": "小涛，小蛇，于洪",
-            id: 3
-          }]
-        }
-      });
-
-      // *************************************************
-      //NOTE:注册了一个全局组件
-      //对于标签起名，最好小写，并且包含一个短杠（不强制）
-      Vue.component('my-mashaobo', {
-        template: '<input type="text" class="form-control" placeholder="我是一个自定义选项" v-model="mine">',
-        //NOTE 在此处返回的DATA，必须是函数
-        data: function() {
-          return {
-            mine: "#CE5BF3" //初始值
-          }
-        }
-      });
-      Vue.component('ht-select', {
-        template: '<select class="form-control">' +
-          '<option>1</option>' +
-          '<option>2</option>' +
-          '<option>3</option>' +
-          '<option>4</option>' +
-          '</select>'
-          // 选项
-      });
-
-      var Child = {
-        template: "<h3>我不是全局组件</h3>"
-      }
-      var tools = new Vue({
-        el: "#tools",
-        components: {
-          // <my-component> 将只在父模板可用
-          'my-component': Child
-        }
-      });
       // **************************************************
       var table = new Vue({
         el: '#table',
@@ -628,6 +586,147 @@
       });
       //在外部可以调用本方法
       handle.tip();
+      // *********************************************************
+      Vue.component('ht-bind', {
+        // 声明 props
+        //NOTE在这要声明自定义的要绑定的属性,然后使用
+        props: ['values', 'bindtoselect'],
+        // 就像 data 一样，prop 可以用在模板内
+        // 同样也可以在 vm 实例中像 “this.message” 这样使用
+        template: '<option v-bind:value="bindtoselect">{{bindtoselect}}--{{ values }}</option>'
+      });
+
+      Vue.component('childer', {
+        props: ['myMessage'],
+        template: '<span>{{ myMessage }}</span>',
+        // data: function() {
+        //   return {
+        //     myMessage: "测试"
+        //   }
+        // }
+
+      });
+
+      Vue.component("button-zidingyi", {
+        // props: [""],
+        template: '<button v-on:click="chuandi">{{ totalNum }}</button>',
+        data: function() {
+          return {
+            totalNum: 0
+          }
+        },
+        methods: {
+          //子元素的单击事件,对父元素传递时,父元素可以监听到此事件
+          chuandi: function() {
+            this.totalNum++;
+            //在此处向父元素传递方法
+            this.$emit('chuandi');
+            this.totalNum *= 10;
+          }
+        }
+      });
+
+      Vue.component('currency-input', {
+        template: '\
+            <span>\
+                  $\
+                  <input\
+                    ref="input"\
+                    v-bind:value="value"\
+                    v-on:input="append($event.target.value)"\
+                  >\
+                </span>\
+              ',
+
+        //  v-on:input="updateValue($event.target.value)"\
+        props: ['value'],
+        methods: {
+          // 不是直接更新值，而是使用此方法来对输入值进行格式化和位数限制
+          updateValue: function(value) {
+            var formattedValue = value
+              // 删除两侧的空格符
+              .trim()
+              // 保留 2 位小数
+              .slice(0, value.indexOf('.') + 3)
+              // 如果值不统一，手动覆盖以保持一致
+            if (formattedValue !== value) {
+              this.$refs.input.value = formattedValue
+            }
+            // 通过 input 事件发出数值
+            this.$emit('input', Number(formattedValue));
+            return formattedValue;
+          },
+          append: function(value) {
+            // alert(value);
+            $("#price").prepend(value + "<br/>");
+          }
+        }
+      })
+
+      var propsTool = new Vue({
+        el: "#propsTool",
+        data: {
+          parentMsg: "",
+          lists: [{
+            "name": "张三，李四，王五",
+            id: 1
+          }, {
+            "name": "老六，和尚，老井",
+            id: 2
+          }, {
+            "name": "小涛，小蛇，于洪",
+            id: 3
+          }],
+          otherNum: 0,
+          price: 0
+        },
+        methods: {
+          //父元素的方法
+          addNum: function() {
+            //必须指定当前的this.才可以获取到当前变量,否则作用域中的此变量无法更改
+            this.otherNum++;
+          }
+        }
+      });
+
+      // *************************************************
+      //NOTE:注册了一个全局组件
+      //对于标签起名，最好小写，并且包含一个短杠（不强制）
+      Vue.component('my-mashaobo', {
+        template: '<input type="text" class="form-control" placeholder="我是一个自定义选项" v-model="normalizedSize">',
+        //NOTE 在此处返回的DATA，必须是函数
+        data: function() {
+          return {
+            mine: "#CE5BF3" //初始值
+          }
+        },
+        //组件初始化值
+        computed: {
+          normalizedSize: function() {
+            return this.mine.trim().toLowerCase()
+          }
+        }
+      });
+      Vue.component('ht-select', {
+        template: '<select class="form-control">' +
+          '<option>1</option>' +
+          '<option>2</option>' +
+          '<option>3</option>' +
+          '<option>4</option>' +
+          '</select>'
+          // 选项
+      });
+
+      var Child = {
+        template: "<h3>我不是全局组件</h3>"
+      }
+      var tools = new Vue({
+        el: "#tools",
+        components: {
+          // <my-component> 将只在父模板可用
+          'my-component': Child
+        }
+      });
     </script>
 </body>
 
