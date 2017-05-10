@@ -74,10 +74,6 @@ var start = function(model, next) {
 
 
 function getAll(next) {
-  console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-  console.log("进入方法2");
-  console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-
   var sql = 'select * from  user';
   client.query(sql, function(err, result) {
     if (!err) {

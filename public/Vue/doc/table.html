@@ -80,10 +80,10 @@
     var vuecontent = new Vue({
       el: "#vueContent",
       data: {
+        //数据部分
         msg: "数据",
         tabledata: [],
         isDesc: false
-
       },
       methods: {
         //分页请求方法
@@ -97,8 +97,6 @@
             }
           }).then(function(data) {
             this.tabledata = data.body.data;
-          }, function() {
-
           });
         },
         sortBy: function(value) {

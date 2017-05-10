@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<root>  
+    <mydb 
+    driver="SQL Server Native Client 11.0" server="localhost" 
+    database="nodesql" 
+    user="root" 
+    pwd="123456">  
+        <table name="user" />  
+    </mydb>  
+</root>  
