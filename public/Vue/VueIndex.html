@@ -33,7 +33,8 @@
 <!--1.所有的属性值必须在data中被声明后才可以被双向绑定或在页面中使用-->
 
 <body>
-  <h5><a href="doc/table.html">表格数据</a></h5>
+  <h5><a href="doc/table.html">表格数据</a>
+    <a href="repeat.html">组件表格</a></h5>
   <h1 class="text-center"> <b>Vue.js入门实践</b></h1>
   <div class="container" id="example">
 
@@ -265,8 +266,83 @@
 
           </div>
         </div>
-        <!--
-  　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+
+        <!--prop组件处理-->
+        <div class="panel panel-default" id="propsTool">
+          <div class="panel-heading">2.props组件的处理方法</div>
+          <div class="panel-body">
+            <div class="row">
+
+              <div class="col-md-4">
+                <h3>自定义组件</h3>
+                <select class="form-control"> 
+                  <option 
+                  is="ht-bind" 
+                  v-for="x in lists" 
+                  v-bind:values="x.name"  v-bind:bindtoselect="x.id"></option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <h3>动态Prop</h3>
+                <div>
+                  <input v-model="parentMsg" class="form-control">
+                  <br>
+                  <childer :my-message="parentMsg"></childer>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <h3>组件事件传递</h3>
+                <p>父元素事件控制:{{otherNum}}</p>
+                <button-zidingyi type="button" class="btn btn-warning" v-on:chuandi="addNum">
+                  点击
+                </button-zidingyi>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h3>自定义INPUT组件</h3>
+                <currency-input v-model="price"></currency-input>
+                <p id="price"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default" id="repeatTool">
+          <div class="panel-heading">3.Table-复用组件</div>
+          <div class="panel-body">
+            <!-- component template -->
+            <script type="text/x-template" id="grid-template">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th v-for="key in columns" @click="sortBy(key)" :class="{ active: sortKey == key }">
+                      {{ key | capitalize }}
+                      <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+                </span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="entry in filteredData">
+                    <td v-for="key in columns">
+                      {{entry[key]}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </script>
+            <!-- demo root element -->
+            <div id="demo">
+              <form id="search">
+                Search <input name="query" v-model="searchQuery">
+              </form>
+              <demo-grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery">
+              </demo-grid>
+            </div>
+
+          </div>
+        </div>
+        <!--　
           　◆◆◆　　　◆◆　　　◆◆◆◆◆　◆◆◆　　　　　　　◆◆◆　
           　◆◆◆◆　　◆◆　　◆◆◆　　◆◆◆◆◆　　　　　　　◆◆◆　
           　◆◆◆◆　　◆◆　◆◆◆　　　◆◆◆◆◆◆　◆◆◆　　◆◆　　
@@ -277,46 +353,61 @@
           　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
           　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
           -->
-        <!--prop组件处理-->
-        <div class="panel panel-default" id="propsTool">
-          <div class="panel-heading">2.props组件的处理方法</div>
+        <div class="panel panel-default" id="repeatTooler">
+          <div class="panel-heading">4.slot组件</div>
           <div class="panel-body">
             <div class="row">
-              <div class="col-md-4">
-                <h3>自定义组件</h3>
-                <select class="form-control"> 
-                <option 
-                is="ht-bind" 
-                v-for="x in lists" 
-                v-bind:values="x.name"  v-bind:bindtoselect="x.id"></option>
-              </select></div>
-              <div class="col-md-4">
-                <h3>动态Prop</h3>
+              <div class="col-md-6">
                 <div>
-                  <input v-model="parentMsg" class="form-control">
-                  <br>
-                  <childer :my-message="parentMsg"></childer>
-
+                  <h1>以下这个slot-tool中包含内容</h1>
+                  <slot-tool>
+                    <p>现在<b>slot-tool</b>里边有我这个元素，所以我显示出来</p>
+                  </slot-tool>
                 </div>
-
               </div>
-              <div class="col-md-4">
-                <h3>组件事件传递</h3>
-                <p>父元素事件控制:{{otherNum}}</p>
-
-                <button-zidingyi type="button" class="btn btn-warning" v-on:chuandi="addNum">点击</button-zidingyi>
-
+              <div class="col-md-6">
+                <!--包括-->
+                <h1>以下这个slot-tool中没有包含内容</h1>
+                <slot-tool></slot-tool>
               </div>
             </div>
+            <hr>
             <div class="row">
               <div class="col-md-4">
-                <h3>自定义INPUT组件</h3>
-                <currency-input v-model="price"></currency-input>
-
-                <p id="price"></p>
+                <slot-type>
+                  <h1 slot="header">一个页面标题</h1>
+                  <p>主要内容的一个段落。</p>
+                  <p>另一个主要段落。</p>
+                  <p slot="footer">这里有一些联系信息</p>
+                </slot-type>
               </div>
-              <div class="col-md-4"></div>
-              <div class="col-md-4"></div>
+
+              <div class="col-md-4">
+                <div class="parent">
+                  <slot-send>
+                    <template scope="props">
+                      <h2>HTML里边本来的消息</h2>
+                      <h2>{{ props.text}}</h2>
+                      <small>{{props.sends }}</small>
+                    </template>
+                  </slot-send>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <ul>
+                  <template slot="item" scope="props">
+                    <slot-list>{{props.text}}</slot-list>
+                  </template>
+                </ul>
+
+                <!--在外部调用标签啊大哥-->
+                <slot-list :datas="datalist">
+                  <!-- 作用域插槽也可以是具名的 -->
+                  <template slot="item" scope="props">
+                      <li class="">{{ props.text }}</li>
+                  </template>
+                </slot-list>
+              </div>
             </div>
           </div>
         </div>
@@ -354,8 +445,157 @@
       // 　◆◆◆　◆◆◆◆　◆◆◆　　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
       // 　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
       // 　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
+      // ******************************************************
+      //slot组件（真心不知道这个组件是干毛的）
+      // 说是内容分发，什么父子组件之间通信，到底有啥用，求解中。。
+      // 声明一个组件
+      Vue.component("slot-tool", {
+        template: '\
+        <div>\
+          <h3>我是子组件的标题</h3>\
+          <slot>\
+            <b style="color:red;">只有在没有要分发的内容时才会显示出来</b>\
+          </slot>\
+        </div>'
+      });
 
-      // **************************************************
+      Vue.component("slot-type", {
+        template: '\
+          <div> \
+            <header  style="border:1px dotted #ddd;">\
+            <span style="color:red;">我是附加内容，我被包裹在header元素中</span>\
+              <slot name="header"></slot>\
+            </header>\
+            <main style="border:1px solid red">\
+            <span style="color:red;">默认元素，被放在没有使用slot这些的元素中</span>\
+              <slot></slot>\
+            </main>\
+            <footer style="border:1px dotted red;">\
+            <span style="color:red;">我是附加内容，我被包裹在footer元素中</span>\
+              <slot name="footer"></slot>\
+            </footer>\
+          </div>'
+      });
+
+
+
+      // NOTE终于来到了最牛逼的传递元素的组件了，这个如果看懂了 那就可以上手写东西了
+      Vue.component("slot-send", {
+        template: '\
+        <div class="child">\
+          <slot text="子组件，叫别人爸爸" sends="声明模板传递过来的消息"></slot>\
+        </div>'
+      });
+
+      Vue.component("slot-list", {
+        template: '<ul><slot name="item" v-for="item in datas"  :text="item.text+\'--我是摇摆哥\'"> </slot></ul>',
+        data: function() {
+          return {
+            datas: []
+          }
+        },
+        // 这个地方代表他要从他爸爸那获取元素
+        props: ["datas"]
+      })
+
+      //NOTE  注意了啊，如果想使用模板元素的话 必须声明一哈这个所在的元素，否则Vue都不声明这个元素的话。那还搞毛啊
+      // ┗( ▔, ▔ )┛┗( ▔, ▔ )┛
+      var repeatTooler = new Vue({
+        el: "#repeatTooler",
+        data: {
+          datalist: [{
+            value: 1,
+            text: "王杰666"
+          }, {
+            value: 123,
+            text: "陈奕迅"
+          }, {
+            value: 13221,
+            text: "刘三峰"
+          }, {
+            value: 1321,
+            text: "郑秀文"
+          }]
+        }
+      });
+
+      // **********************************************************
+      // Table复用组件
+      Vue.component('demo-grid', {
+        template: '#grid-template',
+        props: {
+          data: Array,
+          columns: Array,
+          filterKey: String
+        },
+        data: function() {
+          var sortOrders = {}
+          this.columns.forEach(function(key) {
+            sortOrders[key] = 1
+          })
+          return {
+            sortKey: '',
+            sortOrders: sortOrders
+          }
+        },
+        computed: {
+          filteredData: function() {
+            var sortKey = this.sortKey
+            var filterKey = this.filterKey && this.filterKey.toLowerCase()
+            var order = this.sortOrders[sortKey] || 1
+            var data = this.data
+            if (filterKey) {
+              data = data.filter(function(row) {
+                return Object.keys(row).some(function(key) {
+                  return String(row[key]).toLowerCase().indexOf(filterKey) > -1
+                })
+              })
+            }
+            if (sortKey) {
+              data = data.slice().sort(function(a, b) {
+                a = a[sortKey]
+                b = b[sortKey]
+                return (a === b ? 0 : a > b ? 1 : -1) * order
+              })
+            }
+            return data
+          }
+        },
+        filters: {
+          capitalize: function(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+          }
+        },
+        methods: {
+          sortBy: function(key) {
+            this.sortKey = key
+            this.sortOrders[key] = this.sortOrders[key] * -1
+          }
+        }
+      })
+
+      // bootstrap the demo
+      var demo = new Vue({
+          el: '#demo',
+          data: {
+            searchQuery: '',
+            gridColumns: ['name', 'power'],
+            gridData: [{
+              name: 'Chuck Norris',
+              power: Infinity
+            }, {
+              name: 'Bruce Lee',
+              power: 9000
+            }, {
+              name: 'Jackie Chan',
+              power: 7000
+            }, {
+              name: 'Jet Li',
+              power: 8000
+            }]
+          }
+        })
+        // **************************************************
       var table = new Vue({
         el: '#table',
         data: {
@@ -509,11 +749,11 @@
         // 神TM知道原来的节点是不是父节点
         // 具体这个click和那个remove如何联系起来的，暂时闹不懂
         template: '\
-    <p>\
-      {{ titles }}{{food}}\
-     <button v-on:click="$emit(\'remove\')" class="btn btn-link btn-sm"  >X</button>\
-    </p>\
-  ',
+              <p>\
+                {{ titles }}{{food}}\
+                <button v-on:click="$emit(\'remove\')" class="btn btn-link btn-sm"  >X</button>\
+              </p>\
+              ',
         props: ['titles', 'food']
       })
       var propsBlock = new Vue({
@@ -598,7 +838,7 @@
 
       Vue.component('childer', {
         props: ['myMessage'],
-        template: '<span>{{ myMessage }}</span>',
+        template: '<span>{{ myMessage }}---</span>',
         // data: function() {
         //   return {
         //     myMessage: "测试"
@@ -661,12 +901,12 @@
             $("#price").prepend(value + "<br/>");
           }
         }
-      })
+      });
 
       var propsTool = new Vue({
         el: "#propsTool",
         data: {
-          parentMsg: "",
+          parentMsg: "11",
           lists: [{
             "name": "张三，李四，王五",
             id: 1
