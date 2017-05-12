@@ -27,6 +27,23 @@
     .border-right {
       border-right: 1px solid #ddd;
     }
+    
+    .row>.col-md-4 {
+      border-right: 1px solid red;
+    }
+    
+    .row>.col-md-4:last-child {
+      border: none;
+    }
+    
+    a {
+      cursor: pointer;
+    }
+    
+    td>img {
+      width: 35px;
+      height: 35px;
+    }
   </style>
 </head>
 <!--注意：-->
@@ -130,9 +147,6 @@
             </span></b>
             <h3>v-bind指令 </h3>
             <a v-bind:href="'#?id='+id" v-bind:id="domId">绑定v-bind:href</a>
-
-
-
           </div>
         </div>
         <!--V-on指令-->
@@ -342,17 +356,7 @@
 
           </div>
         </div>
-        <!--　
-          　◆◆◆　　　◆◆　　　◆◆◆◆◆　◆◆◆　　　　　　　◆◆◆　
-          　◆◆◆◆　　◆◆　　◆◆◆　　◆◆◆◆◆　　　　　　　◆◆◆　
-          　◆◆◆◆　　◆◆　◆◆◆　　　◆◆◆◆◆◆　◆◆◆　　◆◆　　
-          　◆◆◆◆◆　◆◆　◆◆◆　　　　◆◆◆◆◆　◆◆◆　　◆◆　　
-          　◆◆◆◆◆◆◆◆　◆◆　　　　　◆◆◆◆◆　◆◆◆◆◆◆◆　　
-          　◆◆◆　◆◆◆◆　◆◆◆　　　　◆◆　◆◆◆◆◆◆◆◆◆◆　　
-          　◆◆◆　◆◆◆◆　◆◆◆　　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
-          　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
-          　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
-          -->
+
         <div class="panel panel-default" id="repeatTooler">
           <div class="panel-heading">4.slot组件</div>
           <div class="panel-body">
@@ -381,7 +385,6 @@
                   <p slot="footer">这里有一些联系信息</p>
                 </slot-type>
               </div>
-
               <div class="col-md-4">
                 <div class="parent">
                   <slot-send>
@@ -394,6 +397,8 @@
                 </div>
               </div>
               <div class="col-md-4">
+                <h3>作用域插槽</h3>
+                <!-BUG:这种写法不对，出不来 -->
                 <ul>
                   <template slot="item" scope="props">
                     <slot-list>{{props.text}}</slot-list>
@@ -409,6 +414,54 @@
                 </slot-list>
               </div>
             </div>
+            <div class="row">
+
+              <div class="col-md-6">
+                <h3 class="alert alert-warning">这个地方，他说是叫动态组件，可能是因为组件来源变了吧</h3>
+                <input type="radio" name="currentView" value="Home" v-model="currentViews" @click="change">
+                <label for="currentView">Home模板</label>
+                <input type="radio" name="currentView" value="anotherHome" v-model="currentViews" @click="change">
+                <label for="currentView">anotherHome模板</label>
+                <component v-bind:is="currentView">
+                  <!-- 组件在 vm.currentview 变化时改变！ -->
+                </component>
+              </div>
+              <div class="col-md-6">
+
+                <h3 class="alert alert-warning"> 据说这个里边添加了&lt;keep-alive&gt;标签，所以未被使用的组件会被缓存起来</h3>
+                <blockquote>如果把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染。为此可以添加一个 keep-alive 指令参数</blockquote>
+                <keep-alive>
+                  <component :is="currentView">
+                    <!-- 非活动组件将被缓存！ -->
+                  </component>
+                </keep-alive>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--　
+          　◆◆◆　　　◆◆　　　◆◆◆◆◆　◆◆◆　　　　　　　◆◆◆　
+          　◆◆◆◆　　◆◆　　◆◆◆　　◆◆◆◆◆　　　　　　　◆◆◆　
+          　◆◆◆◆　　◆◆　◆◆◆　　　◆◆◆◆◆◆　◆◆◆　　◆◆　　
+          　◆◆◆◆◆　◆◆　◆◆◆　　　　◆◆◆◆◆　◆◆◆　　◆◆　　
+          　◆◆◆◆◆◆◆◆　◆◆　　　　　◆◆◆◆◆　◆◆◆◆◆◆◆　　
+          　◆◆◆　◆◆◆◆　◆◆◆　　　　◆◆　◆◆◆◆◆◆◆◆◆◆　　
+          　◆◆◆　◆◆◆◆　◆◆◆　　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
+          　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
+          　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
+          -->
+        <div class="panel panel-default" id="canRepeat">
+          <div class="panel-heading">5.可复用组件编写</div>
+          <div class="panel-body">
+            <h3 class="alert alert-info  text-center">可复用组件编写</h3>
+            <blockquote cite="">
+              在编写组件时，记住是否要复用组件有好处。一次性组件跟其它组件紧密耦合没关系，但是可复用组件应当定义一个清晰的公开接口。
+            </blockquote>
+            <h1 v-show="isshow" class="text-center alert alert-success">点击图片,判断我要不要显示出来</h1>
+            <!--{{valuelist}}-->
+            <ceshi-tool :bindtitle="bindtitle" :bindhref="bindhref" :bindsrc="bindsrc" :username="username" @chuandi="panduan"></ceshi-tool>
+
           </div>
         </div>
       </div>
@@ -445,6 +498,108 @@
       // 　◆◆◆　◆◆◆◆　◆◆◆　　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
       // 　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
       // 　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
+      // *******************************************************
+      Vue.filter('normaltime', function(value) {
+        //这个过滤器必须是毫秒级别的过滤
+        var tm = Date.parse(value);
+        var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
+          hour12: false
+        }).replace(/\//g, "-");
+        return tt;
+      })
+
+      // :href="bindhref"\
+      Vue.component('ceshi-tool', {
+        template: '\
+        <div>\
+          <a\
+            :title="bindtitle"\
+            @click="toshow"\
+            >{{username}}{{bindurl}}\
+            <img :src="bindsrc" \
+            class="img-responsive img-thumbnail"/>\
+          </a>\
+          <table class="table table-hover table-bordered"><tbody>\
+            <tr v-for="x in valuelist">\
+            <td>{{x.name}}</td>\
+            <td>{{x.Regtime|normaltime}}</td>\
+            <td><img :src="x.iconUrl"/></td>\
+            <td>{{x.gender=="M"?"男":"女"}}</td>\
+            </tr></tbody>\
+          </table>\
+        </div>',
+
+        props: ["bindtitle", "bindhref", "bindsrc", "username", "bindurl", ],
+        data: function() {
+          return {
+            valuelist: []
+          }
+        },
+        methods: {
+          toshow: function(e) {
+            e.preventDefault();
+            this.$emit("chuandi");
+          },
+          getlist: function() {
+            var data = new Object();
+            var self = this;
+            $.ajax({
+              type: "GET",
+              url: "/users/allUser",
+              dataType: "json",
+              success: function(data) {
+                if (data != null && data != "") {
+                  if (data.dataSuccess) {　
+                    self.valuelist = data.data;
+                    console.log(data)
+                    console.log(this.valuelist)
+                  } else {}　
+                } else {}
+              }　
+            });
+          }
+        }, //在组件加载完成后的钩子
+        mounted: function() {
+          this.getlist();
+        },
+        filter: {
+
+        }
+      });
+      var canRepeat = new Vue({
+        el: "#canRepeat",
+        //数据部分 
+        data: {
+          username: "史今",
+          bindhref: "https://www.zhihu.com/people/guo-zi-501/answers",
+          bindsrc: "https://pic1.zhimg.com/80/v2-ec073ee96ef7bfd7a74485333c1a0e84_r.jpg",
+          bindtitle: "指向史今的用户主页",
+          isshow: true,
+          valuelist: []
+        },
+        //方法
+        methods: {
+          panduan: function() {
+            this.isshow = !this.isshow;
+          }
+        },
+        //过滤器
+        filters: {
+          time: function(value) {
+            //这个过滤器必须是毫秒级别的过滤
+            var tt = new Date(parseInt(value)).toLocaleString('chinese', {
+              hour12: false
+            }).replace(/\//g, "-");
+            return tt;
+
+          }
+        },
+        //实时计算
+        computed: {},
+        //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
+        created: function() {}
+      });
+
       // ******************************************************
       //slot组件（真心不知道这个组件是干毛的）
       // 说是内容分发，什么父子组件之间通信，到底有啥用，求解中。。
@@ -476,9 +631,6 @@
             </footer>\
           </div>'
       });
-
-
-
       // NOTE终于来到了最牛逼的传递元素的组件了，这个如果看懂了 那就可以上手写东西了
       Vue.component("slot-send", {
         template: '\
@@ -486,17 +638,17 @@
           <slot text="子组件，叫别人爸爸" sends="声明模板传递过来的消息"></slot>\
         </div>'
       });
-
       Vue.component("slot-list", {
         template: '<ul><slot name="item" v-for="item in datas"  :text="item.text+\'--我是摇摆哥\'"> </slot></ul>',
-        data: function() {
-          return {
-            datas: []
-          }
-        },
         // 这个地方代表他要从他爸爸那获取元素
         props: ["datas"]
       })
+      var Home = {
+          template: '<p style="background:#ddd;">在当前这个组件中，仅仅是声明了自己的一个HTML模板数据，然后在声明的new Vue中，使用了此模板</p>'
+        },
+        anotherHome = {
+          template: '<p>这个是另外一个声明的模板，两个互相改变，在data中的currentView选择使用哪个，就会显示出相应的模板</p>'
+        }
 
       //NOTE  注意了啊，如果想使用模板元素的话 必须声明一哈这个所在的元素，否则Vue都不声明这个元素的话。那还搞毛啊
       // ┗( ▔, ▔ )┛┗( ▔, ▔ )┛
@@ -515,7 +667,18 @@
           }, {
             value: 1321,
             text: "郑秀文"
-          }]
+          }],
+          currentView: Home,
+          currentViews: 'Home'
+        },
+        methods: {
+          change: function() {
+            if (this.currentViews == 'Home') {
+              this.currentView = Home;
+            } else {
+              this.currentView = anotherHome;
+            }
+          }
         }
       });
 
@@ -848,7 +1011,6 @@
       });
 
       Vue.component("button-zidingyi", {
-        // props: [""],
         template: '<button v-on:click="chuandi">{{ totalNum }}</button>',
         data: function() {
           return {
