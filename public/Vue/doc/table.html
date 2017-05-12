@@ -23,51 +23,45 @@
 </head>
 
 <body>
-  <div class="container" id="vueContent">
-    <div class="row">
-      <div class="col-md-1"></div>
-      <div class="col-md-10">
-        <div class="panel panel-default">
-          <div class="panel-heading">表格遍历</div>
-          <table class="table table-hover ">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th @click="sortBy('name')" 　class="name order text-left">名称
-                  <span class="glyphicon glyphicon-resize-vertical"></span>
-                </th>
-                <th @click="sortBy('gender')" class="gender order text-center">性别
-                  <span class="glyphicon glyphicon-resize-vertical"></span>
-                </th>
-                <th @click="sortBy('Regtime')" 　class="Regtime order text-center">注册时间
-                  <span class="glyphicon glyphicon-resize-vertical"></span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(x,index) in tabledata">
-                <td>{{index+1}}</td>
-                <td>
-                  <img :src="x.iconUrl" alt="">
-                  <a :href="'userinfo.html?id='+x.ID" :title="'xxd'+x.name">
-                      {{x.name}}
-                  </a>
-                </td>
-                <td class="text-center">{{x.gender=="M"?"男":"女"}}</td>
-                <td class="text-center">{{x.Regtime|time}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+  <!--NOTE HTML代码部分-->
 
-      </div>
-      <!--<div class="col-md-1">{{msg}}</div>-->
+
+  <!--　◆◆　　◆◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆　　　　
+　　◆　　◆　◆　◆　◆　◆◆　◆◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆◆◆◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　◆　
+　◆◆　　◆◆　◆◆◆　◆◆　◆　◆◆◆◆◆◆◆◆　
+　　　　　　　　　　　　　　　　　　　　　　　　　　-->
+
+  <div class="container" id="tableContent">
+    <div class="panel panel-default">
+      <div class="panel-heading">表格复用组件示例</div>
+
+      <ht-table ajaxurl="/users/allUser" ref="profile">
+        <hang ref="profile"></hang>
+      </ht-table>
+      <hang></hang>
     </div>
+
+
   </div>
-
-
-  <!-- 脚本 -->
-  <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
+  <!--
+　　　　　　◆　　　　　　　　　　　◆　　　　　　
+　◆◆◆　　◆　　◆◆◆　　　　　　◆　　　　　　
+　◆　◆　◆◆◆　◆　◆　◆◆◆◆◆◆◆◆◆◆◆　
+　◆　◆　　◆　　◆　◆　　　　　　◆　　　　　　
+　◆◆◆　　◆　　◆　◆　　　　　◆◆◆　　　　　
+　◆　◆　◆◆◆　◆　◆　　　　◆　◆　◆　　　　
+　◆　◆　　◆　　◆　◆　　　　◆　◆　◆　　　　
+　◆◆◆　◆　　　◆　◆　　　◆　　◆　　◆　　　
+　◆　◆　◆　◆　◆　◆　　◆　　　◆　　　◆　　
+　◆　◆　◆◆◆　◆◆◆　◆　◆◆◆◆◆◆◆　◆　
+　◆　◆　　　　　◆　　　　　　　　◆　　　　　　
+　　◆◆　　　　　◆　　　　　　　　◆　　　　　　-->
+  <!--NOTE脚本部分-->
   <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
   <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
   <script src='../../Script/Vue/vue.js'></script>
@@ -77,66 +71,127 @@
   </script>
   <script src='../../Script/ScoketByMa.js'></script>
   <script>
-    var vuecontent = new Vue({
-      el: "#vueContent",
-      data: {
-        //数据部分
-        msg: "数据",
-        tabledata: [],
-        isDesc: false
+    // 　　◆　　　　　　　◆　　　　　　　　◆◆◆◆　　
+    // 　　　◆　　　　　　◆　　◆　　　　　◆　　　　　
+    // 　　　　　　　　　　◆　　　◆　◆◆◆◆◆◆◆◆　
+    // 　　　　　◆◆◆◆◆◆◆　　　　◆　　◆　　　◆　
+    // 　◆◆◆　　　　　　◆　　　　　◆　　◆◆◆　　　
+    // 　　　◆　　◆　　　◆　　◆　　◆◆◆◆　　　◆　
+    // 　　　◆　　　◆　　◆　　　◆　◆　　　◆◆◆◆　
+    // 　　　◆　　　◆　　◆　　　　　◆　　◆　　　　　
+    // 　　　◆　　　　　　◆　　　　　◆　　　◆　　　　
+    // 　　　◆　　　　◆◆◆　　　◆　◆　◆　　　◆　　
+    // 　　◆　◆　　　　　　　　◆　　◆◆　◆　◆　◆　
+    // 　◆　　　◆◆◆◆◆◆◆　　　◆　　　◆◆◆　　　
+    //NOTE 全局过滤插件　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+    Vue.filter('normaltime', function(value) {
+      //这个过滤器必须是毫秒级别的过滤
+      var tm = Date.parse(value);
+      var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
+        hour12: false
+      }).replace(/\//g, "-");
+      return tt;
+    });　　　　　　　　　　　　　　　　　　　　　　　　　
+    // 　　　◆　　　◆　◆　　　　　◆　　　　　　◆◆　
+    // 　　　◆　◆◆◆◆◆◆◆　　　◆　　◆◆◆◆　　　
+    // 　　　◆　　　◆　◆　　　　　◆　　◆　　　　　　
+    // 　◆◆◆◆　◆◆◆◆◆　　◆◆◆◆　◆　　　　　　
+    // 　　　◆　　◆　　　◆　　　　◆　　◆◆◆◆◆◆　
+    // 　　◆◆　　◆◆◆◆◆　　　◆◆◆　◆　◆　　◆　
+    // 　　◆◆◆　◆　　　◆　　　◆◆　◆◆　◆　　◆　
+    // 　◆　◆　　◆◆◆◆◆　　◆　◆　　◆　◆　◆　　
+    // 　　　◆　　　　◆　　　　　　◆　　◆　◆　◆　　
+    // 　　　◆　◆◆◆◆◆◆◆　　　◆　　◆　　◆　　　
+    // 　　　◆　　　◆　◆　　　　　◆　◆　　◆　◆　　
+    // 　　　◆　◆◆　　　◆◆　　　◆◆　　◆　　　◆　
+    //NOTE 模板声明部分
+    Vue.component('ht-table', {
+      template: '\
+        <div>\
+          <table class="table table-hover">\
+          <thead>\
+          <tr></tr>\
+          </thead><tbody>\
+            <tr v-for="x in valuelist">\
+            <td>{{x.name}}</td>\
+            <td>{{x.Regtime|normaltime}}</td>\
+            <td><img :src="x.iconUrl"/></td>\
+            <td>{{x.gender=="M"?"男":"女"}}</td>\
+            </tr></tbody>\
+          </table>\
+        </div>',
+      props: ["ajaxurl"],
+      data: function() {
+        return {
+          valuelist: []
+        }
       },
       methods: {
-        //分页请求方法
-        paging: function(url, pageindex) {
-          var that = this;
-          that.$http({
-            method: "GET",
-            url: "/users/allUser",
-            data: {
-              pageindex: pageindex
-            }
-          }).then(function(data) {
-            this.tabledata = data.body.data;
-          });
+        toshow: function(e) {
+          e.preventDefault();
+          this.$emit("chuandi");
         },
-        sortBy: function(value) {
-          this.isDesc = !this.isDesc;
-          var val = this.isDesc;　
-          var className = val ? "glyphicon-arrow-up" : "glyphicon-arrow-down";
-          $("table span").removeClass("glyphicon-arrow-down glyphicon-arrow-up").addClass("glyphicon-resize-vertical");
-          $('.' + value).find('span').removeClass("glyphicon-resize-vertical").addClass(className);
-          this.tabledata.sort(function(a, b) {
-            if (val) {
-              return (a[value] > b[value])
-            } else {
-              return (a[value] < b[value])
-            }
-          })
+        //异步请求数据
+        getlist: function() {
+          var data = new Object();
+          var self = this;
+          $.ajax({
+            type: "GET",
+            url: this.ajaxurl,
+            dataType: "json",
+            success: function(data) {
+              if (data != null && data != "") {
+                if (data.dataSuccess) {　
+                  self.valuelist = data.data;
+                  console.log(data)
+                  console.log(this.valuelist)
+                } else {}　
+              } else {}
+            }　
+          });
         }
       },
-      filters: {
-        time: function(value) {
-          //这个过滤器必须是毫秒级别的过滤
-          var tm = Date.parse(value);
-          var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
-            hour12: false
-          }).replace(/\//g, "-");
-          return tt;
-
-        }
-      },
-      computed: {
-
+      //在组件加载完成后的钩子
+      mounted: function() {
+        this.getlist();
+        var _this = this;
+        this.$children.forEach(function(child) {
+          console.log(JSON.stringify(child))
+        });
+        console.log(JSON.stringify(this.$refs.profile));
       }
     });
 
-    vuecontent.paging("", 1);
-    // vuecontent.tabledata = ["1", "2"];
+
+    Vue.component('hang', {
+      template: '<span>666</span>'
+    });
+    // 　　　　　　◆　　　　　　　◆◆◆◆◆　◆◆◆◆◆　
+    // 　◆◆◆◆◆◆◆◆◆◆◆　　◆　　　◆　◆　　　◆　
+    // 　　　　　　◆　　　　　　　◆　　　◆　◆　　　◆　
+    // 　　◆◆◆◆◆◆◆◆◆　　　◆　　　◆　◆◆◆◆◆　
+    // 　　　　　　　　　　　　　　◆◆◆◆◆　◆　　　◆　
+    // 　　◆◆◆◆◆◆◆◆◆　　　◆　　　◆　◆　　　◆　
+    // 　　◆　　　◆　　　◆　　　◆　　　◆　◆◆◆◆◆　
+    // 　　◆　　　◆　　　◆　　　◆　　　◆　◆　　　◆　
+    // 　　◆◆◆◆◆◆◆◆◆　　　◆◆◆◆◆　◆　　　◆　
+    // 　　◆　　　　　　　◆　　　◆　　　　　◆　　　◆　
+    // 　　◆　　　　　　　　　　　　　　　　◆　　　　◆　
+    // 　◆　　　　　　　　　　　　　　　　◆　　　◆◆◆　
+    var tableContent = new Vue({
+      el: "#tableContent",
+      //数据部分 
+      data: {},
+      //方法
+      methods: {},
+      //过滤器
+      filters: {},
+      //实时计算
+      computed: {},
+      //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
+      created: function() {}
+    });
     // Vue.set(vuecontent.tabledata, 1, "我是利用Vue.set修改后的名称，否则你看不到我");
-    // $.getJSON("/users/allUser", function(data) {
-    //   console.log(data.data);
-    //   vuecontent.tabledata = data.data;
-    // });
   </script>
 </body>
 
