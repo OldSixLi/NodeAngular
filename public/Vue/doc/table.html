@@ -39,13 +39,16 @@
   <div class="container" id="tableContent">
     <div class="panel panel-default">
       <div class="panel-heading">表格复用组件示例</div>
-
+      <!--外部组件-->
       <ht-table ajaxurl="/users/allUser" ref="profile">
-        <hang ref="profile"></hang>
+        <!--内部组件-->
+        <!--NOTE 现存问题是如何获取当前元素内的子组件-->
+        <column slot name="名称" data-key="name" align="center" filter="status"></column>
+        <column slot name="性别" data-key="gender" align="center" filter="toGender"></column>
+        <column slot name="时间" data-key="Regtime" align="center" filter="normaltime"></column>
+        <column slot name="编辑" data-key="ID" align="center" filter="toHref"></column>
       </ht-table>
-      <hang></hang>
     </div>
-
 
   </div>
   <!--
@@ -91,7 +94,45 @@
         hour12: false
       }).replace(/\//g, "-");
       return tt;
-    });　　　　　　　　　　　　　　　　　　　　　　　　　
+    });　　
+    Vue.filter('toGender', function(value) {
+      return value == "M" ? "男" : "女";
+    });　　
+
+    function toGender(value) {
+      return value == "M" ? "男" : "女";
+    };
+
+    function toHref(value) {
+      var str = "<a href=" + value + ">好的</a>";
+      return str;
+    }
+
+    function normaltime(value) {
+      //这个过滤器必须是毫秒级别的过滤
+      var tm = Date.parse(value);
+      var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
+        hour12: false
+      }).replace(/\//g, "-");
+      return tt;
+    }
+
+    function parseText(str) {
+      if (str.indexOf(0) == ("{") || str.indexOf(0) == ("[")) {
+        //应该有更高效的，献丑
+        str = str.replace(/'/g, "\"");
+        str = str.replace(/(\s?\{\s?)(\S)/g, "$1" + "\"" + "$2");
+        str = str.replace(/(\s?,\s?)(\S)/g, "$1" + "\"" + "$2");
+        str = str.replace(/(\S\s?):(\s?\S)/g, "$1" + "\":" + "$2");
+        str = str.replace(/,"\{/g, ",{");
+        str = str.replace(/""/g, "\"");
+        str = str.replace(/\s/g, "");
+        try {
+          str = JSON.parse(str)
+        } catch (e) {}
+      }
+      return str;
+    }　　　　　　　　　　　　　　　
     // 　　　◆　　　◆　◆　　　　　◆　　　　　　◆◆　
     // 　　　◆　◆◆◆◆◆◆◆　　　◆　　◆◆◆◆　　　
     // 　　　◆　　　◆　◆　　　　　◆　　◆　　　　　　
@@ -110,20 +151,29 @@
         <div>\
           <table class="table table-hover">\
           <thead>\
-          <tr></tr>\
+          <tr><th>#</th><th v-for="x in rule" :width="x.width">{{x.name}}</th></tr>\
           </thead><tbody>\
-            <tr v-for="x in valuelist">\
-            <td>{{x.name}}</td>\
-            <td>{{x.Regtime|normaltime}}</td>\
-            <td><img :src="x.iconUrl"/></td>\
-            <td>{{x.gender=="M"?"男":"女"}}</td>\
-            </tr></tbody>\
+            <tr v-for="(x,index) in valuelist">\
+            <td>{{index+1}}</td>\
+            <td v-for="y in rule" >\
+                {{render(x[y.dataKey],y.filter)}}\
+              </td>\
+            </tr>\
+          </tbody>\
           </table>\
         </div>',
+      //NOTE 如何在此处将数据进行过滤处理是一个问题
+      //获取当前的过滤器并进行处理
       props: ["ajaxurl"],
       data: function() {
         return {
-          valuelist: []
+          valuelist: [],
+          rule: []
+        }
+      },
+      filter: {
+        toGender: function(value) {
+          return value == "M" ? "男" : "女";
         }
       },
       methods: {
@@ -143,28 +193,106 @@
               if (data != null && data != "") {
                 if (data.dataSuccess) {　
                   self.valuelist = data.data;
-                  console.log(data)
-                  console.log(this.valuelist)
                 } else {}　
               } else {}
             }　
           });
-        }
+        },
+        render: function(tdData, rule) {
+          //如果filter存在
+          if (rule) {
+            var filter = rule;
+            if (window[filter]) {
+              var newdata = window[filter](tdData);
+              console.log(newdata);
+              return newdata;
+            } else {
+              return tdData;
+            }
+            // if (typeof filter == "string") {
+            //   tdData = (this[filter] && this.filter[filter](tdData)) || tdData;
+            // } else if (util.isArray(filter)) {
+            //   var theOne = filter.filter(function(o) {
+            //     return o.key == tdData;
+            //   });
+            //   if (theOne.length > 0) {
+            //     tdData = theOne[0].value
+            //   }
+            // }
+
+          } else {
+            return tdData;
+          }
+
+
+        },
       },
       //在组件加载完成后的钩子
       mounted: function() {
         this.getlist();
         var _this = this;
-        this.$children.forEach(function(child) {
-          console.log(JSON.stringify(child))
-        });
-        console.log(JSON.stringify(this.$refs.profile));
+        console.log(_this.$slots.default);
+        // 这个属性  废了好大劲才百度到 神TM坑
+        _this.$slots.default.forEach(function(child) {
+          // 把column的配置整合到rule中
+          var obj = {};
+          // 不知道网上谁开始说的VUE好学的  呵呵哒
+          // 是因为智商不够么  /(ㄒoㄒ)/~~
+          for (var p in child.componentOptions.propsData) {
+            obj[p] = child.componentOptions.propsData[p]
+          }
+          _this.rule.push(obj)
+          console.log(child.componentOptions.propsData);
+        })
+        console.log(_this.rule.length);
+        console.log(_this.rule);
+        console.log(JSON.stringify(_this.rule));
       }
     });
-
-
-    Vue.component('hang', {
-      template: '<span>666</span>'
+    Vue.component('column', {
+      // template: '<span style="display: none">123</span>',
+      template: '<span>123</span>',
+      props: {
+        dataKey: {
+          type: String
+        },
+        name: {
+          type: String,
+          required: true
+        },
+        align: {
+          type: String,
+          default: 'left'
+        },
+        filter: [String, Array],
+        width: String,
+        action: [String, Array, Object]
+      },
+      data: function() {
+        return {}
+      },
+      mounted: function() {
+        // 把{key:1}变成object
+        var filter = this.filter;
+        if (filter && !$.isPlainObject(filter)) {
+          this.filter = parseText(filter);
+        }
+        var action = this.action;
+        if (action && !$.isPlainObject(action)) {
+          this.action = parseText(action);
+          if ($.isPlainObject(this.action)) {
+            this.action = [this.action];
+          }
+        }
+        console.log(this.filter);
+        console.log(this.name);
+        console.log(this.align);
+        console.log(this.width);
+        console.log("值：" + this.dataKey);
+      }
+    });
+    Vue.component('my-table', {
+      template: '<div style="color:red;">111111</div>'
     });
     // 　　　　　　◆　　　　　　　◆◆◆◆◆　◆◆◆◆◆　
     // 　◆◆◆◆◆◆◆◆◆◆◆　　◆　　　◆　◆　　　◆　

@@ -1,0 +1,147 @@
+<!-- 马少博  创建于 2017年5月11日09:36:38 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+  <title> 标题</title>
+  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+
+</head>
+
+<body>
+
+
+  <!-- demo root element -->
+  <div id="demo" class="container">
+    <form id="search" class="form-inline">
+      Search <input name="query" class="form-control" v-model="searchQuery">
+    </form>
+    <demo-grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery">
+    </demo-grid>
+  </div>
+
+  <script type="text/x-template" id="grid-template">
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th v-for="item in rule" class="col_{{$index+1}}" :style="getStyle(item)" @click="thColClick(item, $event)">
+              {{item.name}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(rowIndex, trData) in data | table rule" class="row_{{rowIndex+1}}" @click="bodyTrClick(data[rowIndex], $event)">
+            <td v-for="(colIndex, tdData) in trData" track-by="$index" :style="getStyle(rule[colIndex])" class="col_{{colIndex+1}}">
+              {{render(tdData, rule[colIndex])}}
+              <template v-if="tdData === null && rule[colIndex].action">
+                        <span v-for="actionItem in rule[colIndex].action" @click.stop="fireAction(actionItem, data[rowIndex], $event)">
+                            {{actionItem.text}}
+                        </span>
+                    </template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <slot></slot>
+    </div>
+  </script>
+  <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+  <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+  <script src='../Script/Vue/vue.js'></script>
+  <script>
+    Vue.component('ht-table', {
+      template: "span",
+      props: ['data'],
+      data: function() {
+        return {
+          rule: []
+        }
+      },
+      filters: {
+        table: function(data, rule) {
+          var arr = data.slice(0);
+          var _arr = [];
+          arr.forEach(function(trDate) {
+            var __arr = [];
+            for (var i = 0; i < rule.length; i++) {
+              __arr.push(trDate[rule[i].dataKey] || null)
+            }
+            _arr.push(__arr);
+          });
+          return _arr
+        }
+      },
+      ready: function() {
+        var _this = this;
+        this.$children.forEach(function(child) {
+          //把column的配置整合到rule中
+          var obj = {};
+          for (var p in child._props) {
+            obj[p] = child[p]
+          }
+          _this.rule.push(obj)
+        })
+      },
+      methods: {
+        //渲染列 可以根据类型渲染不同的样式，比如说渲染普通文本，渲染数字，渲染过滤后的文本，可以自定义渲染的td
+        render: function(tdData, rule) {
+          //如果filter存在
+          if (rule.filter) {
+            var filter = rule.filter;
+            if (typeof filter == "string") {
+              tdData = (this[filter] && this[filter](tdData)) || tdData;
+            } else if (util.isArray(filter)) {
+              var theOne = filter.filter(function(o) {
+                return o.key == tdData;
+              });
+              if (theOne.length > 0) {
+                tdData = theOne[0].value
+              }
+            }
+          }
+          return tdData
+        },
+        //设置样式
+        getStyle: function(col) {
+          return {
+            "text-align": col.align,
+            "width": col.width
+          }
+        },
+        //点击th列
+        thColClick: function(item, event) {
+          this.$dispatch("th-col-click", item);
+        },
+        //点击内容行
+        bodyTrClick: function(rowData, event) {
+          this.$dispatch("body-tr-click", rowData)
+        },
+        //触发action动作
+        fireAction: function(action, rowData, event) {
+          if (typeof action.func == "string") {
+            this.$parent[action.func].call(this.$parent, rowData)
+          }
+          if (typeof action.func == "function") {
+            action.func(rowData)
+          }
+        },
+        //其实是一个过滤器
+        status: function(value) {
+          var arr = {
+            "1": "有效",
+            "2": "无效"
+          };
+          return arr[value]
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>
