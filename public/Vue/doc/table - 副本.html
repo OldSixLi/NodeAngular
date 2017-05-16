@@ -1,0 +1,242 @@
+<!-- 马少博  创建于 2017年5月8日14:08:44 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+  <title> Vue表格</title>
+  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+  <style>
+    td>img {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+    }
+    
+    .order {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <!--NOTE HTML代码部分-->
+
+
+  <!--　◆◆　　◆◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆　　　　
+　　◆　　◆　◆　◆　◆　◆◆　◆◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆◆◆◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　◆　
+　◆◆　　◆◆　◆◆◆　◆◆　◆　◆◆◆◆◆◆◆◆　
+　　　　　　　　　　　　　　　　　　　　　　　　　　-->
+
+  <div class="container" id="tableContent">
+    <div class="panel panel-default">
+      <div class="panel-heading">表格复用组件示例</div>
+
+      <ht-table ajaxurl="/users/allUser" ref="profile">
+      </ht-table>
+
+      <input type="text" name="" value="currentPage" value="2">
+    </div>
+
+
+  </div>
+  <!--
+　　　　　　◆　　　　　　　　　　　◆　　　　　　
+　◆◆◆　　◆　　◆◆◆　　　　　　◆　　　　　　
+　◆　◆　◆◆◆　◆　◆　◆◆◆◆◆◆◆◆◆◆◆　
+　◆　◆　　◆　　◆　◆　　　　　　◆　　　　　　
+　◆◆◆　　◆　　◆　◆　　　　　◆◆◆　　　　　
+　◆　◆　◆◆◆　◆　◆　　　　◆　◆　◆　　　　
+　◆　◆　　◆　　◆　◆　　　　◆　◆　◆　　　　
+　◆◆◆　◆　　　◆　◆　　　◆　　◆　　◆　　　
+　◆　◆　◆　◆　◆　◆　　◆　　　◆　　　◆　　
+　◆　◆　◆◆◆　◆◆◆　◆　◆◆◆◆◆◆◆　◆　
+　◆　◆　　　　　◆　　　　　　　　◆　　　　　　
+　　◆◆　　　　　◆　　　　　　　　◆　　　　　　-->
+  <!--NOTE脚本部分-->
+  <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+  <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+  <script src='../../Script/bootstrap-paginator.js'></script>
+
+  <script src='../../Script/Vue/vue.js'></script>
+  <script src="https://cdn.bootcss.com/vue-resource/1.3.1/vue-resource.min.js"></script>
+  <script>
+    var filePath = 'Vue/doc/table.html'; //此处填写相对于public/的目录
+  </script>
+  <script src='../../Script/ScoketByMa.js'></script>
+  <script>
+    //分页控件的初始化
+    function initPageDiv($dom, now, all, each, $dom2, change) {
+      if (parseInt(now) > parseInt(all)) {
+        return;
+      }
+      var options = {
+        bootstrapMajorVersion: 3,
+        currentPage: now, // 当前页
+        totalPages: all, // 共几页
+        numberOfPages: each, // 每次显示几页
+        itemTexts: function(type, page, current) { // 修改显示文字
+          switch (type) {
+            case "first":
+              return "首页";
+            case "prev":
+              return "<";
+            case "next":
+              return ">";
+            case "last":
+              return "尾页";
+            case "page":
+              return page;
+          }
+        },
+        onPageClicked: function(event, originalEvent, type, page) { // 异步换页
+          $dom2.val(page);
+          change();
+        }
+      }
+      $dom.bootstrapPaginator(options);
+    };
+    // 　　◆　　　　　　　◆　　　　　　　　◆◆◆◆　　
+    // 　　　◆　　　　　　◆　　◆　　　　　◆　　　　　
+    // 　　　　　　　　　　◆　　　◆　◆◆◆◆◆◆◆◆　
+    // 　　　　　◆◆◆◆◆◆◆　　　　◆　　◆　　　◆　
+    // 　◆◆◆　　　　　　◆　　　　　◆　　◆◆◆　　　
+    // 　　　◆　　◆　　　◆　　◆　　◆◆◆◆　　　◆　
+    // 　　　◆　　　◆　　◆　　　◆　◆　　　◆◆◆◆　
+    // 　　　◆　　　◆　　◆　　　　　◆　　◆　　　　　
+    // 　　　◆　　　　　　◆　　　　　◆　　　◆　　　　
+    // 　　　◆　　　　◆◆◆　　　◆　◆　◆　　　◆　　
+    // 　　◆　◆　　　　　　　　◆　　◆◆　◆　◆　◆　
+    // 　◆　　　◆◆◆◆◆◆◆　　　◆　　　◆◆◆　　　
+    //NOTE 全局过滤插件　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+    Vue.filter('normaltime', function(value) {
+      //这个过滤器必须是毫秒级别的过滤
+      var tm = Date.parse(value);
+      var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
+        hour12: false
+      }).replace(/\//g, "-");
+      return tt;
+    });　　　　　　　　　　　　　　　　　　　　　　　　　
+    // 　　　◆　　　◆　◆　　　　　◆　　　　　　◆◆　
+    // 　　　◆　◆◆◆◆◆◆◆　　　◆　　◆◆◆◆　　　
+    // 　　　◆　　　◆　◆　　　　　◆　　◆　　　　　　
+    // 　◆◆◆◆　◆◆◆◆◆　　◆◆◆◆　◆　　　　　　
+    // 　　　◆　　◆　　　◆　　　　◆　　◆◆◆◆◆◆　
+    // 　　◆◆　　◆◆◆◆◆　　　◆◆◆　◆　◆　　◆　
+    // 　　◆◆◆　◆　　　◆　　　◆◆　◆◆　◆　　◆　
+    // 　◆　◆　　◆◆◆◆◆　　◆　◆　　◆　◆　◆　　
+    // 　　　◆　　　　◆　　　　　　◆　　◆　◆　◆　　
+    // 　　　◆　◆◆◆◆◆◆◆　　　◆　　◆　　◆　　　
+    // 　　　◆　　　◆　◆　　　　　◆　◆　　◆　◆　　
+    // 　　　◆　◆◆　　　◆◆　　　◆◆　　◆　　　◆　
+    //NOTE 模板声明部分
+    Vue.component('ht-table', {
+      template: '\
+        <div>\
+          <table class="table table-hover">\
+          <thead>\
+          <tr></tr>\
+          </thead><tbody>\
+            <tr v-for="x in valuelist">\
+            <td>{{x.name}}</td>\
+            <td>{{x.Regtime|normaltime}}</td>\
+            <td><img :src="x.iconUrl"/></td>\
+            <td>{{x.gender=="M"?"男":"女"}}</td>\
+            </tr></tbody>\
+          </table>\
+            <ul class="pagination" id="alreadyPage"></ul>\
+        </div>',
+      props: ["ajaxurl", "searchData"],
+      data: function() {
+        return {
+          valuelist: []
+        }
+      },
+      methods: {
+        toshow: function(e) {
+          e.preventDefault();
+          this.$emit("chuandi");
+        },
+        //异步请求数据
+        getlist: function(pageindex) {
+          var searchData = new Object();
+          var data = new Object();
+          var self = this;
+          $.ajax({
+            type: "GET",
+            url: this.ajaxurl + "?page=" + pageindex,
+            data: {
+
+            },
+            dataType: "json",
+            success: function(data) {
+              if (data != null && data != "") {
+                if (data.dataSuccess) {　
+                  self.valuelist = data.data;
+                  initPageDiv($("#alreadyPage"), //在哪里生成页码
+                    pageindex + 1, //当前页
+                    data.totalPages, //总页数
+                    5, //每次显示多少页
+                    $("#currentPage"), //隐藏域的值：当前页数
+                    function() {
+                      self.getlist($("#currentPage").val() - 1);
+                    });
+                } else {}　
+              } else {}
+            }　
+          });
+        }
+      },
+      //在组件加载完成后的钩子
+      mounted: function() {
+        this.getlist(0);
+        var _this = this;
+        this.$children.forEach(function(child) {
+          console.log(JSON.stringify(child))
+        });
+        console.log(JSON.stringify(this.$refs.profile));
+      }
+    });
+
+
+    Vue.component('hang', {
+      template: '<span>666</span>'
+    });
+    // 　　　　　　◆　　　　　　　◆◆◆◆◆　◆◆◆◆◆　
+    // 　◆◆◆◆◆◆◆◆◆◆◆　　◆　　　◆　◆　　　◆　
+    // 　　　　　　◆　　　　　　　◆　　　◆　◆　　　◆　
+    // 　　◆◆◆◆◆◆◆◆◆　　　◆　　　◆　◆◆◆◆◆　
+    // 　　　　　　　　　　　　　　◆◆◆◆◆　◆　　　◆　
+    // 　　◆◆◆◆◆◆◆◆◆　　　◆　　　◆　◆　　　◆　
+    // 　　◆　　　◆　　　◆　　　◆　　　◆　◆◆◆◆◆　
+    // 　　◆　　　◆　　　◆　　　◆　　　◆　◆　　　◆　
+    // 　　◆◆◆◆◆◆◆◆◆　　　◆◆◆◆◆　◆　　　◆　
+    // 　　◆　　　　　　　◆　　　◆　　　　　◆　　　◆　
+    // 　　◆　　　　　　　　　　　　　　　　◆　　　　◆　
+    // 　◆　　　　　　　　　　　　　　　　◆　　　◆◆◆　
+    var tableContent = new Vue({
+      el: "#tableContent",
+      //数据部分 
+      data: {},
+      //方法
+      methods: {},
+      //过滤器
+      filters: {},
+      //实时计算
+      computed: {},
+      //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
+      created: function() {}
+    });
+    // Vue.set(vuecontent.tabledata, 1, "我是利用Vue.set修改后的名称，否则你看不到我");
+  </script>
+</body>
+
+</html>

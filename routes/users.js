@@ -65,6 +65,8 @@ router.get('/allUser', function(req, res, next) {
       //查询成功dataSuccess = false;
       returnObj.dataSuccess = true;
       returnObj.data = result;
+      returnObj.totalPages = 10;
+      returnObj.currentPage = 4;
       res.json(returnObj);
     } else {
       //查询失败处理操作
@@ -75,6 +77,7 @@ router.get('/allUser', function(req, res, next) {
     //控制延时返回数据
     var obj = JSON.parse(data);
     setTimeout(function() {
+
       res.json(obj);
     }, 0);
   });
