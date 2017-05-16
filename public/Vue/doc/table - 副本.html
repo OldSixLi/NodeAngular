@@ -181,7 +181,7 @@
               if (data != null && data != "") {
                 if (data.dataSuccess) {　
                   self.valuelist = data.data;
-                  initPageDiv($("#alreadyPage"), //在哪里生成页码
+                  initPageDiv($("#alreadyPage"),
                     pageindex + 1, //当前页
                     data.totalPages, //总页数
                     5, //每次显示多少页
@@ -189,6 +189,7 @@
                     function() {
                       self.getlist($("#currentPage").val() - 1);
                     });
+
                 } else {}　
               } else {}
             }　

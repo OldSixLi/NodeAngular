@@ -49,7 +49,7 @@ router.get('/', function(req, res, next) {
 
 //请求的是/users/users接口才会访问到此处
 router.get('/users', function(req, res, next) {
-  var absolutePath = path.resolve(__dirname, '../public/JSON/userlist.json');
+  var absolutePath = path.resolve(__dirname, '../public/JSON/uu.json');
   var data = fs.readFileSync(absolutePath, "utf-8");
   //控制延时返回数据
   var obj = JSON.parse(data);
