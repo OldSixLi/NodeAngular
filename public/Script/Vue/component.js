@@ -1,15 +1,17 @@
+//表格组件
 Vue.component('ht-table', {
   template: '\
         <div>\
-          <table class="table table-hover">\
+          <table :class="getClass(classname)">\
           <thead>\
           <tr><th v-show="showindex==\'true\'||showindex==null">#</th>\
-          <th v-for="x in rule" :width="x.width">{{x.name}}</th></tr>\
+          <th v-for="x in rule" :style="getStyle(x)">{{x.name}}</th></tr>\
           </thead><tbody>\
             <tr v-for="(x,index) in valuelist">\
             <td v-show="showindex==\'true\'||showindex==null">{{index+1}}</td>\
-            <td v-for="y in rule" >\
-               <span v-html="render(x[y.dataKey],y.filter)"> </span>\
+            <td v-for="y in rule" :style="getStyle(y)">\
+               <span v-if="y.ishtml==\'true\'" v-html="render(x[y.dataKey],y.filter)"> </span>\
+               <span v-if="y.ishtml!=\'true\'">{{render(x[y.dataKey],y.filter)}} </span>\
                \
               </td>\
             </tr>\
@@ -17,11 +19,12 @@ Vue.component('ht-table', {
           </table>\
           <div class="pull-right page">\
            <ul class="pagination"></ul></div>\
-          <span style="display:none;">{{searchDatas}}{{searchData}}</span>\
+          <span style="display:none;">{{paramss}}{{params}}</span>\
         </div>',
   //NOTE 如何在此处将数据进行过滤处理是一个问题
   //获取当前的过滤器并进行处理
-  props: ["ajaxurl", "searchData", "showindex"],
+  //TODO  此处可以改为相关属性的required default值
+  props: ["url", "params", "showindex", "classname"],
   data: function() {
     return {
       valuelist: [],
@@ -44,32 +47,44 @@ Vue.component('ht-table', {
       var data = new Object();
       var self = this;
       var params = new Object();
-      params = this.searchData;
-
-      params.page = pageindex;
+      params = this.params;
+      params.currentPage = pageindex;
       $.ajax({
         type: "GET",
-        url: this.ajaxurl,
+        url: this.url,
         data: params,
         dataType: "json",
         success: function(data) {
           if (data != null && data != "") {
-            if (data.dataSuccess) {
-              self.valuelist = data.data;
+            if (data.success) {
+              //数据进行处理
+              self.valuelist = data.bean.data;
               var $page = $(self.$el.childNodes[2]).find("ul");
-              self.initPageDiv($page,
-                pageindex + 1,
-                data.totalPages,
-                5,
-                $page,
-                function() {
-                  self.getlist($page.data("page") - 1);
-                });
-            } else {}　
-          } else {}
-        }　
+              //调用分页方法
+              self.initPageDiv($page, pageindex + 1, data.pageCount, 5, $page, function() {
+                self.getlist($page.data("page") - 1);
+              });
+
+            } else { console.info("当前data.success值为false，数据请求失败！"); }　
+          } else { console.info("当前data为空，数据请求失败！") }
+        },
+        error: function() {
+          console.info("当前数据请求失败，请校验url地址和搜索参数格式是否正确！");
+        }
       });
     },
+    //设置样式
+    getStyle: function(col) {
+      return {
+        "text-align": col.align,
+        "width": col.width
+      }
+    },
+    //样式名称
+    getClass: function(name) {
+      return name ? "table table-hover " + name : "table table-hover";
+    },
+    //处理数据
     render: function(tdData, rule) {
       //如果filter存在
       if (rule) {
@@ -78,6 +93,7 @@ Vue.component('ht-table', {
           var newdata = window[filter](tdData);
           return newdata;
         } else {
+          console.info("当前未声明" + rule + "方法");
           return tdData;
         }
       } else {
@@ -132,9 +148,9 @@ Vue.component('ht-table', {
     }
   },
   computed: {
-    searchDatas: function() {
+    paramss: function() {
       this.getlist(0);
-      return this.searchData;
+      return this.params;
     }
   },
   //在组件加载完成后的钩子
@@ -150,9 +166,9 @@ Vue.component('ht-table', {
     })
   }
 });
+//每列组件
 Vue.component('column', {
-  template: '<span style="display: none">123</span>',
-  // template: '<span>123</span>',
+  template: '<span style="display: none"></span>',
   props: {
     dataKey: {
       type: String
@@ -167,7 +183,8 @@ Vue.component('column', {
     },
     filter: [String, Array],
     width: String,
-    action: [String, Array, Object]
+    action: [String, Array, Object],
+    ishtml: false
   },
   data: function() {
     return {}
