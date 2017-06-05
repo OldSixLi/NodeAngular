@@ -1,0 +1,197 @@
+<!-- 马少博  创建于 Date -->
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+  <title> 标题</title>
+  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+  <style>
+    .el-alert {
+      margin: 10px 0;
+    }
+    
+    .panel-heading {
+      font-weight: 800;
+    }
+    
+    .panel-body.code {
+      background-color: #f5f5f5;
+    }
+    
+    .panel-body.code>pre {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="alertBlock">
+    <div class="container">
+      <h1 class="text-center">Alert提示</h1>
+      <div class="row">
+
+        <div class="col-md-12 col-sm-12">
+          <!--示例-->
+          <div class="panel panel-default">
+            <div class="panel-heading">Example</div>
+            <div class="panel-body">
+              <ht-alert id="alert1" type="success" title="成功提示" description="当前type='success'">
+              </ht-alert>
+              <ht-alert type="info" title="信息提示" description="当前type='info'" :closable="isclose">
+              </ht-alert>
+              <ht-alert type="warning" title="警告，您当前正处于犯罪的边缘" show-icon @close="guanbi">
+              </ht-alert>
+              <ht-alert type="error" title="错误提示，且自定义错误类型" description="当前type='error'" close-text="知道了">
+              </ht-alert>
+            </div>
+          </div>
+          <!--代码-->
+          <div class="panel panel-default">
+            <div class="panel-heading">代码使用</div>
+            <div class="panel-body code">
+              <textarea disabled class="form-control" rows="8" style="cursor:default;">
+              <ht-alert id="alert1" type="success" title="成功提示" description="当前type='success'">
+              </ht-alert>
+              <ht-alert type="info" title="信息提示" description="当前type='info'">
+              </ht-alert>
+              <ht-alert type="warning" title="警告，您当前正处于犯罪的边缘" show-icon>
+              </ht-alert>
+              <ht-alert type="error" title="错误提示，且自定义错误类型" description="当前type='error'" close-text="知道了">
+              </ht-alert></textarea>
+            </div>
+          </div>
+          <!--说明-->
+          <div class="panel panel-default">
+            <div class="panel-heading">说明</div>
+            <div class="panel-body">
+              1.图标
+              <br> 2.title
+              <br> 3.description
+              <br> 4.图标
+              <br> 5.关闭事件
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  </div>
+  <script type="text/x-template" id="ht-alert">
+    <transition name="el-alert-fade">
+      <div class="el-alert" :class="[ typeClass ]" v-show="visible">
+        <i class="el-alert__icon" :class="[ iconClass, isBigIcon ]" v-if="showIcon"></i>
+        <div class="el-alert__content">
+          <span class="el-alert__title" :class="[ isBoldTitle ]" v-if="title">{{ title }}</span>
+          <slot>
+            <p class="el-alert__description" v-if="description">{{ description }}</p>
+          </slot>
+          <i class="el-alert__closebtn" :class="{ 'is-customed': closeText !== '', 'el-icon-close': closeText === '' }" v-show="closable" @click="close()">{{closeText}}</i>
+        </div>
+      </div>
+    </transition>
+  </script>
+
+  <script src='../../Script/jquery-1.9.1.js'></script>
+  <script src='../../Script/bootstrap.js'></script>
+  <script src="../../Script/Vue/vue.js"></script>
+  <script>
+    const TYPE_CLASSES_MAP = {
+      'success': 'el-icon-circle-check',
+      'warning': 'el-icon-warning',
+      'error': 'el-icon-circle-cross'
+    };
+    Vue.component("ht-alert", {
+      template: '#ht-alert',
+      props: {
+        title: {
+          type: String,
+          default: '',
+          required: true
+        },
+        description: {
+          type: String,
+          default: ''
+        },
+        type: {
+          type: String,
+          default: 'info'
+        },
+        closable: {
+          type: Boolean,
+          default: true
+        },
+        closeText: {
+          type: String,
+          default: 'x'
+        },
+        showIcon: {
+          type: Boolean,
+          default: false
+        }
+      },
+
+      data: function() {
+        return {
+          visible: true
+        };
+      },
+
+      methods: {
+        close() {
+          this.visible = false;
+          this.$emit('close');
+        }
+      },
+
+      computed: {
+        typeClass() {
+          return `el-alert--${ this.type }`;
+        },
+
+        iconClass() {
+          return TYPE_CLASSES_MAP[this.type] || 'el-icon-information';
+        },
+
+        isBigIcon() {
+          return this.description ? 'is-big' : '';
+        },
+
+        isBoldTitle() {
+          return this.description ? 'is-bold' : '';
+        }
+      },
+      mounted: function() {
+
+      }
+    });
+    var alertBlock = new Vue({
+      el: "#alertBlock",
+      //数据部分 
+      data: {
+        isclose: false
+      },
+      //方法
+      methods: {
+        guanbi: function() {
+          console.log("李荣浩，眼睛小")
+        }
+      },
+      //过滤器
+      filters: {},
+      //实时计算
+      computed: {},
+      //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
+      created: function() {}
+    });
+  </script>
+</body>
+
+</html>

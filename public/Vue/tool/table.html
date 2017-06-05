@@ -28,35 +28,16 @@
     .table {
       margin-bottom: 0;
     }
+    
+    .pagination>li>a {
+      cursor: pointer;
+    }
   </style>
 </head>
 
 <body>
   <!--NOTE HTML代码部分-->
-  <script type="text/x-template" id="ht-table">
-    <div>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th v-show="showindex=='true'||showindex==null">#</th>
-            <th v-for="x in rule" :width="x.width">{{x.name}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(x,index) in valuelist">
-            <td v-show="showindex=='true'||showindex==null">{{index+1}}</td>
-            <td v-for="y in rule">
-              <span v-html="render(x[y.dataKey],y.filter)"> </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="pull-right page">
-        <ul class="pagination"></ul>
-      </div>
-      <span style="display:none;">{{searchDatas}}{{searchData}}</span>
-    </div>
-  </script>
+
 
   <!--　◆◆　　◆◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆　　　　
 　　◆　　◆　◆　◆　◆　◆◆　◆◆　　◆　　　　　
@@ -96,7 +77,6 @@
         <column slot name="头像" data-key="iconUrl" align="center" filter="toImg"></column>
         <column slot name="编辑" data-key="ID" align="center" filter="toHref"></column>
       </ht-table>
-
     </div>
 
     <!--NOTE 下一个表格-->
@@ -108,7 +88,31 @@
     </ht-table>
 
   </div>
-
+  <!--脚本代码-->
+  <script type="text/x-template" id="ht-table">
+    <div>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th v-show="showindex=='true'||showindex==null">#</th>
+            <th v-for="x in rule" :width="x.width">{{x.name}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(x,index) in valuelist">
+            <td v-show="showindex=='true'||showindex==null">{{index+1}}</td>
+            <td v-for="y in rule">
+              <span v-html="render(x[y.dataKey],y.filter)"> </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pull-right page">
+        <ul class="pagination"></ul>
+      </div>
+      <span style="display:none;">{{searchDatas}}</span>
+    </div>
+  </script>
   <!--
 　　　　　　◆　　　　　　　　　　　◆　　　　　　
 　◆◆◆　　◆　　◆◆◆　　　　　　◆　　　　　　
