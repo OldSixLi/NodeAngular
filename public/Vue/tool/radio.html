@@ -36,8 +36,9 @@
           <div class="panel panel-default">
             <div class="panel-heading">Example</div>
             <div class="panel-body">
-              <ht-radio class="radio" v-model="radio" label="1" @click="alerts()">第一个</ht-radio>
-              <ht-radio class="radio" v-model="radio" label="2">第二个</ht-radio>
+              <ht-radio class="radio" v-model="radio" label="1" @clicks="alerts()" @change="change()">第一个</ht-radio>
+              <ht-radio class="radio" v-model="radio" label="2" @clicks="alerts()" @change="change()">第二个</ht-radio>
+              <ht-radio class="radio" v-model="radio" label="3" @clicks="alerts()" @change="change()">第三个</ht-radio>
               <p>当前选项的值是:{{radio}}</p>
             </div>
           </div>
@@ -52,9 +53,7 @@
           <!--说明-->
           <div class="panel panel-default">
             <div class="panel-heading">说明</div>
-            <div class="panel-body">
-
-            </div>
+            <div class="panel-body"> </div>
           </div>
         </div>
 
@@ -81,7 +80,8 @@
         v-model="model"
         @focus="focus = true"
         @blur="focus = false"
-        @click="click"
+        @click="click()"
+        @change="change()"
         :name="name"
         :disabled="isDisabled">
     </span>
@@ -112,35 +112,13 @@
         }
       });
     }
-    // export default {
-    //   methods: {
-    //     dispatch(componentName, eventName, params) {
-    //       var parent = this.$parent || this.$root;
-    //       var name = parent.$options.componentName;
 
-    //       while (parent && (!name || name !== componentName)) {
-    //         parent = parent.$parent;
-
-    //         if (parent) {
-    //           name = parent.$options.componentName;
-    //         }
-    //       }
-    //       if (parent) {
-    //         parent.$emit.apply(parent, [eventName].concat(params));
-    //       }
-    //     },
-    //     broadcast(componentName, eventName, params) {
-    //       broadcast.call(this, componentName, eventName, params);
-    //     }
-    //   }
-    // };
     Vue.component("ht-radio", {
       template: "#htradio",
       methods: {
         dispatch(componentName, eventName, params) {
           var parent = this.$parent || this.$root;
           var name = parent.$options.componentName;
-
           while (parent && (!name || name !== componentName)) {
             parent = parent.$parent;
 
@@ -154,16 +132,21 @@
         },
         broadcast(componentName, eventName, params) {
           broadcast.call(this, componentName, eventName, params);
+        },
+        //当下点击
+        click() {
+          this.$emit('clicks');
+        },
+        change() {
+          this.$emit('change');
         }
       },
-      //   componentName: 'ElRadio',
-
+      　
       props: {
         value: {},
         label: {},
         disabled: Boolean,
-        name: String,
-        click: null
+        name: String　
       },
       data() {
         return {
@@ -203,6 +186,11 @@
             this._radioGroup.disabled || this.disabled :
             this.disabled;
         }
+      },
+      watch: {
+        label(val) {
+          alert('23131');
+        }
       }
     });
 
@@ -211,12 +199,15 @@
       //数据部分 
       data: {
         radio: '1'
-
       },
       //方法
       methods: {
+        //这个是radio上的方法
         alerts: function() {
-          alert(this.radio);
+          console.log(this.radio);
+        },
+        change: function() {
+          alert('当前改变后的值为：' + this.radio);
         }
       },
       //过滤器
