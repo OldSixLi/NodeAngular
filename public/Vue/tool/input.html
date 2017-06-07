@@ -1,0 +1,111 @@
+<!-- 马少博  创建于 2017年6月7日09:09:16 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+  <title> 标题</title>
+  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+  <style>
+    .help-block {
+      display: none;
+    }
+    
+    .has-error>.help-block {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <!--NOTE 此处声明Vue-->
+  <div id="vueBlock">
+    <h1 class="text-center">Input组件</h1>
+    <div class="container">
+      <div class="row">
+        <!-- 消除外边距 -->
+        <div class="col-md-4 col-sm-4">
+          <!--在此处编辑内容-->
+
+        </div>
+        <div class="col-md-4 col-sm-4">
+          <div class="form-group">
+            <label class="control-label" for="inputSuccess1">年龄</label>
+            <input v-focus v-hello class="form-control" v-model="something" max-length="5" pattern="^[0-9]*$">
+            <span class="help-block"></span>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+          <!--在此处编辑内容-->
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- 脚本 -->
+  <script src='../../Script/jquery-1.9.1.js'></script>
+  <script src='../../Script/bootstrap.js'></script>
+  <script src="../../Script/Vue/vue.js"></script>
+  <script>
+    // 注册一个全局自定义指令 v-focus
+    Vue.directive('focus', {
+      // 当绑定元素插入到 DOM 中。
+      inserted: function(el) {
+        // 聚焦元素
+        el.focus() //在页面初始加载时就会显示
+      }
+    });
+    Vue.directive('hello', {
+      bind: function(el) {
+        // console.log('bind')
+      },
+      inserted: function(el) {
+        // console.log('inserted')
+      },
+      update: function(el, binding, vnode, oldVnode) { 
+        console.log(el.value) ;
+        var reg = new RegExp($(el).attr('pattern'));
+        if (reg.test(el.value)) {
+          $(el).parent().hasClass('has-error') && $(el).parent().removeClass('has-error');
+        } else {
+          $(el).parent().hasClass('has-error') || $(el).parent().addClass('has-error').end().next().text("请输入纯数字");
+          return false;
+        }
+        if (el.value.length <= 5) {
+          $(el).parent().hasClass('has-error') && $(el).parent().removeClass('has-error');
+        } else {
+          $(el).parent().hasClass('has-error') || $(el).parent().addClass('has-error').end().next().text('您输入的值超出了最大长度');
+          return false;
+        }
+      },
+      componentUpdated: function(el) {
+        // console.log('componentUpdated')
+        // console.log(el.value) ;
+      },
+      unbind: function(el) {
+        // console.log('unbind')
+      }
+    })
+    var vueBlock = new Vue({
+      el: "#vueBlock",
+      //数据部分 
+      data: {
+        something: ""
+      },
+      //方法
+      methods: {},
+      //过滤器
+      filters: {},
+      //实时计算
+      computed: {},
+      //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
+      created: function() {}
+    });
+  </script>
+</body>
+
+</html>

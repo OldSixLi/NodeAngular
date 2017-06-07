@@ -9,37 +9,37 @@
   <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
   <title> radio组件</title>
   <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
-  <style>
-    .panel-heading {
-      font-weight: 800;
-    }
-    
-    .panel-body.code {
-      background-color: #f5f5f5;
-    }
-    
-    .panel-body.code>pre {
-      border: none;
-    }
-  </style>
+  <link rel="stylesheet" href="../../Style/vue-index.css">
+  <link rel="stylesheet" href="../../Style/vue-base.css">
 </head>
 
 <body>
   <div id="radioBlock">
+
     <div class="container">
+      <div class="row">
+        <!-- 消除外边距 -->
+        <div class="col-md-12">
+          <ol class="breadcrumb">
+            <li><a href="javascript:window.history.back(-1)">组件列表</a></li>
+            <li class="active">radio组件</li>
+          </ol>
+        </div>
+      </div>
       <h1 class="text-center">radio组件</h1>
       <div class="row">
-
         <div class="col-md-12 col-sm-12">
           <!--示例-->
           <div class="panel panel-default">
             <div class="panel-heading">Example</div>
             <div class="panel-body">
-              <ht-radio class="radio" v-model="radio" label="1" @clicks="alerts()" @change="change()">第一个</ht-radio>
-              <ht-radio class="radio" v-model="radio" label="2" @clicks="alerts()" @change="change()">第二个</ht-radio>
-              <ht-radio class="radio" v-model="radio" label="3" @clicks="alerts()" @change="change()">第三个</ht-radio>
+              <ht-radio class="radio" v-model="radio" label="1" @click="alerts()" @change="change()" disabled>第一个</ht-radio>
+              <ht-radio class="radio" v-model="radio" label="2" @click="alerts()" @change="change()">第二个</ht-radio>
+              <ht-radio class="radio" v-model="radio" label="3" @click="alerts()" @change="change()">第三个</ht-radio>
+              <ht-radio class="radio" v-model="radio" label="4" @click="alerts()" @change="change()">第三个</ht-radio>
               <p>当前选项的值是:{{radio}}</p>
+              <div id="clickRecord" class="col-md-6"></div>
+              <div id="changeRecord" class="col-md-6"></div>
             </div>
           </div>
           <!--代码-->
@@ -135,7 +135,7 @@
         },
         //当下点击
         click() {
-          this.$emit('clicks');
+          this.$emit('click');
         },
         change() {
           this.$emit('change');
@@ -198,16 +198,17 @@
       el: "#radioBlock",
       //数据部分 
       data: {
-        radio: '1'
+        radio: '2'
       },
       //方法
       methods: {
         //这个是radio上的方法
-        alerts: function() {
-          console.log(this.radio);
+        alerts: function(e) {
+          $("#clickRecord").append('<p><b>@click</b>事件：每次<b>点击</b>都会增加内容，当前点击的值为：' + this.radio + '，可以根据此来进行相关操作</p>');
         },
         change: function() {
-          alert('当前改变后的值为：' + this.radio);
+          $("#changeRecord").append('<p><b>@change</b>事件：如果值发生改变，提示当前改变后的值为：' + this.radio + '可以根据此进行相关操作</p>');
+          return false;
         }
       },
       //过滤器
