@@ -2,69 +2,69 @@
 <!DOCTYPE html>
 <html lang='en'>
 
-<head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
-  <title> radio组件</title>
-  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
-  <link rel="stylesheet" href="../../Style/vue-index.css">
-  <link rel="stylesheet" href="../../Style/vue-base.css">
-</head>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+    <title> radio组件</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../Style/vue-index.css">
+    <link rel="stylesheet" href="../../Style/vue-base.css">
+  </head>
 
-<body>
-  <div id="radioBlock">
+  <body>
+    <div id="radioBlock">
 
-    <div class="container">
-      <div class="row">
-        <!-- 消除外边距 -->
-        <div class="col-md-12">
-          <ol class="breadcrumb">
-            <li><a href="javascript:window.history.back(-1)">组件列表</a></li>
-            <li class="active">radio组件</li>
-          </ol>
-        </div>
-      </div>
-      <h1 class="text-center">radio组件</h1>
-      <div class="row">
-        <div class="col-md-12 col-sm-12">
-          <!--示例-->
-          <div class="panel panel-default">
-            <div class="panel-heading">Example</div>
-            <div class="panel-body">
-              <ht-radio class="radio" v-model="radio" label="1" @click="alerts()" @change="change()" disabled>第一个</ht-radio>
-              <ht-radio class="radio" v-model="radio" label="2" @click="alerts()" @change="change()">第二个</ht-radio>
-              <ht-radio class="radio" v-model="radio" label="3" @click="alerts()" @change="change()">第三个</ht-radio>
-              <ht-radio class="radio" v-model="radio" label="4" @click="alerts()" @change="change()">第三个</ht-radio>
-              <p>当前选项的值是:{{radio}}</p>
-              <div id="clickRecord" class="col-md-6"></div>
-              <div id="changeRecord" class="col-md-6"></div>
-            </div>
+      <div class="container">
+        <div class="row">
+          <!-- 消除外边距 -->
+          <div class="col-md-12">
+            <ol class="breadcrumb">
+              <li><a href="javascript:window.history.back(-1)">组件列表</a></li>
+              <li class="active">radio组件</li>
+            </ol>
           </div>
-          <!--代码-->
-          <div class="panel panel-default">
-            <div class="panel-heading">代码使用</div>
-            <div class="panel-body code">
-              <textarea disabled class="form-control" rows="8" style="cursor:default;">
+        </div>
+        <h1 class="text-center">radio组件</h1>
+        <div class="row">
+          <div class="col-md-12 col-sm-12">
+            <!--示例-->
+            <div class="panel panel-default">
+              <div class="panel-heading">Example</div>
+              <div class="panel-body">
+                <ht-radio class="radio" v-model="radio" label="1" @click="alerts()" @change="change()" disabled>第一个</ht-radio>
+                <ht-radio class="radio" v-model="radio" label="2" @click="alerts()" @change="change()">第二个</ht-radio>
+                <ht-radio class="radio" v-model="radio" label="3" @click="alerts()" @change="change()">第三个</ht-radio>
+                <ht-radio class="radio" v-model="radio" label="4" @click="alerts()" @change="change()">第三个</ht-radio>
+                <p>当前选项的值是:{{radio}}</p>
+                <div id="clickRecord" class="col-md-6"></div>
+                <div id="changeRecord" class="col-md-6"></div>
+              </div>
+            </div>
+            <!--代码-->
+            <div class="panel panel-default">
+              <div class="panel-heading">代码使用</div>
+              <div class="panel-body code">
+                <textarea disabled class="form-control" rows="8" style="cursor:default;">
               </textarea>
+              </div>
+            </div>
+            <!--说明-->
+            <div class="panel panel-default">
+              <div class="panel-heading">说明</div>
+              <div class="panel-body"> </div>
             </div>
           </div>
-          <!--说明-->
-          <div class="panel panel-default">
-            <div class="panel-heading">说明</div>
-            <div class="panel-body"> </div>
-          </div>
-        </div>
 
+        </div>
       </div>
+
     </div>
 
-  </div>
-
-  </div>
-  <script type="text/x-template" id="htradio">
-    <label class="el-radio">
+    </div>
+    <script type="text/x-template" id="htradio">
+      <label class="el-radio">
     <span class="el-radio__input"
       :class="{
         'is-disabled': isDisabled,
@@ -90,135 +90,135 @@
       <template v-if="!$slots.default">{{label}}</template>
     </span>
   </label>
-  </script>
+    </script>
 
-  <script src='../../Script/jquery-1.9.1.js'></script>
-  <script src='../../Script/bootstrap.js'></script>
-  <script src="../../Script/Vue/vue.js"></script>
-  <script>
-    const TYPE_CLASSES_MAP = {
-      'success': 'el-icon-circle-check',
-      'warning': 'el-icon-warning',
-      'error': 'el-icon-circle-cross'
-    };
+    <script src='../../Script/jquery-1.9.1.js'></script>
+    <script src='../../Script/bootstrap.js'></script>
+    <script src="../../Script/Vue/vue.js"></script>
+    <script>
+      const TYPE_CLASSES_MAP = {
+        'success': 'el-icon-circle-check',
+        'warning': 'el-icon-warning',
+        'error': 'el-icon-circle-cross'
+      };
 
-    function broadcast(componentName, eventName, params) {
-      this.$children.forEach(child => {
-        var name = child.$options.componentName;
-        if (name === componentName) {
-          child.$emit.apply(child, [eventName].concat(params));
-        } else {
-          broadcast.apply(child, [componentName, eventName].concat([params]));
-        }
-      });
-    }
-
-    Vue.component("ht-radio", {
-      template: "#htradio",
-      methods: {
-        dispatch(componentName, eventName, params) {
-          var parent = this.$parent || this.$root;
-          var name = parent.$options.componentName;
-          while (parent && (!name || name !== componentName)) {
-            parent = parent.$parent;
-
-            if (parent) {
-              name = parent.$options.componentName;
-            }
+      function broadcast(componentName, eventName, params) {
+        this.$children.forEach(child => {
+          var name = child.$options.componentName;
+          if (name === componentName) {
+            child.$emit.apply(child, [eventName].concat(params));
+          } else {
+            broadcast.apply(child, [componentName, eventName].concat([params]));
           }
-          if (parent) {
-            parent.$emit.apply(parent, [eventName].concat(params));
-          }
-        },
-        broadcast(componentName, eventName, params) {
-          broadcast.call(this, componentName, eventName, params);
-        },
-        //当下点击
-        click() {
-          this.$emit('click');
-        },
-        change() {
-          this.$emit('change');
-        }
-      },
-      　
-      props: {
-        value: {},
-        label: {},
-        disabled: Boolean,
-        name: String　
-      },
-      data() {
-        return {
-          focus: false
-        };
-      },
-      computed: {
-        isGroup() {
-          var parent = this.$parent;
-          while (parent) {
-            if (parent.$options.componentName !== 'ElRadioGroup') {
+        });
+      }
+
+      Vue.component("ht-radio", {
+        template: "#htradio",
+        methods: {
+          dispatch(componentName, eventName, params) {
+            var parent = this.$parent || this.$root;
+            var name = parent.$options.componentName;
+            while (parent && (!name || name !== componentName)) {
               parent = parent.$parent;
-            } else {
-              this._radioGroup = parent;
-              return true;
-            }
-          }
-          return false;
-        },
 
-        model: {
-          get() {
-            return this.isGroup ? this._radioGroup.value : this.value;
+              if (parent) {
+                name = parent.$options.componentName;
+              }
+            }
+            if (parent) {
+              parent.$emit.apply(parent, [eventName].concat(params));
+            }
+          },
+          broadcast(componentName, eventName, params) {
+            broadcast.call(this, componentName, eventName, params);
+          },
+          //当下点击
+          click() {
+            this.$emit('click');
+          },
+          change() {
+            this.$emit('change');
+          }
+        },
+        　
+        props: {
+          value: {},
+          label: {},
+          disabled: Boolean,
+          name: String　
+        },
+        data() {
+          return {
+            focus: false
+          };
+        },
+        computed: {
+          isGroup() {
+            var parent = this.$parent;
+            while (parent) {
+              if (parent.$options.componentName !== 'ElRadioGroup') {
+                parent = parent.$parent;
+              } else {
+                this._radioGroup = parent;
+                return true;
+              }
+            }
+            return false;
           },
 
-          set(val) {
-            if (this.isGroup) {
-              this.dispatch('ElRadioGroup', 'input', [val]);
-            } else {
-              this.$emit('input', val);
+          model: {
+            get() {
+              return this.isGroup ? this._radioGroup.value : this.value;
+            },
+
+            set(val) {
+              if (this.isGroup) {
+                this.dispatch('ElRadioGroup', 'input', [val]);
+              } else {
+                this.$emit('input', val);
+              }
             }
+          },
+
+          isDisabled() {
+            return this.isGroup ?
+              this._radioGroup.disabled || this.disabled :
+              this.disabled;
           }
         },
-
-        isDisabled() {
-          return this.isGroup ?
-            this._radioGroup.disabled || this.disabled :
-            this.disabled;
+        watch: {
+          label(val) {
+            alert('23131');
+          }
         }
-      },
-      watch: {
-        label(val) {
-          alert('23131');
-        }
-      }
-    });
+      });
 
-    var radioBlock = new Vue({
-      el: "#radioBlock",
-      //数据部分 
-      data: {
-        radio: '2'
-      },
-      //方法
-      methods: {
-        //这个是radio上的方法
-        alerts: function(e) {
-          $("#clickRecord").append('<p><b>@click</b>事件：每次<b>点击</b>都会增加内容，当前点击的值为：' + this.radio + '，可以根据此来进行相关操作</p>');
+      var radioBlock = new Vue({
+        el: "#radioBlock",
+        //数据部分
+        data: {
+          radio: '2'
         },
-        change: function() {
-          $("#changeRecord").append('<p><b>@change</b>事件：如果值发生改变，提示当前改变后的值为：' + this.radio + '可以根据此进行相关操作</p>');
-          return false;
-        }
-      },
-      //过滤器
-      filters: {},
-      //实时计算
-      computed: {},
-      //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
-      created: function() {}
-    });
-  </script>
-</body>
+        //方法
+        methods: {
+          //这个是radio上的方法
+          alerts: function(e) {
+            $("#clickRecord").append('<p><b>@click</b>事件：每次<b>点击</b>都会增加内容，当前点击的值为：' + this.radio + '，可以根据此来进行相关操作</p>');
+          },
+          change: function() {
+            $("#changeRecord").append('<p><b>@change</b>事件：如果值发生改变，提示当前改变后的值为：' + this.radio + '可以根据此进行相关操作</p>');
+            return false;
+          }
+        },
+        //过滤器
+        filters: {},
+        //实时计算
+        computed: {},
+        //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
+        created: function() {}
+      });
+    </script>
+  </body>
 
 </html>

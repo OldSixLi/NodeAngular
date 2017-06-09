@@ -46,6 +46,14 @@
         <input type="hidden" name="type" value="turn" />
       </form>
       <!--图片上传的表单隐藏域END↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑-->
+
+      <!--图片上传的表单隐藏域BEGIN↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓-->
+      <input type="hidden" id="multiIconUrl" name="" value="">
+      <form action="/multi-upload" id="headForm" method="post" enctype="multipart/form-data">
+        <input type="file" style="display:none" name="multiImages" id="multiImages" onchange="uploadImage()" multipart/>
+        <input type="hidden" name="type" value="turn" />
+      </form>
+      <!--图片上传的表单隐藏域END↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑-->
     </div>
   </div>
   <script>

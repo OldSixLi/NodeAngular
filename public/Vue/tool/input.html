@@ -2,110 +2,457 @@
 <!DOCTYPE html>
 <html lang='en'>
 
-<head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
-  <title> 标题</title>
-  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
-  <style>
-    .help-block {
-      display: none;
-    }
-    
-    .has-error>.help-block {
-      display: block;
-    }
-  </style>
-</head>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+    <title> 标题</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../Style/vue-index.css">
+    <link rel="stylesheet" href="../../Style/vue-base.css">
 
-<body>
-  <!--NOTE 此处声明Vue-->
-  <div id="vueBlock">
-    <h1 class="text-center">Input组件</h1>
-    <div class="container">
-      <div class="row">
-        <!-- 消除外边距 -->
-        <div class="col-md-4 col-sm-4">
-          <!--在此处编辑内容-->
+    <style>
+      .help-block {
+        display: none;
+      }
+      
+      .has-error>.help-block {
+        display: block;
+      }
+    </style>
+  </head>
 
-        </div>
-        <div class="col-md-4 col-sm-4">
-          <div class="form-group">
-            <label class="control-label" for="inputSuccess1">年龄</label>
-            <input v-focus v-hello class="form-control" v-model="something" max-length="5" pattern="^[0-9]*$">
-            <span class="help-block"></span>
+  <body>
+    <!--NOTE 此处声明Vue-->
+    <div id="vueBlock">
+      <h1 class="text-center">Input指令</h1>
+      <div class="container">
+        <div class="row">
+          <!-- 消除外边距 -->
+          <div class="col-md-4 col-sm-4">
           </div>
+          <div class="col-md-4 col-sm-4">
+            <div class="form-group">
+              <label class="control-label" for="inputSuccess1">年龄</label>
+              <input v-focus v-hello class="form-control" v-model="something" max-length="5" pattern="^[0-9]*$" placeholder="请输入您的年龄">
+              <span class="help-block"></span>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-4"> </div>
         </div>
-        <div class="col-md-4 col-sm-4">
-          <!--在此处编辑内容-->
-
-        </div>
+        <!--　　　　　　　　　　　　　　　　　　　　　　　　　　
+　◆◆　　◆◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆　　　　
+　　◆　　◆　◆　◆　◆　◆◆　◆◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆◆◆◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　◆　
+　◆◆　　◆◆　◆◆◆　◆◆　◆　◆◆◆◆◆◆◆◆　
+　　　　　　　　　　　　　　　　　　　　　　　　　　-->
+        <h1 class="text-center">Input组件</h1>
+        <!--此处调用Input模板-->
+        <span>文本类型：</span>
+        <ht-input type="text" placeholder="请输入用户名称" v-model="name" @focus="focus()" @blur="blur()" @input="input()">
+          <!--<template slot="prepend">Http://</template>-->
+        </ht-input>
+        <br>
+        <span>　正整数：</span>
+        <ht-input type="numbers" v-focus v-model="number"></ht-input>
+        <!--<input type="number" name="" value="">-->
       </div>
-    </div>
 
-  </div>
-  <!-- 脚本 -->
-  <script src='../../Script/jquery-1.9.1.js'></script>
-  <script src='../../Script/bootstrap.js'></script>
-  <script src="../../Script/Vue/vue.js"></script>
-  <script>
-    // 注册一个全局自定义指令 v-focus
-    Vue.directive('focus', {
-      // 当绑定元素插入到 DOM 中。
-      inserted: function(el) {
-        // 聚焦元素
-        el.focus() //在页面初始加载时就会显示
+    </div>
+    <!--　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　◆　　　◆　◆　　　　　◆　　　　　　◆◆　　　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　◆　◆◆◆◆◆◆◆　　　◆　　◆◆◆◆　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　◆　　　◆　◆　　　　　◆　　◆　　　　　　　◆◆　　◆◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆　　　　
+　◆◆◆◆　◆◆◆◆◆　　◆◆◆◆　◆　　　　　　　　◆　　◆　◆　◆　◆　◆◆　◆◆　　◆　　　　　
+　　　◆　　◆　　　◆　　　　◆　　◆◆◆◆◆◆　　　◆　　◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆◆　　◆◆◆◆◆　　　◆◆◆　◆　◆　　◆　　　◆◆◆◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆◆◆　◆　　　◆　　　◆◆　◆◆　◆　　◆　　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　◆　◆　　◆◆◆◆◆　　◆　◆　　◆　◆　◆　　　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　　　◆　　　　◆　　　　　　◆　　◆　◆　◆　　　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　◆　
+　　　◆　◆◆◆◆◆◆◆　　　◆　　◆　　◆　　　　◆◆　　◆◆　◆◆◆　◆◆　◆　◆◆◆◆◆◆◆◆　
+　　　◆　　　◆　◆　　　　　◆　◆　　◆　◆　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　◆　◆◆　　　◆◆　　　◆◆　　◆　　　◆　　　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　-->
+    <script type="text/x-template" id="ht-input">
+      <label>
+        <div :class="[
+                      type === 'textarea' ? 'el-textarea' : 'el-input',
+                      size ? 'el-input--' + size : '',
+                      {
+                        'is-disabled': disabled,
+                        'el-input-group': $slots.prepend || $slots.append,
+                        'el-input-group--append': $slots.append,
+                        'el-input-group--prepend': $slots.prepend
+                      }
+                    ]">
+      <template v-if="type !== 'textarea'">
+      <!-- 前置元素 -->
+      <div class="el-input-group__prepend" v-if="$slots.prepend">
+        <slot name="prepend"></slot>
+      </div>
+      <!-- input 图标 -->
+      <slot name="icon">
+        <i class="el-input__icon"
+          :class="[
+            'el-icon-' + icon,
+            onIconClick ? 'is-clickable' : ''
+          ]"
+          v-if="icon"
+          @click="handleIconClick">
+        </i>
+      </slot>
+      <input
+        v-if="type !== 'textarea'"
+        class="el-input__inner  form-control"
+        v-bind="$props" 
+        :placeholder="places"
+        :autocomplete="autoComplete"
+        :value="currentValue"
+        ref="input"
+        @input="handleInput"
+        @focus="handleFocus"
+        @blur="handleBlur"
+      >
+      <i class="el-input__icon el-icon-loading" v-if="validating"></i>
+      <!-- 后置元素 -->
+      <div class="el-input-group__append" v-if="$slots.append">
+        <slot name="append"></slot>
+      </div>
+    </template>
+    </div>
+    </label>
+
+    </script>
+    <!--　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　　　　◆　　　　　　　　　　　◆　　　　　　
+　◆◆◆　　◆　　◆◆◆　　　　　　◆　　　　　　
+　◆　◆　◆◆◆　◆　◆　◆◆◆◆◆◆◆◆◆◆◆　
+　◆　◆　　◆　　◆　◆　　　　　　◆　　　　　　
+　◆◆◆　　◆　　◆　◆　　　　　◆◆◆　　　　　
+　◆　◆　◆◆◆　◆　◆　　　　◆　◆　◆　　　　
+　◆　◆　　◆　　◆　◆　　　　◆　◆　◆　　　　
+　◆◆◆　◆　　　◆　◆　　　◆　　◆　　◆　　　
+　◆　◆　◆　◆　◆　◆　　◆　　　◆　　　◆　　
+　◆　◆　◆◆◆　◆◆◆　◆　◆◆◆◆◆◆◆　◆　
+　◆　◆　　　　　◆　　　　　　　　◆　　　　　　
+　　◆◆　　　　　◆　　　　　　　　◆　　　　　　
+　　　　　　　　　　　　　　　　　　　　　　　　-->
+    <script src='../../Script/jquery-1.9.1.js'></script>
+    <script src='../../Script/bootstrap.js'></script>
+    <script src="../../Script/Vue/vue.js"></script>
+    <script>
+      //     　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+      // 　　　◆　　　◆　◆　　　　　◆　　　　　　◆◆　　　　　　◆　　　　　　◆◆◆◆◆　◆◆◆◆◆　
+      // 　　　◆　◆◆◆◆◆◆◆　　　◆　　◆◆◆◆　　　◆◆◆◆◆◆◆◆◆◆◆　◆　　　◆　◆　　　◆　
+      // 　　　◆　　　◆　◆　　　　　◆　　◆　　　　　　　　　　　◆　　　　　　◆　　　◆　◆　　　◆　
+      // 　◆◆◆◆　◆◆◆◆◆　　◆◆◆◆　◆　　　　　　　◆◆◆◆◆◆◆◆◆　　◆　　　◆　◆◆◆◆◆　
+      // 　　　◆　　◆　　　◆　　　　◆　　◆◆◆◆◆◆　　　　　　　　　　　　　◆◆◆◆◆　◆　　　◆　
+      // 　　◆◆　　◆◆◆◆◆　　　◆◆◆　◆　◆　　◆　　◆◆◆◆◆◆◆◆◆　　◆　　　◆　◆　　　◆　
+      // 　　◆◆◆　◆　　　◆　　　◆◆　◆◆　◆　　◆　　◆　　　◆　　　◆　　◆　　　◆　◆◆◆◆◆　
+      // 　◆　◆　　◆◆◆◆◆　　◆　◆　　◆　◆　◆　　　◆　　　◆　　　◆　　◆　　　◆　◆　　　◆　
+      // 　　　◆　　　　◆　　　　　　◆　　◆　◆　◆　　　◆◆◆◆◆◆◆◆◆　　◆◆◆◆◆　◆　　　◆　
+      // 　　　◆　◆◆◆◆◆◆◆　　　◆　　◆　　◆　　　　◆　　　　　　　◆　　◆　　　　　◆　　　◆　
+      // 　　　◆　　　◆　◆　　　　　◆　◆　　◆　◆　　　◆　　　　　　　　　　　　　　　◆　　　　◆　
+      // 　　　◆　◆◆　　　◆◆　　　◆◆　　◆　　　◆　◆　　　　　　　　　　　　　　　◆　　　◆◆◆　
+      function broadcast(componentName, eventName, params) {
+        this.$children.forEach(child => {
+          var name = child.$options.componentName;
+          if (name === componentName) {
+            child.$emit.apply(child, [eventName].concat(params));
+          } else {
+            broadcast.apply(child, [componentName, eventName].concat([params]));
+          }
+        });
       }
-    });
-    Vue.directive('hello', {
-      bind: function(el) {
-        // console.log('bind')
-      },
-      inserted: function(el) {
-        // console.log('inserted')
-      },
-      update: function(el, binding, vnode, oldVnode) { 
-        console.log(el.value) ;
-        var reg = new RegExp($(el).attr('pattern'));
-        if (reg.test(el.value)) {
-          $(el).parent().hasClass('has-error') && $(el).parent().removeClass('has-error');
-        } else {
-          $(el).parent().hasClass('has-error') || $(el).parent().addClass('has-error').end().next().text("请输入纯数字");
-          return false;
+      //NOTE 模板声明部分
+      Vue.component('ht-input', {
+        template: '#ht-input',
+
+        //对外获取的数据
+        props: {
+          value: [String, Number],
+          placeholder: String,
+          size: String,
+          resize: String,
+          readonly: Boolean,
+          autofocus: Boolean,
+          icon: String,
+          disabled: Boolean,
+          type: {
+            type: String,
+            default: 'text'
+          },
+          name: String,
+          autosize: {
+            type: [Boolean, Object],
+            default: false
+          },
+          rows: {
+            type: Number,
+            default: 2
+          },
+          autoComplete: {
+            type: String,
+            default: 'off'
+          },
+          form: String,
+          maxlength: Number,
+          minlength: Number,
+          max: {},
+          min: {},
+          step: {},
+          validateEvent: {
+            type: Boolean,
+            default: true
+          },
+          onIconClick: Function
+        },
+        //
+        computed: {
+          validating() {
+            return this.$parent.validateState === 'validating';
+          },
+          textareaStyle() {
+            return merge({}, this.textareaCalcStyle, {
+              resize: this.resize
+            });
+          }
+        },
+        watch: {
+          'value' (value, oldValue) {
+            //根据不同的类型进行处理操作
+            var type = this.type;
+            switch (type) {
+              case "text":
+                break;
+              case "numbers":
+                // this.placeholder = "请输入大于0的整数";
+                var reg = new RegExp(/^[1-9]+$/);
+                if (!reg.test(value)) {
+                  if (value.length == 1) {
+
+                    value = value.replace(/[^1-9]/g, '')
+                  } else {
+                    if (value - 0 == 0) {
+                      value = ""
+                    }
+                    value = value.replace(/\D/g, '')
+                  }
+                }
+                break;
+              default:
+                break;
+            }
+            this.setCurrentValue(value);
+          }
+        },
+
+        methods: {
+          dispatch(componentName, eventName, params) {
+            var parent = this.$parent || this.$root;
+            var name = parent.$options.componentName;
+            while (parent && (!name || name !== componentName)) {
+              parent = parent.$parent;
+
+              if (parent) {
+                name = parent.$options.componentName;
+              }
+            }
+            if (parent) {
+              parent.$emit.apply(parent, [eventName].concat(params));
+            }
+          },
+          broadcast(componentName, eventName, params) {
+            broadcast.call(this, componentName, eventName, params);
+          },
+          handleBlur(event) {
+            this.$emit('blur', event);
+            if (this.validateEvent) {
+              this.dispatch('ElFormItem', 'el.form.blur', [this.currentValue]);
+            }
+          },
+          inputSelect() {
+            this.$refs.input.select();
+          },
+          handleFocus(event) {
+            this.$emit('focus', event);
+          },
+          handleInput(event) {
+            const value = event.target.value;
+            this.$emit('input', value);
+            this.setCurrentValue(value);
+            this.$emit('change', value);
+          },
+          handleIconClick(event) {
+            if (this.onIconClick) {
+              this.onIconClick(event);
+            }
+            this.$emit('click', event);
+          },
+          setCurrentValue(value) {
+            if (value === this.currentValue) return;
+
+
+
+            this.currentValue = value;
+            if (this.validateEvent) {
+              this.dispatch('ElFormItem', 'el.form.change', [value]);
+            }
+          }
+        },
+        //组件内数据部分
+        data() {
+
+          var placehs = "";
+
+          if (this.placeholder == undefined) {
+
+            if (this.type == "numbers") {
+              placehs = "请输入数字"
+            }
+          } else {
+            placehs = this.placeholder;
+          }
+
+          return {
+            currentValue: this.value,
+            textareaCalcStyle: {},
+            places: placehs
+          };
+        },
+        created() {
+          this.$on('inputSelect', this.inputSelect);
+          if (this.type == "numbers") {
+            if (this.placeholder == undefined) {
+              this.places = "请输入大于0的整数"
+            }
+          }
+        },
+
+        mounted() {
+          //这个地方我想设置默认的placeholder  但是在添加两个判断条件之后 就会报错  暂时不确定原因
+          if (this.type == "numbers") {
+
+            // if (this.placeholder == undefined) {
+            // this.placeholder = "请输入数字"
+            // }
+          }
         }
-        if (el.value.length <= 5) {
-          $(el).parent().hasClass('has-error') && $(el).parent().removeClass('has-error');
-        } else {
-          $(el).parent().hasClass('has-error') || $(el).parent().addClass('has-error').end().next().text('您输入的值超出了最大长度');
-          return false;
+      });
+
+      // 　　　　　　　　　　　　　　　　　　　　　　　　　
+      // 　　　◆　　◆　　　　◆　　　　　　◆　　　　　　
+      // 　　　◆　　◆　　◆◆　　　　　　◆　◆　　　　　
+      // 　　　◆　　◆◆◆　　　　　　　◆　　　◆　　　　
+      // 　◆◆◆◆　◆　　　　◆　　　◆　　　　　◆　　　
+      // 　　　◆　　　◆◆◆◆◆　◆◆　　◆　　　　◆◆　
+      // 　　　◆　　　　　　　　　　　　　　◆　　　　　　
+      // 　　　◆◆　◆◆◆◆◆◆　　◆◆◆◆◆◆◆◆　　　
+      // 　◆◆◆　　◆　　　　◆　　　　　　　　　◆　　　
+      // 　　　◆　　◆◆◆◆◆◆　　　　　　　　◆　　　　
+      // 　　　◆　　◆　　　　◆　　　◆◆　　◆　　　　　
+      // 　　　◆　　◆◆◆◆◆◆　　　　　◆◆　　　　　　
+      // 　　◆◆　　◆　　　　◆　　　　　　　◆◆　　　　
+      // 注册一个全局自定义指令 v-focus
+      Vue.directive('focus', {
+        // 当绑定元素插入到 DOM 中。
+        inserted: function(el) {
+          // 聚焦元素
+          el.focus() //在页面初始加载时就会显示
         }
-      },
-      componentUpdated: function(el) {
-        // console.log('componentUpdated')
-        // console.log(el.value) ;
-      },
-      unbind: function(el) {
-        // console.log('unbind')
-      }
-    })
-    var vueBlock = new Vue({
-      el: "#vueBlock",
-      //数据部分 
-      data: {
-        something: ""
-      },
-      //方法
-      methods: {},
-      //过滤器
-      filters: {},
-      //实时计算
-      computed: {},
-      //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
-      created: function() {}
-    });
-  </script>
-</body>
+      });
+
+      Vue.directive('hello', {
+        bind: function(el) {
+          // console.log('bind')
+        },
+        inserted: function(el) {
+          // console.log('inserted')
+        },
+        update: function(el, binding, vnode, oldVnode) { 
+          //这个东西有点邪性，每次其他的值变化时他也会跟着变
+          // 所以现在这个update应该是进行模板更新时就会触发
+          if (!el.value) {
+            return false;
+          }
+          console.log('当前的值为：' + el.value) ;
+          var reg = new RegExp($(el).attr('pattern'));
+          console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+          console.log(reg.test(el.value));
+          console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+          if (reg.test(el.value)) {
+            $(el).parent().hasClass('has-error') && $(el).parent().removeClass('has-error');
+          } else {
+            $(el).parent().hasClass('has-error') || $(el).parent().addClass('has-error').end().next().text("请输入纯数字");
+            return false;
+          }
+          if (el.value.length <= 5) {
+            $(el).parent().hasClass('has-error') && $(el).parent().removeClass('has-error');
+          } else {
+            $(el).parent().hasClass('has-error') || $(el).parent().addClass('has-error').end().next().text('您输入的值超出了最大长度');
+            return false;
+          }
+        },
+        componentUpdated: function(el) {
+          // console.log('componentUpdated')
+          // console.log(el.value) ;
+        },
+        unbind: function(el) {
+          // console.log('unbind')
+        }
+      })
+
+      // 　　　　　　　　　　　　　　　　　　　　　　　　　◆　　　　　　◆◆◆◆◆　◆◆◆◆◆　
+      // 　　　　　　　　　　　　　　　　　　　　◆◆◆◆◆◆◆◆◆◆◆　◆　　　◆　◆　　　◆　
+      // 　◆◆　　◆◆◆◆　　◆◆◆◆◆◆◆　　　　　　　◆　　　　　　◆　　　◆　◆　　　◆　
+      // 　　◆　　◆　　◆　　◆　　◆　　◆　　　◆◆◆◆◆◆◆◆◆　　◆　　　◆　◆◆◆◆◆　
+      // 　　◆　　◆　　◆　　◆　　◆　◆　　　　　　　　　　　　　　　◆◆◆◆◆　◆　　　◆　
+      // 　　◆　◆　　　◆　　◆　　◆◆◆　　　　◆◆◆◆◆◆◆◆◆　　◆　　　◆　◆　　　◆　
+      // 　　◆　◆　　　◆　　◆　　◆　◆　　　　◆　　　◆　　　◆　　◆　　　◆　◆◆◆◆◆　
+      // 　　　◆◆　　　◆　　◆　　◆　　　　　　◆　　　◆　　　◆　　◆　　　◆　◆　　　◆　
+      // 　　　◆　　　　◆　　◆　　◆　　◆　　　◆◆◆◆◆◆◆◆◆　　◆◆◆◆◆　◆　　　◆　
+      // 　　　◆　　　　　◆◆　　◆◆◆◆◆　　　◆　　　　　　　◆　　◆　　　　　◆　　　◆　
+      // 　　　　　　　　　　　　　　　　　　　　　◆　　　　　　　　　　　　　　　◆　　　　◆　
+      // 　　　　　　　　　　　　　　　　　　　　◆　　　　　　　　　　　　　　　◆　　　◆◆◆　
+      var vueBlock = new Vue({
+        el: "#vueBlock",
+        //数据部分
+        data: {
+          something: "",
+          name: "",
+          number: ""
+        },
+        //方法
+        methods: {
+          focus: function() {
+            //千万不要在这调用alert  要么就进入死循环了 ╮(╯▽╰)╭
+            console.log('焦点事件')
+            return false
+          },
+          blur: function() {
+            console.log('失去焦点事件')
+          },
+          input: function() {
+            console.log('输入事件')
+          }
+        },
+        //过滤器
+        filters: {},
+        //实时计算
+        computed: {
+          // Name: function() {
+          //   return this.name.split('').reverse().join('');
+          // }
+        },
+        //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
+        created: function() {}
+      });
+    </script>
+  </body>
 
 </html>
