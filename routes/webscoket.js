@@ -10,7 +10,9 @@ var xssEscape = require('xss-escape');
 var answer = require('../NodeCode/zhihu/answer');
 var fileWatch = require('./watch');
 
-
+console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+console.log("21321");
+console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
 io.on('connection', function(_socket) {
   console.log(_socket.id + ': connection');
   _socket.emit('mashaobo', "连接成功");

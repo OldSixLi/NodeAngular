@@ -2,16 +2,16 @@
 <!DOCTYPE html>
 <html lang='en'>
 
-<head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/myapp/public/images/my.ico' />
-  <title> 标题</title>
-  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
-  <!--<link href='../Script/jquery-viewer/viewer.css' rel='stylesheet'>-->
-  <link href="../Script/Masonry/style/chromagallery.min.css" rel='stylesheet'>
-  <!--<style>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/myapp/public/images/my.ico' />
+    <title> 标题</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <!--<link href='../Script/jquery-viewer/viewer.css' rel='stylesheet'>-->
+    <link href="../Script/Masonry/style/chromagallery.min.css" rel='stylesheet'>
+    <!--<style>
     body,
     html {
       height: 100%;
@@ -42,351 +42,240 @@
       height: auto;
     }
   </style>-->
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-    }
-    
-    #contianer {
-      position: relative;
-      font-size: 0;
-      margin: 0 auto;
-    }
-    
-    .box {
-      padding: 5px;
-      float: left;
-      box-sizing: border-box;
-    }
-    
-    .boximg {
-      padding: 5px;
-      box-shadow: 0 0 5px #ccc;
-      border: 1px solid #cccccc;
-      border-radius: 5px;
-    }
-    
-    .boximg img {
-      width: 250px;
-      height: auto;
-    }
-    
-    .once {
-      opacity: 0;
-    }
-    
-    #container {
-      /*width: 1300px;
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      
+      #contianer {
+        position: relative;
+        font-size: 0;
+        margin: 0 auto;
+      }
+      
+      .box {
+        padding: 5px;
+        float: left;
+        box-sizing: border-box;
+      }
+      
+      .boximg {
+        padding: 5px;
+        box-shadow: 0 0 5px #ccc;
+        border: 1px solid #cccccc;
+        border-radius: 5px;
+      }
+      
+      .boximg img {
+        width: 250px;
+        height: auto;
+        min-height: 20px;
+      }
+      
+      .once {
+        opacity: 0;
+      }
+      
+      #container {
+        /*width: 1300px;
       margin: 0 auto;*/
-    }
-  </style>
-</head>
+      }
+    </style>
+  </head>
 
-<body>
-  <div class="container">
-    <div class="input-group">
-      <input type="text" class="form-control input-lg" id="questionUrl" placeholder="请输入搜索地址">
-      <span class="input-group-btn">
+  <body>
+    <div class="container">
+      <div class="input-group">
+        <input type="text" class="form-control input-lg" id="questionUrl" placeholder="请输入搜索地址">
+        <span class="input-group-btn">
         <button class="btn btn-primary btn-lg" type="button" onclick="beginSpider()">　开始抓取　</button>
       </span>
+      </div>
+      <hr>
     </div>
-    <hr>
-  </div>
-  sdadsa adsa萨达撒奥所多撒 啊娃娃让我二娃挖sa daa s萨达萨达撒
-  <!--table-bordered   边框
-       table-condensed  收缩
-       table-striped    斑马色-->
-  <table class="table table-hover table-bordered table-condensed table-striped">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>第一列</th>
-        <th>第二列</th>
-        <th>第三列</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td>数据1</td>
-        <td>数据2</td>
-        <td>数据3</td>
-      </tr>
-    </tbody>
-  </table>
-  <!-- Angularjs 表格相关HTML代码 -->
-  <div class="tab-content container-fluid">
-    <table class="table table-hover">
-      <!-- 表头 -->
-      <thead>
-        <tr>
-          <th>序号</th>
-          <th data-order="name" class="order" ng-click="title='name';desc=!desc;sort('name')">
-            标题1
-            <!--排序字段需设置字段名称以及span标签-->
-            <span class="glyphicon glyphicon-sort"></span>
-          </th>
-          <th> 标题2 </th>
-          <th> 标题3 </th>
-        </tr>
-      </thead>
-      <tbody id="databody">
-        <tr ng-show="dataLengths" ng-repeat="x in data.content | orderBy : title : desc">
-          <td>{{ index+1 }}</td>
-          <td>{{ x.name }}</td>
-          <td>{{ x.prescriptionType=="Sport"?"运动":"营养" }}</td>
-          <td>{{ x.spell}}</td>
-        </tr>
-        <tr ng-show="!dataLengths">
-          <td colspan="100" class="text-center ">没有相关数据</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div ng-show="dataLengths">
-    <div class="form-group pull-right topage_block">
-      <!-- 跳转至 -->
-      <label>{{totalRecord}}条/{{totalPage}}页</label>
-      <label>跳至</label>
-      <input type="text" onkeyup="this.value=this.value.replace(///D/g,'')" onafterpaste="this.value=this.value.replace(///D/g,'')" class="form-control topage" ng-model="toPageValue" />
-      <label>页</label>
-      <button class="btn btn-primary btn-sm" ng-click="skip()">确定</button>
-    </div>
-    <!-- 分页控件 -->
-    <div class="pull-right">
-      <ul class="pagination" id="alreadyPage"></ul>
-    </div>
-  </div>
-  <script>
-    function save() {
-      var saveInfo = {
-        //文本框,下拉菜单选择值
-        name: $.trim($("#name").val()),
-        //单选框值
-        role: $("[name='role']").val(),
-        //复选框选择值
-        fruit: getCheckBoxValue("fruit")
-      };
-      var __error = [];
-      if (saveInfo.name == "") {
-        __error.push("错误提示！");
-      }
-      if (__error.length > 0) {
-        tool.alert("提示", __error.join("<br />"));
-        return false;
-      }
-      $.ajax({
-        type: "POST",
-        url: "url",
-        data: saveInfo,
-        dataType: "json",
-        success: function(data, textStatus, jqXHR) {
-          if (data != null && data != "") {
-            if (data.success) {
-              tool.alert("提示", "保存成功");
-            } else {
-              tool.alert("提示", "保存失败");
-            }
-          } else {
-            //NOTE 数据为空时提示 
-            tool.alert("提示", "未获取到数据!");
-          }
-        },
-        error: function(response) {
-          //NOTE 获取服务出错时提示
-          tool.alert("提示", "请求服务失败,请重试!");
-        },
-        complete: function(xhr, textStatus) {
-          //NOTE 异步事件完成后需要操作的内容
-        }
-      });
-    }
-    //获取多选框的值
-    function getCheckBoxValue(name) {
-      var obj = document.getElementsByName(name); //选择所有name="'test'"的对象，返回数组
-      //取到对象数组后，我们来循环检测它是不是被选中
-      var s = [];
-      for (var i = 0; i < obj.length; i++) {
-        if (obj[i].checked) {
-          s.push(obj[i].value); //如果选中，将value添加到变量s中
-        }
-      }
-      return s.join(',');
-    }
-  </script>
-  <div id="imgBlock">
 
-  </div>
-  <div id="container" class="once" style="padding-top:20px;">
-    <!--<div class="box">
+    <div id="container" class="once" style="padding-top:20px;">
+      <!--<div class="box">
       <div class="boximg">
         <img src="/images/zhihu_Down/42511318--13--2df611_r.jpeg">
       </div>
     </div>-->
-    <div class="box">
-      <div class="boximg"><img src="\images\zhihu_Down\24463692\153831272--0--ab6c4da_r.jpg"></div>
+      <div class="box">
+        <div class="boximg">
+          <img src="\images\zhihu_Down\24463692\153831272--0--ab6c4da_r.jpg">
+        </div>
+      </div>
+      <div class="box">
+        <div class="boximg">
+          <img src="\images\zhihu_Down\24463692\157387811--0--3a71563_r.jpg">
+        </div>
+      </div>
+      <div class="box">
+        <div class="boximg">
+          <img src="\images\zhihu_Down\24463692\153831272--1--fdfa436_r.jpg">
+        </div>
+      </div>
+      <div class="box">
+        <div class="boximg">
+          <img src="\images\zhihu_Down\24463692\157387811--1--9155d5c_r.jpg">
+        </div>
+      </div>
+      <div class="box">
+        <div class="boximg">
+          <img src="\images\zhihu_Down\24463692\153831272--2--7a3715d_r.jpg">
+        </div>
+      </div>
+
     </div>
-    <div class="box">
-      <div class="boximg"><img src="\images\zhihu_Down\24463692\157387811--0--3a71563_r.jpg"></div>
+    <div id="zancun">
     </div>
-    <div class="box">
-      <div class="boximg"><img src="\images\zhihu_Down\24463692\153831272--1--fdfa436_r.jpg"></div>
-    </div>
-    <div class="box">
-      <div class="boximg"><img src="\images\zhihu_Down\24463692\157387811--1--9155d5c_r.jpg"></div>
-    </div>
-    <div class="box">
-      <div class="boximg"><img src="\images\zhihu_Down\24463692\153831272--2--7a3715d_r.jpg"></div>
-    </div>
+    <!-- 脚本 -->
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+    <script src='../Script/Masonry/scripts/chromagallery.pkgd.min.js'></script>
+    <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+    <script src="//cdnjscn.b0.upaiyun.com/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="../Script/webscoket/socket.io.js"></script>
+    <script src="../Script/webscoket/desktopnotify.js"></script>
+    <!--<script src="../Script/ScoketByMa.js"></script>-->
+    <script src="../Script/webscoket/common.js"></script>
+    <script>
+      var chat_server = 'http://' + location.hostname + ':3000';
+      console.log('server: ' + chat_server);
+      var socket = io.connect(chat_server);
+      var imgIndex = 1;
 
-  </div>
-  <div id="zancun">
-  </div>
-  <!-- 脚本 -->
-  <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
-  <script src='../Script/Masonry/scripts/chromagallery.pkgd.min.js'></script>
-  <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
-  <script src="//cdnjscn.b0.upaiyun.com/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-  <!--<script src="../Script/webscoket/socket.io.js"></script>-->
-  <!--<script src="../Script/webscoket/desktopnotify.js"></script>-->
-  <script src="../Script/ScoketByMa.js"></script>
-  <!--<script src="../Script/webscoket/common.js"></script>-->
-  <script>
-    // var chat_server = 'http://' + location.hostname + ':3000';
-    // console.log('server: ' + chat_server);
-    // var socket = io.connect(chat_server);
-    // var imgIndex = 1;
+      //webscoket相关代码
+      socket.on('mashaobo', function(data) {
+        socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
+        socket.emit('FileWatch', '前台传输数据成功'); //前台传输数据
 
-    // //webscoket相关代码
-    // socket.on('mashaobo', function(data) {
-    //   socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
-    //   socket.emit('FileWatch', '前台传输数据成功'); //前台传输数据
+      });
 
-    // });
-    // socket.on('FileChange', function(data) {
-    //   // socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
-    //   //刷新当前页面.
-    //   window.location.reload();
-    // });
-    // FileChange
-    var settime = 0,
-      str = "",
-      ad = 1;
-    socket.on('ImgData', function(data) { // src="/images/1.jpg"
-      if (data) {
-        settime++;
-        // $("#zancun").append('<b data-url="' + data + '" data-index="' + imgIndex + '"></b>');
-        str += "<div class='box once'  ><div class='boximg'><img src=" + data + "></div></div>";
-        imgIndex++;
-      }
-      if (settime % 6 == 0) {
-        $("#container").prepend(str); //向容器内一次性添加12个图片  
-        $("#container").find(".once").slice(6, 12).removeClass('once');
-        waterFlow(); //瀑布流布局
-        str = "";
-        settime = 0;
-      }
-
-      if ($("#container").find(".box").length >= 12 && ad == 1) {
-        $("#container").removeClass('once');
-        $("#container").find(".box").slice(6, 12).remove();
-        // waterFlow(); //瀑布流布局
-        ad = 2;
-
-      } else {
-        return;
-      }
-    });
-
-    function beginSpider() {
-      var word = $("#questionUrl").val();
-      if (!word) {
-        alert("请输入内容");
-      } else {
-        if (word.indexOf('www.zhihu.com')) {
-          word = word.substr(word.lastIndexOf('/') + 1);
+      // socket.on('FileChange', function(data) {
+      //   // socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
+      //   //刷新当前页面.
+      //   window.location.reload();
+      // });
+      // FileChange
+      var settime = 0,
+        str = "",
+        ad = 1;
+      socket.on('ImgData', function(data) { // src="/images/1.jpg"
+        if (data) {
+          settime++;
+          // $("#zancun").append('<b data-url="' + data + '" data-index="' + imgIndex + '"></b>');
+          str += "<div class='box once'  ><div class='boximg'><img src=" + data + "></div></div>";
+          imgIndex++;
         }
-        socket.emit('SpiderBegin', word);
-      }
-
-    }
-
-    $(function() {
-
-
-
-      var imgWidth = $(".box").innerWidth(); //获得每个div的宽度，包括内边距  
-      var screenWidth = $(window).width(); //获得浏览器可视区域的宽度  
-      var num = Math.floor(screenWidth / imgWidth); //计算一行可以放几个div  
-      $("#container").css({
-        "width": num * imgWidth + "px",
-        "margin": "0 auto"
-      }); //根据每行放的div的总长来给容器一个宽度，然后居中显示  
-      console.log($(document).height())
-      console.log($(window).height())
-      window.onload = function() {
-        // waterFlow(); //图片加载完毕执行  
-
-        window.onscroll = function() { //滚动条滚动执行  
-          // if (checkScrollDirector()) {
-          //   var urlList = [];
-          //   $("#zancun").find('b').slice(0, 12).each(function(index) {
-          //     var url = $(this).attr("data-url");
-          //     urlList.push(url);
-          //   }).remove();
-          //   if (urlList.length == 0) {
-          //     return false;
-          //   }
-          //   for (var i = 0; i < urlList.length; i++) {
-          //     var html = "<div class='box'><div class='boximg'><img src=" + urlList[i] + "></div></div>";
-          //     $("#container").append(html); //向容器内一次性添加12个图片  
-          //     console.log(1);
-          //   }
-          // waterFlow(); //瀑布流布局   
-          // }
+        if (settime % 6 == 0) {
+          $("#container").prepend(str); //向容器内一次性添加12个图片  
+          $("#container").find(".once").slice(6, 12).removeClass('once');
+          waterFlow(); //瀑布流布局
+          str = "";
+          settime = 0;
         }
-      }
-    });
 
-    function getMinIndex(arr, min) { //取得数组中最小高度的div的索引  
-      for (var i in arr) {
-        if (arr[i] == min) {
-          return i;
-        }
-      }
-    }
-    // .scrollTop(100);aaaaaaaaaaaaaa
-    function checkScrollDirector() { //判断滚动条是否滑到底部  
-      var flag = 0;
-      if ($(document).scrollTop() + $(window).height() >= $(document).height()) {
-        flag = 1;
+        if ($("#container").find(".box").length >= 12 && ad == 1) {
+          $("#container").removeClass('once');
+          $("#container").find(".box").slice(6, 12).remove();
+          // waterFlow(); //瀑布流布局
+          ad = 2;
 
-      }
-      return flag;
-    }
-
-    function waterFlow() {
-      var imgWidth = $(".box").innerWidth(); //获得每个div的宽度，包括内边距  
-      var screenWidth = $(window).width(); //获得浏览器可视区域的宽度  
-      var num = Math.floor(screenWidth / imgWidth); //计算一行可以放几个div  
-      var arr = []; //定义一个数组  
-      for (var i = 0; i < $(".box").length; i++) {
-        if (i < num) { //一行显示num个div,将第一行的每个div高度写入数组  
-          arr[i] = $(".box").eq(i).innerHeight();
         } else {
-          var minImgHeight = Math.min.apply(null, arr); //取得数组中最小高度的div  
-          var index = getMinIndex(arr, minImgHeight); //取得数组中最小高度的div的索引  
-          $(".box").eq(i).css({
-            "position": "absolute",
-            "top": minImgHeight + "px",
-            "left": $(".box").eq(index).offset().left + "px"
-          }); //瀑布流布局  
-          arr[index] += $(".box").eq(i).innerHeight(); //将布局好的该div的高度和该div上面的div高度相加，重新放入数组  
+          return;
+        }
+      });
+
+      function beginSpider() {
+        var word = $("#questionUrl").val();
+        if (!word) {
+          alert("请输入内容");
+        } else {
+          if (word.indexOf('www.zhihu.com')) {
+            word = word.substr(word.lastIndexOf('/') + 1);
+          }
+          socket.emit('SpiderBegin', word);
+        }
+
+      }
+
+      $(function() {
+
+
+
+        var imgWidth = $(".box").innerWidth(); //获得每个div的宽度，包括内边距  
+        var screenWidth = $(window).width(); //获得浏览器可视区域的宽度  
+        var num = Math.floor(screenWidth / imgWidth); //计算一行可以放几个div  
+        $("#container").css({
+          "width": num * imgWidth + "px",
+          "margin": "0 auto"
+        }); //根据每行放的div的总长来给容器一个宽度，然后居中显示  
+        console.log($(document).height())
+        console.log($(window).height())
+        window.onload = function() {
+          // waterFlow(); //图片加载完毕执行  
+
+          window.onscroll = function() {
+            //滚动条滚动执行  
+            // if (checkScrollDirector()) {
+            //   var urlList = [];
+            //   $("#zancun").find('b').slice(0, 12).each(function(index) {
+            //     var url = $(this).attr("data-url");
+            //     urlList.push(url);
+            //   }).remove();
+            //   if (urlList.length == 0) {
+            //     return false;
+            //   }
+            //   for (var i = 0; i < urlList.length; i++) {
+            //     var html = "<div class='box'><div class='boximg'><img src=" + urlList[i] + "></div></div>";
+            //     $("#container").append(html); //向容器内一次性添加12个图片  
+            //     console.log(1);
+            //   }
+            // waterFlow(); //瀑布流布局   
+            // }
+          }
+        }
+      });
+
+      function getMinIndex(arr, min) { //取得数组中最小高度的div的索引  
+        for (var i in arr) {
+          if (arr[i] == min) {
+            return i;
+          }
         }
       }
-    }
-  </script>
-</body>
+      // .scrollTop(100);aaaaaaaaaaaaaa
+      function checkScrollDirector() { //判断滚动条是否滑到底部  
+        var flag = 0;
+        if ($(document).scrollTop() + $(window).height() >= $(document).height()) {
+          flag = 1;
+
+        }
+        return flag;
+      }
+
+      function waterFlow() {
+        var imgWidth = $(".box").innerWidth(); //获得每个div的宽度，包括内边距  
+        var screenWidth = $(window).width(); //获得浏览器可视区域的宽度  
+        var num = Math.floor(screenWidth / imgWidth); //计算一行可以放几个div  
+        var arr = []; //定义一个数组  
+        for (var i = 0; i < $(".box").length; i++) {
+          if (i < num) { //一行显示num个div,将第一行的每个div高度写入数组  
+            arr[i] = $(".box").eq(i).innerHeight();
+          } else {
+            var minImgHeight = Math.min.apply(null, arr); //取得数组中最小高度的div  
+            var index = getMinIndex(arr, minImgHeight); //取得数组中最小高度的div的索引  
+            $(".box").eq(i).css({
+              "position": "absolute",
+              "top": minImgHeight + "px",
+              "left": $(".box").eq(index).offset().left + "px"
+            }); //瀑布流布局  
+            arr[index] += $(".box").eq(i).innerHeight(); //将布局好的该div的高度和该div上面的div高度相加，重新放入数组  
+          }
+        }
+      }
+    </script>
+  </body>
 
 </html>

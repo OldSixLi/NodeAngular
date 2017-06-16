@@ -6,13 +6,12 @@
         <a onclick="uploadPic(this)">
           <img class="img-responsive img-thumbnail" src="../../images/upload.jpg">
         </a>
-        <h2>上传</h2>
-        <input type="file" id="file_input" multiple/>
       </div>
     </div>
     <input type="hidden" id="iconUrl" name="" value="">
     <form action="/upload" id="headForm" method="post" enctype="multipart/form-data">
-      <input type="file" style="display:none" name="imageRes" id="imageRes" onchange="uploadImage()" />
+      <input type="file" style="display:none" name="imageRes" id="imageRes" onchange="uploadImage()" multiple/>
+      <!--multiple-->
       <input type="hidden" name="type" value="turn" />
     </form>
   </div>
