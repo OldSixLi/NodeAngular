@@ -12,6 +12,9 @@
 
     <link rel="stylesheet" href="../../Style/vue-index.css">
     <link rel="stylesheet" href="../../Style/vue-base.css">
+    <style>
+
+    </style>
   </head>
 
   <body>
@@ -44,7 +47,13 @@
           </div>
         </div>
       </div>
-
+      <div class="row">
+        <div class="col-md-4">
+          <!--<div class="cssload-loader"></div>-->
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+      </div>
       <div class="panel panel-default">
         <div class="panel-heading">表格复用组件示例</div>
         <!--外部组件-->
@@ -70,6 +79,7 @@
     <!--脚本代码-->
     <script type="text/x-template" id="ht-table">
       <div>
+
         <table class="table table-hover">
           <thead>
             <tr>
@@ -77,8 +87,11 @@
               <th v-for="x in rule" :width="x.width">{{x.name}}</th>
             </tr>
           </thead>
+
           <tbody>
-            <tr v-for="(x,index) in valuelist">
+
+
+            <tr v-for="(x,index) in valuelist" v-if="!showLoading">
               <td v-show="showindex=='true'||showindex==null">{{index+1}}</td>
               <td v-for="y in rule">
                 <span v-html="render(x[y.dataKey],y.filter)"> </span>
@@ -86,11 +99,19 @@
             </tr>
           </tbody>
         </table>
+        <div v-show="showLoading">
+          <!--:style="loadingHeight"-->
+          <!--<div class="cssload-clock"></div>-->
+          <div class="cssload-loader"></div>
+        </div>
         <div class="pull-right page">
+          <!-- -->
           <ul class="pagination"></ul>
         </div>
+
         <span style="display:none;">{{searchDatas}}</span>
       </div>
+
     </script>
     <!--
 　　　　　　◆　　　　　　　　　　　◆　　　　　　
@@ -183,7 +204,9 @@
           return {
             valuelist: [],
             rule: [],
-            nameurl: "李三丰"
+            nameurl: "李三丰",
+            showLoading: false
+              // loadingHeight: "height:500px"
           }
         },
         filter: {
@@ -207,13 +230,17 @@
             $.ajax({
               type: "GET",
               url: this.ajaxurl,
+              beforeSend: function() {
+                self.showLoading = true;
+              },
               data: params,
               dataType: "json",
               success: function(data) {
                 if (data != null && data != "") {
+                  self.valuelist = data.data;
+                  self.showLoading = false;
                   if (data.dataSuccess) {
-                    self.valuelist = data.data;
-                    var $page = $(self.$el.childNodes[2]).find("ul");
+                    var $page = $(self.$el.children[2]).find("ul");
                     self.initPageDiv($page,
                       pageindex + 1,
                       data.totalPages,
@@ -222,6 +249,10 @@
                       function() {
                         self.getlist($page.data("page") - 1);
                       });
+
+                    // console.log($(self.$el.children[0]).find('tbody').height())
+                    // self.loadingHeight = $(self.$el.children[0]).find('tbody').height() ? "height:" + $(self.$el.children[0]).find('tbody').height() + "px" : "height:100px";
+
                   } else {}　
                 } else {}
               }　
@@ -307,6 +338,7 @@
           })
         }
       });
+
       Vue.component('column', {
         template: '<span style="display: none">123</span>',
         // template: '<span>123</span>',

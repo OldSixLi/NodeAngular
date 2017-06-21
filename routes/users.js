@@ -67,7 +67,10 @@ router.get('/allUser', function(req, res, next) {
       returnObj.data = result;
       returnObj.totalPages = 10;
       returnObj.currentPage = 4;
-      res.json(returnObj);
+      setTimeout(function() {
+        res.json(returnObj);
+      }, 1000);
+
     } else {
       //查询失败处理操作
       returnObj.errorMessage = '没数据' + new Date().getSeconds();
@@ -77,9 +80,8 @@ router.get('/allUser', function(req, res, next) {
     //控制延时返回数据
     var obj = JSON.parse(data);
     setTimeout(function() {
-
       res.json(obj);
-    }, 0);
+    }, 5000);
   });
 });
 
