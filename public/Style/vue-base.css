@@ -65,6 +65,10 @@ td img {
 
 /*Table组件样式End*/
 
+.relative {
+    position: relative;
+}
+
 
 /*动画相关部分*/
 
@@ -72,8 +76,12 @@ td img {
     width: 146px;
     height: 146px;
     line-height: 146px;
-    margin: 49px auto;
-    position: relative;
+    /*margin: 49px auto;*/
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -73px;
+    margin-top: -73px;
     box-sizing: border-box;
     text-align: center;
     z-index: 0;

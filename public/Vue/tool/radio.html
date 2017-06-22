@@ -56,13 +56,11 @@
               <div class="panel-body"> </div>
             </div>
           </div>
-
         </div>
       </div>
 
     </div>
 
-    </div>
     <script type="text/x-template" id="htradio">
       <label class="el-radio">
     <span class="el-radio__input"
@@ -96,27 +94,28 @@
     <script src='../../Script/bootstrap.js'></script>
     <script src="../../Script/Vue/vue.js"></script>
     <script>
-      const TYPE_CLASSES_MAP = {
+      'use strict';
+
+      var TYPE_CLASSES_MAP = {
         'success': 'el-icon-circle-check',
         'warning': 'el-icon-warning',
         'error': 'el-icon-circle-cross'
       };
 
-      function broadcast(componentName, eventName, params) {
-        this.$children.forEach(child => {
+      function _broadcast(componentName, eventName, params) {
+        this.$children.forEach(function(child) {
           var name = child.$options.componentName;
           if (name === componentName) {
             child.$emit.apply(child, [eventName].concat(params));
           } else {
-            broadcast.apply(child, [componentName, eventName].concat([params]));
+            _broadcast.apply(child, [componentName, eventName].concat([params]));
           }
         });
       }
-
       Vue.component("ht-radio", {
         template: "#htradio",
         methods: {
-          dispatch(componentName, eventName, params) {
+          dispatch: function dispatch(componentName, eventName, params) {
             var parent = this.$parent || this.$root;
             var name = parent.$options.componentName;
             while (parent && (!name || name !== componentName)) {
@@ -130,31 +129,32 @@
               parent.$emit.apply(parent, [eventName].concat(params));
             }
           },
-          broadcast(componentName, eventName, params) {
-            broadcast.call(this, componentName, eventName, params);
+          broadcast: function broadcast(componentName, eventName, params) {
+            _broadcast.call(this, componentName, eventName, params);
           },
           //当下点击
-          click() {
+          click: function click() {
             this.$emit('click');
           },
-          change() {
+          change: function change() {
             this.$emit('change');
           }
         },
-        　
+
         props: {
           value: {},
           label: {},
           disabled: Boolean,
-          name: String　
+          name: String
         },
-        data() {
+        data: function data() {
           return {
             focus: false
           };
         },
+
         computed: {
-          isGroup() {
+          isGroup: function isGroup() {
             var parent = this.$parent;
             while (parent) {
               if (parent.$options.componentName !== 'ElRadioGroup') {
@@ -167,12 +167,12 @@
             return false;
           },
 
+
           model: {
-            get() {
+            get: function get() {
               return this.isGroup ? this._radioGroup.value : this.value;
             },
-
-            set(val) {
+            set: function set(val) {
               if (this.isGroup) {
                 this.dispatch('ElRadioGroup', 'input', [val]);
               } else {
@@ -181,14 +181,12 @@
             }
           },
 
-          isDisabled() {
-            return this.isGroup ?
-              this._radioGroup.disabled || this.disabled :
-              this.disabled;
+          isDisabled: function isDisabled() {
+            return this.isGroup ? this._radioGroup.disabled || this.disabled : this.disabled;
           }
         },
         watch: {
-          label(val) {
+          label: function label(val) {
             alert('23131');
           }
         }
@@ -203,10 +201,10 @@
         //方法
         methods: {
           //这个是radio上的方法
-          alerts: function(e) {
+          alerts: function alerts(e) {
             $("#clickRecord").append('<p><b>@click</b>事件：每次<b>点击</b>都会增加内容，当前点击的值为：' + this.radio + '，可以根据此来进行相关操作</p>');
           },
-          change: function() {
+          change: function change() {
             $("#changeRecord").append('<p><b>@change</b>事件：如果值发生改变，提示当前改变后的值为：' + this.radio + '可以根据此进行相关操作</p>');
             return false;
           }
@@ -216,7 +214,7 @@
         //实时计算
         computed: {},
         //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
-        created: function() {}
+        created: function created() {}
       });
     </script>
   </body>

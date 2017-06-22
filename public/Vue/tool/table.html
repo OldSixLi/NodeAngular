@@ -99,8 +99,8 @@
             </tr>
           </tbody>
         </table>
-        <div v-show="showLoading">
-          <!--:style="loadingHeight"-->
+        <!--TODO 在此编辑加载LOGO样式属性-->
+        <div v-show="showLoading" :style="loadingHeight" class="relative">
           <!--<div class="cssload-clock"></div>-->
           <div class="cssload-loader"></div>
         </div>
@@ -173,12 +173,17 @@
       }
 
       function normaltime(value) {
-        //这个过滤器必须是毫秒级别的过滤
-        var tm = Date.parse(value);
-        var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
-          hour12: false
-        }).replace(/\//g, "-");
-        return tt;
+        try {
+          //这个过滤器必须是毫秒级别的过滤
+          var tm = Date.parse(value);
+          var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
+            hour12: false
+          }).replace(/\//g, "-");
+          return tt;
+        } catch (error) {
+          return value;
+        }
+
       }
 
       　　　　　　　　　　　　　　　
@@ -205,8 +210,8 @@
             valuelist: [],
             rule: [],
             nameurl: "李三丰",
-            showLoading: false
-              // loadingHeight: "height:500px"
+            showLoading: false,
+            loadingHeight: "height:300px"
           }
         },
         filter: {
@@ -227,6 +232,8 @@
             params = this.searchData;
 
             params.page = pageindex;
+            //此处用来计算当前的Tbody的高度，将此高度设置成加载LOGO的高度，视觉上高度不会产生变化
+            self.loadingHeight = $(self.$el).find('tbody').height() ? "height:" + $(self.$el).find('tbody').height() + "px" : "height:300px";
             $.ajax({
               type: "GET",
               url: this.ajaxurl,
@@ -249,9 +256,6 @@
                       function() {
                         self.getlist($page.data("page") - 1);
                       });
-
-                    // console.log($(self.$el.children[0]).find('tbody').height())
-                    // self.loadingHeight = $(self.$el.children[0]).find('tbody').height() ? "height:" + $(self.$el.children[0]).find('tbody').height() + "px" : "height:100px";
 
                   } else {}　
                 } else {}
@@ -327,7 +331,10 @@
         },
         //在组件加载完成后的钩子
         mounted: function() {　
+          var self = this;
           this.getlist(0);
+
+
           var _this = this;
           _this.$slots.default.forEach(function(child) {
             var obj = {};

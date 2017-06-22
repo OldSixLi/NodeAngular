@@ -36,8 +36,12 @@
             <div class="form-group">
               <label class="control-label" for="inputSuccess1">年龄</label>
               <input v-focus v-hello class="form-control" v-model="something" max-length="5" pattern="^[0-9]*$" placeholder="请输入您的年龄">
-              <span class="help-block"></span>
             </div>
+
+            <div class="form-group">
+              <input v-hello class="form-control" v-model="somethings" max-length="20" max-length-message="您输入的长度超出限制" pattern="^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])" pattern-message="请输入正确格式的邮箱地址" placeholder="请输入正确的邮箱地址">
+            </div>
+
           </div>
           <div class="col-md-4 col-sm-4"> </div>
         </div>
@@ -160,7 +164,7 @@
       // 　　　◆　　　◆　◆　　　　　◆　◆　　◆　◆　　　◆　　　　　　　　　　　　　　　◆　　　　◆　
       // 　　　◆　◆◆　　　◆◆　　　◆◆　　◆　　　◆　◆　　　　　　　　　　　　　　　◆　　　◆◆◆　
       function broadcast(componentName, eventName, params) {
-        this.$children.forEach(child => {
+        this.$children.forEach(function(child) {
           var name = child.$options.componentName;
           if (name === componentName) {
             child.$emit.apply(child, [eventName].concat(params));
@@ -363,38 +367,48 @@
         // 当绑定元素插入到 DOM 中。
         inserted: function(el) {
           // 聚焦元素
-          el.focus() //在页面初始加载时就会显示
+          el.focus(); //在页面初始加载时就会显示
         }
       });
 
       Vue.directive('hello', {
+        //元素声明时调用
         bind: function(el) {
-          // console.log('bind')
+
         },
+        //插入到页面时调用
         inserted: function(el) {
-          // console.log('inserted')
+          $(el).parent().append('<span class="help-block"></span>')
+
         },
+        //模板更新时调用
         update: function(el, binding, vnode, oldVnode) { 
+
           //这个东西有点邪性，每次其他的值变化时他也会跟着变
           // 所以现在这个update应该是进行模板更新时就会触发
           if (!el.value) {
+            $(el).parent().removeClass('has-error');
             return false;
           }
           console.log('当前的值为：' + el.value) ;
+
+          //输出当前校验是否正确
+          // console.log(reg.test(el.value));
+          //获取当前组件内自定义的值
           var reg = new RegExp($(el).attr('pattern'));
-          console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-          console.log(reg.test(el.value));
-          console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
           if (reg.test(el.value)) {
             $(el).parent().hasClass('has-error') && $(el).parent().removeClass('has-error');
           } else {
-            $(el).parent().hasClass('has-error') || $(el).parent().addClass('has-error').end().next().text("请输入纯数字");
+            var patternMessage = $(el).attr('pattern-message') || "请输入正确的值";
+            $(el).parent().hasClass('has-error') || $(el).parent().addClass('has-error').end().next().text(patternMessage);
             return false;
           }
-          if (el.value.length <= 5) {
+          var maxLength = $(el).attr('max-length');
+          if (el.value.length <= maxLength) {
             $(el).parent().hasClass('has-error') && $(el).parent().removeClass('has-error');
           } else {
-            $(el).parent().hasClass('has-error') || $(el).parent().addClass('has-error').end().next().text('您输入的值超出了最大长度');
+            var maxLengthMessage = $(el).attr('max-length-message') || "长度超出限制";
+            $(el).parent().hasClass('has-error') || $(el).parent().addClass('has-error').end().next().text(maxLengthMessage);
             return false;
           }
         },
@@ -424,6 +438,7 @@
         //数据部分
         data: {
           something: "",
+          somethings: "",
           name: "",
           number: ""
         },
