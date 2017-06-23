@@ -111,7 +111,7 @@ function CircleGetAnswer(answercount, questionId, anstitle, scoket) {
               setTimeout(function() {
                 var absolute = path.resolve(__dirname, filePath) + '\\';
                 startDownloadTask(scoket, element.url, absolute + element.answerid + '--' + element.imgindex + '--' + element.imgName.substr(-13), element.anstitle);
-              }, 1000 * j);
+              }, 2000 * j);
             })(j);
           }
         });
