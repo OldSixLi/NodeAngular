@@ -49,6 +49,8 @@ router.get('/', function(req, res, next) {
 
 //请求的是/users/users接口才会访问到此处
 router.get('/users', function(req, res, next) {
+  //允许跨域
+  res.header("Access-Control-Allow-Origin", "*");
   var absolutePath = path.resolve(__dirname, '../public/JSON/uu.json');
   var data = fs.readFileSync(absolutePath, "utf-8");
   //控制延时返回数据

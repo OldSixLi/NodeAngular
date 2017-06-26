@@ -10,6 +10,19 @@ var users = require('./routes/users');
 
 var app = express();
 
+//设置跨域访问(此处设置请求头等内容，同时需要在接口中设置跨域属性，详见users/users接口)
+app.all('*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  //设置自定义请求头
+  res.header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild");
+  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  res.header("X-Powered-By", '3.2.1')
+    // res.header("Content-Type", "application/json;charset=utf-8");
+  if (req.method == "OPTIONS") res.send(200); /*让options请求快速返回*/
+  next();
+});
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

@@ -1,0 +1,54 @@
+<!-- 马少博  创建于 2017年6月26日14:14:33 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+    <title> 测试跨域</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+  </head>
+
+  <body>
+
+    <!-- 脚本 -->
+    <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
+    <!-- <script src='https://cdn.bootcss.com/vue/2.3.3/vue.js'></script> -->
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+    <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+    <script>
+      $.ajaxSetup({
+        beforeSend: function(request) {
+          alert(21)
+          request.setRequestHeader("authorization", "我是客户端自定义内容");
+        }
+      });
+
+
+      //NOTE:这个方法不能用中文参数 
+      // $.ajax({
+      //   type: "GET",
+      //   url: "http://localhost:3001/users/users", //修改地址
+      //   dataType: "json",
+      //   success: function(data) {
+      //     if (data != null && data != "") {
+      //       if (data.success) {　
+      //         alert("提示1");
+      //       } else {　
+      //         alert("提示2");
+      //       }
+
+      //     } else {
+
+      //     }
+      //   },
+      //   error: function(response) {
+      //     alert("提示错误");
+      //   }
+      // });
+    </script>
+  </body>
+
+</html>
