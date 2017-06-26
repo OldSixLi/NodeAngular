@@ -1,0 +1,56 @@
+#container .box {
+    width: 16.66%;
+    float: left;
+}
+
+.jconfirm-content>img {
+    text-align: center;
+}
+
+.box {
+    max-width: 100%;
+    margin: 5px 0;
+}
+
+.box>img {
+    -webkit-animation: cssAnimation 0.4s 1 ease-in;
+    -moz-animation: cssAnimation 0.4s 1 ease-in;
+    -o-animation: cssAnimation 0.4s 1 ease-in;
+    animation: cssAnimation 0.4s 1 ease-in;
+}
+
+@keyframes cssAnimation {
+    from {
+        transform: rotate(0deg) scale(0.1) skew(0) translate(0);
+    }
+    to {
+        transform: rotate(0deg) scale(1) skew(0) translate(0);
+    }
+}
+
+@-webkit-keyframes cssAnimation {
+    from {
+        -webkit-transform: rotate(0deg) scale(0.1) skew(0) translate(0);
+    }
+    to {
+        -webkit-transform: rotate(0deg) scale(1) skew(0) translate(0);
+    }
+}
+
+@-moz-keyframes cssAnimation {
+    from {
+        -moz-transform: rotate(0deg) scale(0.1) skew(0) translate(0);
+    }
+    to {
+        -moz-transform: rotate(0deg) scale(1) skew(0) translate(0);
+    }
+}
+
+@-o-keyframes cssAnimation {
+    from {
+        -o-transform: rotate(0deg) scale(0.1) skew(0) translate(0);
+    }
+    to {
+        -o-transform: rotate(0deg) scale(1) skew(0) translate(0);
+    }
+}

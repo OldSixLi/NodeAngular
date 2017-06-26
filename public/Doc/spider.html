@@ -9,66 +9,8 @@
     <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/myapp/public/images/my.ico' />
     <title> 标题</title>
     <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
-    <link href="../Script/Masonry/style/chromagallery.min.css" rel='stylesheet'>
-
-    <style>
-      #container {
-        /*display: flex;*/
-      }
-      
-      #container .box {
-        width: 16.66%;
-        float: left;
-      }
-      
-      .box>img {
-        max-width: 100%;
-        margin: 5px 0;
-      }
-      
-      .box>img {
-        -webkit-animation: cssAnimation 0.4s 1 ease-in;
-        -moz-animation: cssAnimation 0.4s 1 ease-in;
-        -o-animation: cssAnimation 0.4s 1 ease-in;
-        animation: cssAnimation 0.4s 1 ease-in;
-      }
-      
-      @keyframes cssAnimation {
-        from {
-          transform: rotate(0deg) scale(0.1) skew(0) translate(0);
-        }
-        to {
-          transform: rotate(0deg) scale(1) skew(0) translate(0);
-        }
-      }
-      
-      @-webkit-keyframes cssAnimation {
-        from {
-          -webkit-transform: rotate(0deg) scale(0.1) skew(0) translate(0);
-        }
-        to {
-          -webkit-transform: rotate(0deg) scale(1) skew(0) translate(0);
-        }
-      }
-      
-      @-moz-keyframes cssAnimation {
-        from {
-          -moz-transform: rotate(0deg) scale(0.1) skew(0) translate(0);
-        }
-        to {
-          -moz-transform: rotate(0deg) scale(1) skew(0) translate(0);
-        }
-      }
-      
-      @-o-keyframes cssAnimation {
-        from {
-          -o-transform: rotate(0deg) scale(0.1) skew(0) translate(0);
-        }
-        to {
-          -o-transform: rotate(0deg) scale(1) skew(0) translate(0);
-        }
-      }
-    </style>
+    <link href="https://cdn.bootcss.com/jquery-confirm/3.2.3/jquery-confirm.min.css" rel="stylesheet">
+    <link href="../Style/spider.css" rel="stylesheet">
   </head>
 
   <body>
@@ -82,22 +24,18 @@
       <hr>
     </div>
 
-    <div id="container" class="once container" style="padding-top:20;">
-      <div class="box" id="imgblock2"> </div>
+    <div id="container" class="once container" style="padding-top:20px;">
+      <div class="box" id="imgblock2"><img src="\images\zhihu_Down\54579592\140044028--0--5a1cc56_r.jpg" class="img-responsive img-thumbnail"> </div>
       <div class="box" id="imgblock3"> </div>
       <div class="box" id="imgblock4"> </div>
       <div class="box" id="imgblock5"> </div>
       <div class="box" id="imgblock6"> </div>
       <div class="box" id="imgblock1"> </div>
-
-    </div>
-    <div id="zancun">
     </div>
     <!-- 脚本 -->
     <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
-    <script src='../Script/Masonry/scripts/chromagallery.pkgd.min.js'></script>
     <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
-    <script src="//cdnjscn.b0.upaiyun.com/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-confirm/3.2.3/jquery-confirm.min.js"></script>
     <script src="../Script/webscoket/socket.io.js"></script>
     <script src="../Script/webscoket/desktopnotify.js"></script>
     <script src="../Script/webscoket/common.js"></script>
@@ -111,14 +49,8 @@
       socket.on('mashaobo', function(data) {
         socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
         socket.emit('FileWatch', '前台传输数据成功'); //前台传输数据
+      });　
 
-      });
-
-      // socket.on('FileChange', function(data) {
-      //   // socket.emit('mashaobotest', '前台传输数据成功'); //前台传输数据
-      //   //刷新当前页面.
-      //   window.location.reload();
-      // }); 
       var settime = 0,
         str = "";
       socket.on('ImgData', function(data) {
@@ -156,18 +88,173 @@
         $(selectors).append(str)　　
       });
 
+
+      $(function() {
+        document.onkeydown = function(e) {
+          var ev = document.all ? window.event : e;
+          if (ev.keyCode == 13) {　
+            beginSpider();
+          }
+        }
+
+
+        $("#container").on('click', 'img', function() {
+          var src = $(this).attr('src');
+          console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+          console.log(src);
+          console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+          tool.alert("图片详情", "<img src='" + src + "' style='width:100%' class='img-responsive img-thumbnail'>");
+        })
+      });
+
       function beginSpider() {
         var word = $("#questionUrl").val();
         if (!word) {
-          alert("请输入内容");
+          tool.alert("提示", "请输入内容");
         } else {
           if (word.indexOf('www.zhihu.com')) {
             word = word.substr(word.lastIndexOf('/') + 1);
           }
           socket.emit('SpiderBegin', word);
         }
-
       }
+
+      //判断浏览器版本
+      function myBrowser() {
+        var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+        var isOpera = userAgent.indexOf("Opera") > -1; //判断是否Opera浏览器
+        var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera; //判断是否IE浏览器
+        var isFF = userAgent.indexOf("Firefox") > -1; //判断是否Firefox浏览器
+        var isSafari = userAgent.indexOf("Safari") > -1; //判断是否Safari浏览器
+        if (isIE) {
+          var IE5 = IE55 = IE6 = IE7 = IE8 = false;
+          var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+          reIE.test(userAgent);
+          var fIEVersion = parseFloat(RegExp["$1"]);
+          IE55 = fIEVersion == 5.5;
+          IE6 = fIEVersion == 6.0;
+          IE7 = fIEVersion == 7.0;
+          IE8 = fIEVersion == 8.0;
+          if (IE55) {
+            return "IE55";
+          }
+          if (IE6) {
+            return "IE6";
+          }
+          if (IE7) {
+            return "IE7";
+          }
+          if (IE8) {
+            return "IE8";
+          }
+        } //isIE end
+        if (isFF) {
+          return "FF";
+        }
+        if (isOpera) {
+          return "Opera";
+        }
+      };
+
+      var JSTOOL = function() {
+
+        /* 弹窗 */
+        this.alert = function(title, content, callback, className) {
+          var confirm = callback && typeof callback === "function" ? callback :
+            function() {};
+          if (myBrowser() == "IE8") {
+
+            $.alert({
+              buttons: {
+                ok: {
+                  label: '',
+                  className: 'btn-primary'
+                }
+              },
+              message: content,
+              callback: function() {
+                confirm();
+              },
+              title: title,
+            });
+
+
+          } else {
+            var alertClass = "";
+            if (typeof className == "undefined") {
+              alertClass = 'offset2 col-md-8 col-md-offset-2';
+            } else {
+              alertClass = className;
+            }
+            $.alert({
+              title: title,
+              content: content,
+              confirm: confirm,
+              confirmButton: '确定',
+              backgroundDismiss: false,
+              confirmButtonClass: 'btn-primary',
+              animation: 'zoom',
+              closeAnimation: 'scale',
+              columnClass: alertClass
+            });
+          }
+        };
+        this.confirm = function(title, content, okCallback, cancelCallback) {
+          var confirm = okCallback && typeof okCallback === "function" ? okCallback :
+            function() {};
+          var cancel = cancelCallback && typeof cancelCallback === "function" ? cancelCallback :
+            function() {};
+          if (myBrowser() == "IE8") {
+            window.confirm({
+              buttons: {
+                confirm: {
+                  label: '确认',
+                  className: 'btn-primary'
+                },
+                cancel: {
+                  label: '取消',
+                  className: 'btn-danger'
+                }
+              },
+              message: content,
+              callback: function(result) {
+                if (result) {
+                  confirm();
+                } else {
+                  cancel();
+                }
+              },
+              title: title,
+            });
+          } else {
+            var confirm = okCallback && typeof okCallback === "function" ? okCallback : function() {};
+            var cancel = cancelCallback && typeof cancelCallback === "function" ? cancelCallback : function() {};
+            $.confirm({
+              title: title,
+              offsetTop: 10,
+              content: content,
+              confirm: confirm,
+              cancel: cancel,
+              confirmButton: '确定',
+              cancelButton: '取消',
+              confirmButtonClass: 'btn-primary',
+              cancelButtonClass: 'btn-danger',
+              backgroundDismiss: false,
+              animation: 'zoom',
+              closeAnimation: 'scale'
+            });
+          }
+        };
+        this.dialog = function(title, content) {
+          window.top.$.dialog({
+            title: title,
+            content: content,
+            animation: 'zoom',
+            closeAnimation: 'scale'
+          });
+        };
+      };
+      var tool = new JSTOOL();
     </script>
   </body>
 
