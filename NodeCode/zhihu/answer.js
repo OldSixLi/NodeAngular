@@ -120,6 +120,10 @@ function CircleGetAnswer(answercount, questionId, anstitle, scoket) {
 
 }
 var imgIndexNew = 0;
+
+
+
+
 //处理请求
 function parseResult(data, anstitle) {
   var deferred = Q.defer();
