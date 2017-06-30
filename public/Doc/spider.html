@@ -15,12 +15,14 @@
 
   <body>
     <div class="container">
-      <div class="input-group">
+      <div class="input-group" id="searchInput">
         <input type="text" class="form-control input-lg" id="questionUrl" placeholder="请输入搜索地址">
         <span class="input-group-btn">
         <button class="btn btn-primary btn-lg" type="button" onclick="beginSpider()">　开始抓取　</button>
       </span>
       </div>
+
+      <h2 id="searchInfo" style="display: none;">以下为搜索结果</h2>
       <hr>
     </div>
 
@@ -94,6 +96,7 @@
           var ev = document.all ? window.event : e;
           if (ev.keyCode == 13) {　
             beginSpider();
+
           }
         }
 
@@ -112,6 +115,8 @@
         if (!word) {
           tool.alert("提示", "请输入内容");
         } else {
+          $("#searchInfo").show();
+          $("#searchInput").hide();
           if (word.indexOf('www.zhihu.com')) {
             word = word.substr(word.lastIndexOf('/') + 1);
           }
@@ -160,14 +165,13 @@
 
         /* 弹窗 */
         this.alert = function(title, content, callback, className) {
-          var confirm = callback && typeof callback === "function" ? callback :
-            function() {};
+          var confirm = callback && typeof callback === "function" ? callback : function() {};
           if (myBrowser() == "IE8") {
 
             $.alert({
               buttons: {
                 ok: {
-                  label: '',
+                  label: '关闭',
                   className: 'btn-primary'
                 }
               },
@@ -191,14 +195,21 @@
               content: content,
               confirm: confirm,
               confirmButton: '确定',
+              cancelButton: '取消',
               backgroundDismiss: false,
               confirmButtonClass: 'btn-primary',
               animation: 'zoom',
               closeAnimation: 'scale',
-              columnClass: alertClass
+              columnClass: alertClass,
+              buttons: [{
+                text: "确定",
+                btnClass: "btn-primary"
+              }]
             });
           }
         };
+
+
         this.confirm = function(title, content, okCallback, cancelCallback) {
           var confirm = okCallback && typeof okCallback === "function" ? okCallback :
             function() {};
@@ -254,6 +265,8 @@
           });
         };
       };
+
+
       var tool = new JSTOOL();
     </script>
   </body>

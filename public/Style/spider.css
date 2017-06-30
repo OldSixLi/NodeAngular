@@ -7,6 +7,12 @@
     text-align: center;
 }
 
+.jconfirm .jconfirm-scrollpane {
+    /* IE6和部分IE7内核的浏览器(如QQ浏览器)下颜色被覆盖 */
+    background-color: rgba(19, 18, 16, 0.78);
+    /* IE6和部分IE7内核的浏览器(如QQ浏览器)会读懂，但解析为透明 */
+}
+
 .box {
     max-width: 100%;
     margin: 5px 0;

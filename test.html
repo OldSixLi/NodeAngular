@@ -1,0 +1,59 @@
+<!-- 马少博  创建于 2017年6月30日16:44:01 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+    <title> 标题</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+  </head>
+
+  <body>
+
+    <!-- 脚本 -->
+    <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
+    <!-- <script src='https://cdn.bootcss.com/vue/2.3.3/vue.js'></script> -->
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+    <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+    <script>
+      var arr = [1, 2, 3, 4, 5];
+
+      //   setInterval()
+
+      //   for (var index = 0; index < arr.length; index++) {
+      //     var element = arr[index];
+      //     (function(i) {
+      //       setTimeout(function() {
+      //         alert(arr[i])
+      //       }, (i + 1) * 10000);
+      //     })(index)
+      //   }
+
+      var j = 0;
+      setarr()
+
+      function setarr() {
+        alert(arr[j])
+        j++;
+        if (j < arr.length) {
+          setTimeout(function() {
+            setarr()
+          }, 2000);
+        }
+      }
+
+      setTimeout(function() {
+        arr.push(6);
+        arr.push(7);
+        arr.push(8);
+        arr.push(9);
+        arr.push(10);
+      }, 2000);
+    </script>
+
+  </body>
+
+</html>
