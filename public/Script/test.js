@@ -1,6 +1,7 @@
-function testIsNum(num) {
-  console.log(isNaN(num) && num > 0);
-  return num > 0;
-}
-
-testIsNum('6')
+$("#selector").click(function() {
+  if (this.checked) {
+    $("input[type='checkbox'][name='names']").each(function() { this.checked = true; });
+  } else {
+    $("input[type='checkbox'][name='names']").each(function() { this.checked = false; });
+  }
+});

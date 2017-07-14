@@ -64,6 +64,9 @@
         <br>
         <span>　正整数：</span>
         <ht-input type="numbers" v-focus v-model="number"></ht-input>
+        <br>
+        <span>　　金额：</span>
+        <ht-input type="money" v-focus v-model="moneys"></ht-input>
         <!--<input type="number" name="" value="">-->
       </div>
 
@@ -248,6 +251,24 @@
                   }
                 }
                 break;
+              case "money":
+                // $(".vipprices").keyup(function() {
+                var reg = value.match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                  txt = reg[0];
+                }
+                value = txt;
+                // }).change(function() {
+                //   $(this).keypress();
+                //   var v = $(this).val();
+                //   if (/\.$/.test(v)) {
+                //     $(this).val(v.substr(0, v.length - 1));
+                //   }
+                // });
+                break;
+
+
               default:
                 break;
             }
@@ -299,9 +320,6 @@
           },
           setCurrentValue(value) {
             if (value === this.currentValue) return;
-
-
-
             this.currentValue = value;
             if (this.validateEvent) {
               this.dispatch('ElFormItem', 'el.form.change', [value]);
@@ -333,6 +351,11 @@
           if (this.type == "numbers") {
             if (this.placeholder == undefined) {
               this.places = "请输入大于0的整数"
+            }
+          }
+          if (this.type == "money") {
+            if (this.placeholder == undefined) {
+              this.places = "请输入金额，小数点后保留两位小数"
             }
           }
         },
@@ -439,7 +462,8 @@
           something: "",
           somethings: "",
           name: "",
-          number: ""
+          number: "",
+          moneys: ""
         },
         //方法
         methods: {
