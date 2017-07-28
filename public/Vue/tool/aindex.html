@@ -9,6 +9,29 @@
     <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
     <title> 组件列表页面</title>
     <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <style>
+      a {
+        text-decoration: none;
+      }
+      
+      a:hover {
+        text-decoration: none;
+        color: #23527c;
+      }
+      
+      a:focus h2,
+      a:hover h2 {
+        transform: translateY(-2px);
+      }
+      
+      h2 small {
+        color: #000;
+      }
+      
+      .red {
+        color: red;
+      }
+    </style>
   </head>
 
   <body>
@@ -23,15 +46,18 @@
             <h2 class="alert alert-info">表格-Table <small>（已完成）</small></h2>
           </a>
           <a href="input.html">
-            <h2 class="alert alert-info">输入框-input <small>（开发中）</small></h2>
+            <h2 class="alert alert-info">输入框-input <small class="red">（开发中...）</small></h2>
           </a>
         </div>
         <div class="col-md-4">
           <a href="from.html">
-            <h2 class="alert alert-info">表单-Form</h2>
+            <h2 class="alert alert-info">表单-Form<small class="red">（开发中...）</small></h2>
           </a>
           <a href="radio.html">
             <h2 class="alert alert-info">单选框-Radio<small>（已完成）</small></h2>
+          </a>
+          <a href="checkbox.html">
+            <h2 class="alert alert-info">复选-CheckBox<small>（已完成）</small></h2>
           </a>
         </div>
         <div class="col-md-2"></div>

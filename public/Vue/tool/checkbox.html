@@ -1,0 +1,332 @@
+<!-- 马少博  创建于 2017年7月26日14:33:39 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+    <title> 标题</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../Style/vue-index.css">
+    <link rel="stylesheet" href="../../Style/vue-base.css">
+    <style>
+      .col-md-4 {
+        border-radius: 5px;
+        min-height: 500px;
+        border: 1px solid #ddd;
+        background-clip: content-box;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!--　　　　　　　　　　　　　　　　　　　　　　　　　　
+　◆◆　　◆◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆　　　　
+　　◆　　◆　◆　◆　◆　◆◆　◆◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆◆◆◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　◆　
+　◆◆　　◆◆　◆◆◆　◆◆　◆　◆◆◆◆◆◆◆◆　
+　　　　　　　　　　　　　　　　　　　　　　　　　　-->
+    <div id="vueBlock">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="text-center">Checkbox组件</h1>
+        </div>
+
+        <div class="col-md-4">
+          <p>当前checkbox的值是：<b> {{ischeck}}</b></p>
+          1.
+          <ht-checkbox v-model="ischeck" :value="num" :true-label="num" :false-label="num1" @change='checkChange()'>是否选中</ht-checkbox>
+          <br> 2.
+          <ht-checkbox v-model="checks">选中？</ht-checkbox>{{checks}}
+        </div>
+        <div class="col-md-4">
+
+          <b>CF永久武器你买了哪些？</b><br>
+          <ht-checkbox v-model='wuqiList' :label='888'>火麒麟（888元）</ht-checkbox><br>
+          <ht-checkbox v-model='wuqiList' :label='788'>雷神（788元）</ht-checkbox><br>
+          <ht-checkbox v-model='wuqiList' :label='188'>盘龙（188元）</ht-checkbox><br>
+          <ht-checkbox v-model='wuqiList' :label='688' disabled>毁灭（688元）</ht-checkbox><br>
+          <ht-checkbox v-model='wuqiList' :label='588'>屠龙（588元）</ht-checkbox><br>
+          <ht-checkbox v-model='wuqiList' :label='488'>龙啸（488元）</ht-checkbox><br>
+          <ht-checkbox v-model='wuqiList' :label='388'>修罗（388元）</ht-checkbox><br>
+          
+          <p>总共花费了 {{wuqiList.sum()}} 元</p>
+          <br>
+        </div>
+        <div class="col-md-4">
+          <h3 class="text-center">循环遍历组件
+            <small>注：checkbox的值不能相同</small></h3>
+          <b>人物你买了哪些？</b>
+          <p v-for="x in PersonsList">
+            <ht-checkbox v-model="totalPrice" :label='x.price'> {{x.name+'('+x.price+'元)'}}</ht-checkbox>
+          </p>
+          <p> 总共花费了 {{totalPrice.sum()}}元</p>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!--　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　◆　　　◆　◆　　　　　◆　　　　　　◆◆　　　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　◆　◆◆◆◆◆◆◆　　　◆　　◆◆◆◆　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　◆　　　◆　◆　　　　　◆　　◆　　　　　　　◆◆　　◆◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆　　　　
+　◆◆◆◆　◆◆◆◆◆　　◆◆◆◆　◆　　　　　　　　◆　　◆　◆　◆　◆　◆◆　◆◆　　◆　　　　　
+　　　◆　　◆　　　◆　　　　◆　　◆◆◆◆◆◆　　　◆　　◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆◆　　◆◆◆◆◆　　　◆◆◆　◆　◆　　◆　　　◆◆◆◆　　　◆　　　◆◆　◆◆　　◆　　　　　
+　　◆◆◆　◆　　　◆　　　◆◆　◆◆　◆　　◆　　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　◆　◆　　◆◆◆◆◆　　◆　◆　　◆　◆　◆　　　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　　　
+　　　◆　　　　◆　　　　　　◆　　◆　◆　◆　　　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　◆　
+　　　◆　◆◆◆◆◆◆◆　　　◆　　◆　　◆　　　　◆◆　　◆◆　◆◆◆　◆◆　◆　◆◆◆◆◆◆◆◆　
+　　　◆　　　◆　◆　　　　　◆　◆　　◆　◆　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　◆　◆◆　　　◆◆　　　◆◆　　◆　　　◆　　　　　　　　　　　　　　　　　　　　　　　　　　　
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　-->
+    <script type="text/x-template" id="ht-check">
+      <label class="el-checkbox">
+         
+    <span class="el-checkbox__input"
+      :class="{
+        'is-disabled': disabled,
+        'is-checked': isChecked,
+        'is-indeterminate': indeterminate,
+        'is-focus': focus
+      }"
+    >
+     <!-- 隐藏原来的原生checkbox，更改样式 -->
+      <span class="el-checkbox__inner"></span>
+      <!-- 有true-label时，显示此插件 -->
+      <input
+        v-if="trueLabel || falseLabel"
+        class="el-checkbox__original"
+        type="checkbox"
+        :name="name"
+        :disabled="disabled"
+        :true-value="trueLabel"
+        :false-value="falseLabel"
+        v-model="model"
+        @change="handleChange"
+        @focus="focus = true"
+        @blur="focus = false">
+      <input
+        v-else
+        class="el-checkbox__original"
+        type="checkbox"
+        :disabled="disabled"
+        :value="label"
+        :name="name"
+        v-model="model"
+        @change="handleChange"
+        @focus="focus = true"
+        @blur="focus = false">
+    </span>
+    <span class="el-checkbox__label" v-if="$slots.default || label">
+      <slot></slot>
+      <template v-if="!$slots.default">{{label}}</template>
+    </span>
+  </label>
+    </script>
+    <!-- 脚本 -->
+    <script src='https://cdn.bootcss.com/vue/2.3.3/vue.js'></script>
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+    <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+    <script>
+      Array.prototype.sum = function() {
+        if (this.length != 0) {
+          return this.reduce(function(partial, value) {
+            return partial + value;
+          })
+        } else {
+          return 0;
+        }
+      };
+
+      //     　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　  
+      // 　　　◆　　　◆　◆　　　　　◆　　　　　　◆◆　　　　　　◆　　　　　　◆◆◆◆◆　◆◆◆◆◆　
+      // 　　　◆　◆◆◆◆◆◆◆　　　◆　　◆◆◆◆　　　◆◆◆◆◆◆◆◆◆◆◆　◆　　　◆　◆　　　◆　
+      // 　　　◆　　　◆　◆　　　　　◆　　◆　　　　　　　　　　　◆　　　　　　◆　　　◆　◆　　　◆　
+      // 　◆◆◆◆　◆◆◆◆◆　　◆◆◆◆　◆　　　　　　　◆◆◆◆◆◆◆◆◆　　◆　　　◆　◆◆◆◆◆　
+      // 　　　◆　　◆　　　◆　　　　◆　　◆◆◆◆◆◆　　　　　　　　　　　　　◆◆◆◆◆　◆　　　◆　
+      // 　　◆◆　　◆◆◆◆◆　　　◆◆◆　◆　◆　　◆　　◆◆◆◆◆◆◆◆◆　　◆　　　◆　◆　　　◆　
+      // 　　◆◆◆　◆　　　◆　　　◆◆　◆◆　◆　　◆　　◆　　　◆　　　◆　　◆　　　◆　◆◆◆◆◆　
+      // 　◆　◆　　◆◆◆◆◆　　◆　◆　　◆　◆　◆　　　◆　　　◆　　　◆　　◆　　　◆　◆　　　◆　
+      // 　　　◆　　　　◆　　　　　　◆　　◆　◆　◆　　　◆◆◆◆◆◆◆◆◆　　◆◆◆◆◆　◆　　　◆　
+      // 　　　◆　◆◆◆◆◆◆◆　　　◆　　◆　　◆　　　　◆　　　　　　　◆　　◆　　　　　◆　　　◆　
+      // 　　　◆　　　◆　◆　　　　　◆　◆　　◆　◆　　　◆　　　　　　　　　　　　　　　◆　　　　◆　
+      // 　　　◆　◆◆　　　◆◆　　　◆◆　　◆　　　◆　◆　　　　　　　　　　　　　　　◆　　　◆◆◆　
+      Vue.component('ht-checkbox', {
+        template: '#ht-check',
+        //对外获取的数据
+        props: {
+          value: {},
+          label: {},
+          indeterminate: Boolean,
+          disabled: Boolean,
+          checked: Boolean,
+          name: String,
+          trueLabel: [String, Number],
+          falseLabel: [String, Number]
+        },
+        computed: {
+          model: {
+            get() {
+              return this.isGroup ?
+                this.store : this.value !== undefined ?
+                this.value : this.selfModel;
+            },
+            set(val) {
+              if (this.isGroup) {
+                let isLimitExceeded = false;
+                (this._checkboxGroup.min !== undefined &&
+                  val.length < this._checkboxGroup.min &&
+                  (isLimitExceeded = true));
+
+                (this._checkboxGroup.max !== undefined &&
+                  val.length > this._checkboxGroup.max &&
+                  (isLimitExceeded = true));
+
+                isLimitExceeded === false &&
+                  this.dispatch('ElCheckboxGroup', 'input', [val]);
+
+              } else if (this.value !== undefined) {
+                this.$emit('input', val);
+              } else {
+                this.selfModel = val;
+              }
+            }
+          },
+
+          isChecked() {
+            if ({}.toString.call(this.model) === '[object Boolean]') {
+              return this.model;
+            } else if (Array.isArray(this.model)) {
+              return this.model.indexOf(this.label) > -1;
+            } else if (this.model !== null && this.model !== undefined) {
+              return this.model === this.trueLabel;
+            }
+          },
+
+          isGroup() {
+            let parent = this.$parent;
+            while (parent) {
+              if (parent.$options.componentName !== 'ElCheckboxGroup') {
+                parent = parent.$parent;
+              } else {
+                this._checkboxGroup = parent;
+                return true;
+              }
+            }
+            return false;
+          },
+
+          store() {
+            return this._checkboxGroup ? this._checkboxGroup.value : this.value;
+          }
+        },
+        //组件内数据部分
+        data: function() {
+          return {
+            selfModel: false,
+            focus: false
+          };
+        },
+        methods: {
+          addToStore() {
+            if (
+              //判断当前的模型是否为数组，并且
+              Array.isArray(this.model) &&
+              this.model.indexOf(this.label) === -1
+            ) {
+              this.model.push(this.label);
+            } else {
+              this.model = this.trueLabel || true;
+            }
+          },
+          handleChange(ev) {
+            this.$emit('change', ev);
+            if (this.isGroup) {
+              this.$nextTick(_ => {
+                this.dispatch('ElCheckboxGroup', 'change', [this._checkboxGroup.value]);
+              });
+            }
+          }
+        },
+
+        created() {
+          this.checked && this.addToStore();
+        }
+      });
+      // 　　　　　　　　　　　　　　　　　　　　　　　　　◆　　　　　　◆◆◆◆◆　◆◆◆◆◆　
+      // 　　　　　　　　　　　　　　　　　　　　◆◆◆◆◆◆◆◆◆◆◆　◆　　　◆　◆　　　◆　
+      // 　◆◆　　◆◆◆◆　　◆◆◆◆◆◆◆　　　　　　　◆　　　　　　◆　　　◆　◆　　　◆　
+      // 　　◆　　◆　　◆　　◆　　◆　　◆　　　◆◆◆◆◆◆◆◆◆　　◆　　　◆　◆◆◆◆◆　
+      // 　　◆　　◆　　◆　　◆　　◆　◆　　　　　　　　　　　　　　　◆◆◆◆◆　◆　　　◆　
+      // 　　◆　◆　　　◆　　◆　　◆◆◆　　　　◆◆◆◆◆◆◆◆◆　　◆　　　◆　◆　　　◆　
+      // 　　◆　◆　　　◆　　◆　　◆　◆　　　　◆　　　◆　　　◆　　◆　　　◆　◆◆◆◆◆　
+      // 　　　◆◆　　　◆　　◆　　◆　　　　　　◆　　　◆　　　◆　　◆　　　◆　◆　　　◆　
+      // 　　　◆　　　　◆　　◆　　◆　　◆　　　◆◆◆◆◆◆◆◆◆　　◆◆◆◆◆　◆　　　◆　
+      // 　　　◆　　　　　◆◆　　◆◆◆◆◆　　　◆　　　　　　　◆　　◆　　　　　◆　　　◆　
+      // 　　　　　　　　　　　　　　　　　　　　　◆　　　　　　　　　　　　　　　◆　　　　◆　
+      // 　　　　　　　　　　　　　　　　　　　　◆　　　　　　　　　　　　　　　◆　　　◆◆◆　
+      var vueBlock = new Vue({
+        el: "#vueBlock",
+        //数据部分 
+        data: {
+          checks: true,
+          ischeck: '哈哈',
+          num: '哈哈',
+          num1: "你瞎哈哈啥呢，别哈哈了",
+          wuqiList: [],
+          totalPrice: [],
+          wuqi1: "火麒麟",
+          wuqi2: "雷神",
+          wuqi3: "毁灭",
+          PersonsList: [{
+            name: "猎狐者",
+            price: 38
+          }, {
+            name: "飞虎队",
+            price: 58
+          }, {
+            name: "灵狐者",
+            price: 108
+          }, {
+            name: "夜玫瑰",
+            price: 18
+          }, {
+            name: "刀锋战士",
+            price: 36
+          }, {
+            name: "潘多拉",
+            price: 19
+          }]
+
+        },
+        //方法
+        methods: {
+          checkChange: function() {
+            if (this.ischeck == this.num) {
+              console.log("选中");
+            } else {
+              console.log("未选.中");
+            }
+          }
+        },
+        //过滤器
+        filters: {},
+        //实时计算
+        computed: {
+
+        },
+        //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
+        created: function() {}
+      });
+    </script>
+  </body>
+
+</html>
