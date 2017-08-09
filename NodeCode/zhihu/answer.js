@@ -58,10 +58,8 @@ function start(queObj) {
         nodegrass.get(questionUrls, function(data, status, headers) {
           var $ = cheerio.load(data);
           //只获取中文字符
-          var anstitle = $(data).find('title').text().trim().replace(/[^\u4e00-\u9fa5]/gi, "");
-
+          var anstitle = stripscript($(data).find('title').text().trim());
           console.log('【问题】：' + questionId + '—' + anstitle.substr(0, anstitle.length - 2) + '？' + '已开始加入获取答案队列中！');
-
           //返回答案数
           var answer = $(data).find('#zh-question-answer-num').text();
           var ansCount = parseInt((answer.substr(0, answer.length - 4)));
@@ -70,7 +68,6 @@ function start(queObj) {
             ansCount = 200;
           }
           // CircleGetAnswer(ansCount, questionId, anstitle);
-
         });
         break;
       default:
@@ -81,9 +78,55 @@ function start(queObj) {
 }
 //#endregion 
 // CircleGetAnswer(10, 24463692, "测试");
+
+
+function stripscript(s) {
+  var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]")
+  var rs = "";
+  for (var i = 0; i < s.length; i++) {
+    rs = rs + s.substr(i, 1).replace(pattern, '');
+  }
+  return rs;
+}
+
+/**
+ * 获取单个问题
+ * 
+ * @param {any} questionId 
+ * @param {any} _socket 
+ */
+function GetSingleQuestion(questionId, _socket) {
+  nodegrass.get('https://www.zhihu.com/question/' + questionId, function(data, status, headers) {
+    var $ = cheerio.load(data);
+    //只获取中文字符
+    var anstitle = $(data).find('title').text().trim().replace(/[^\u4e00-\u9fa5]/gi, "");
+    console.log('【问题】：' + questionId + '—' + anstitle.substr(0, anstitle.length - 2) + '？' + '已开始加入获取答案队列中！');
+    //返回答案数
+    var ansCount = getNum($(data).find('.List-headerText').text());
+    //在遍历问题下的答案时，优质答案一般不会超过20页，后期答案不再进行遍历
+    if (ansCount > 200) {
+      ansCount = 200;
+    }
+    var filePath = path.resolve(__dirname, '../../public/images/zhihu_Down/' + questionId);
+    if (!fs.existsSync(filePath)) {
+      fs.mkdirSync(filePath, 0777); //创建目录
+      console.log(filePath + '文件夹已成功创建！');
+    }
+    CircleGetAnswer(ansCount, questionId, anstitle, _socket);
+  });
+}
+
+//获取纯字符串
+function getNum(text) {
+  var value = text.replace(/[^0-9]/ig, "");
+  return value;
+}
+
+
+
+
 //#region 根据答案总数，循环获取答案
 /**
- * 
  * 
  * @param {any} answercount 遍历的答案数量
  * @param {any} questionId 问题ID
@@ -92,10 +135,6 @@ function start(queObj) {
 function CircleGetAnswer(answercount, questionId, anstitle, scoket) {
 
   var filePath = path.resolve(__dirname, '../../public/images/zhihu_Down/' + questionId);
-  if (!fs.existsSync(filePath)) {
-    fs.mkdirSync(filePath, 0777); //创建目录
-    console.log(filePath + '文件夹已成功创建！');
-  }
 
   //因为NodeJs是异步执行的，所以另起函数的话会导致获取不到ans，因为此时异步请求还没有相应
   //所以当前函数必须在上一个函数中被调用
@@ -111,7 +150,7 @@ function CircleGetAnswer(answercount, questionId, anstitle, scoket) {
               setTimeout(function() {
                 var absolute = path.resolve(__dirname, filePath) + '\\';
                 startDownloadTask(scoket, element.url, absolute + element.answerid + '--' + element.imgindex + '--' + element.imgName.substr(-13), element.anstitle);
-              }, 2000 * j);
+              }, 3000 * j);
             })(j);
           }
         });
@@ -120,9 +159,6 @@ function CircleGetAnswer(answercount, questionId, anstitle, scoket) {
 
 }
 var imgIndexNew = 0;
-
-
-
 
 //处理请求
 function parseResult(data, anstitle) {
@@ -133,7 +169,6 @@ function parseResult(data, anstitle) {
     //遍历JSON操作
     if (obj.msg.length > 0) {
       var arr = obj.msg;
-
       // console.log($(arr[0]).find('.zm-editable-content').html());
       //#region 遍历每个答案的数据，进行对比赞数与下载 
       console.log(obj.msg.length);
@@ -290,4 +325,4 @@ function getNowFormatDate(dates) {
   return currentdate;
 }
 
-exports.getAnswer = CircleGetAnswer;
+exports.getAnswer = GetSingleQuestion;

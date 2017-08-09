@@ -29,7 +29,7 @@ io.on('connection', function(_socket) {
   });
   _socket.on('SpiderBegin', function(questionId) {
     try {
-      answer.getAnswer(10, questionId, "测试", _socket);
+      answer.getAnswer(questionId, _socket);
     } catch (error) {
       console.log(error);
     }

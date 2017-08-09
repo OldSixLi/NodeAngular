@@ -1,3 +1,23 @@
+//NOTE此处应该为通用方法
+function _broadcast(componentName, eventName, params) {
+  this.$children.forEach(function(child) {
+    var name = child.$options.componentName;
+    if (name === componentName) {
+      child.$emit.apply(child, [eventName].concat(params));
+    } else {
+      _broadcast.apply(child, [componentName, eventName].concat([params]));
+    }
+  });
+}
+// 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+// 　◆◆◆◆◆　　　◆　　　◆◆◆◆　　◆◆◆　　　◆◆◆◆◆　
+// 　◆　◆　◆　　　◆　　　　◆　　◆　　◆　　　　　◆　　◆　
+// 　　　◆　　　　　◆◆　　　◆　　◆　　◆　　　　　◆　◆　　
+// 　　　◆　　　　◆　◆　　　◆◆◆　　　◆　　　　　◆◆◆　　
+// 　　　◆　　　　◆　◆　　　◆　　◆　　◆　　　　　◆　◆　　
+// 　　　◆　　　　◆◆◆◆　　◆　　◆　　◆　　　　　◆　　　　
+// 　　　◆　　　　◆　　◆　　◆　　◆　　◆　　　◆　◆　　◆　
+// 　　◆◆◆　　◆◆　　◆◆◆◆◆◆　　◆◆◆◆◆◆◆◆◆◆◆　
 //表格组件
 Vue.component('ht-table', {
   template: '\
@@ -166,6 +186,14 @@ Vue.component('ht-table', {
     })
   }
 });
+// 　　◆◆◆◆　　◆◆◆　　◆◆◆　　　◆◆　　◆◆◆◆　◆◆◆◆◆　◆◆◆　
+// 　◆　　　◆　◆　　　◆　　◆　　　　　◆　　◆　◆◆　◆◆　　◆　　◆　　
+// 　◆　　　　　◆　　　◆　　◆　　　　　◆　　◆　◆◆　◆◆　　◆◆　◆　　
+// 　◆　　　　　◆　　　◆　　◆　　　　　◆　　◆　◆◆　◆◆　　◆◆　◆　　
+// 　◆　　　　　◆　　　◆　　◆　　　　　◆　　◆　◆　◆　◆　　◆　◆◆　　
+// 　◆　　　　　◆　　　◆　　◆　　　　　◆　　◆　◆　◆　◆　　◆　◆◆　　
+// 　◆　　　◆　◆　　　◆　　◆　　　◆　◆　　◆　◆　◆　◆　　◆　　◆　　
+// 　　◆◆◆　　　◆◆◆　　◆◆◆◆◆◆　　◆◆　◆◆　◆　◆◆◆◆◆　◆　　
 //每列组件
 Vue.component('column', {
   template: '<span style="display: none"></span>',
@@ -201,6 +229,369 @@ Vue.component('column', {
       if ($.isPlainObject(this.action)) {
         this.action = [this.action];
       }
+    }
+  }
+});　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+// 　◆◆◆◆◆　◆◆　◆◆◆◆◆◆◆　　◆◆　　◆◆◆◆◆◆◆　
+// 　　　◆　　　　◆　　◆　　◆　　◆　　◆　　◆　◆　◆　◆　
+// 　　　◆　　　　◆◆　◆　　◆　　◆　　◆　　◆　　　◆　　　
+// 　　　◆　　　　◆◆　◆　　◆◆◆　　　◆　　◆　　　◆　　　
+// 　　　◆　　　　◆　◆◆　　◆　　　　　◆　　◆　　　◆　　　
+// 　　　◆　　　　◆　◆◆　　◆　　　　　◆　　◆　　　◆　　　
+// 　　　◆　　　　◆　　◆　　◆　　　　　◆　　◆　　　◆　　　
+// 　◆◆◆◆◆　◆◆◆　◆　◆◆◆　　　　　◆◆　　　◆◆◆　　　
+//输入框组件
+Vue.component('ht-input', {
+  // template: '#ht-input',
+  template: '<label style="padding: 0;border: none;border-radius: 0;box-shadow:none;">' +
+    '        <div :class="[' +
+    '                      type === \'textarea\' ? \'el-textarea\' : \'el-input\',' +
+    '                      size ? \'el-input--\' + size : \'\',' +
+    '                      {' +
+    '                        \'is-disabled\': disabled,' +
+    '                        \'el-input-group\': $slots.prepend || $slots.append,' +
+    '                        \'el-input-group--append\': $slots.append,' +
+    '                        \'el-input-group--prepend\': $slots.prepend' +
+    '                      }' +
+    '                    ]">' +
+    '      <template v-if="type !== \'textarea\'">' +
+    '      <!-- 前置元素 -->' +
+    '      <div class="el-input-group__prepend" v-if="$slots.prepend">' +
+    '        <slot name="prepend"></slot>' +
+    '      </div>' +
+    '      <!-- input 图标 -->' +
+    '      <slot name="icon">' +
+    '        <i class="el-input__icon"' +
+    '          :class="[' +
+    '            \'el-icon-\' + icon,' +
+    '            onIconClick ? \'is-clickable\' : \'\'' +
+    '          ]"' +
+    '          v-if="icon"' +
+    '          @click="handleIconClick">' +
+    '        </i>' +
+    '      </slot>' +
+    '      <input' +
+    '        v-if="type !== \'textarea\'"' +
+    // NOTE 为了和Bootstrap风格保持一致,取消使用.el-input__inner  
+    '        class="form-control"' +
+    '        v-bind="$props" ' +
+    '        :placeholder="places"' +
+    '        :autocomplete="autoComplete"' +
+    '        :value="currentValue"' +
+    '        ref="input"' +
+    '        @input="handleInput"' +
+    '        @focus="handleFocus"' +
+    '        @blur="handleBlur"' +
+    '      >' +
+    '      <i class="el-input__icon el-icon-loading" v-if="validating"></i>' +
+    '      <!-- 后置元素 -->' +
+    '      <div class="el-input-group__append" v-if="$slots.append">' +
+    '        <slot name="append"></slot>' +
+    '      </div>' +
+    '    </template>' +
+    '    </div>' +
+    '    </label>',
+  //对外获取的数据
+  props: {
+    value: [String, Number],
+    placeholder: String,
+    size: String,
+    resize: String,
+    readonly: Boolean,
+    autofocus: Boolean,
+    icon: String,
+    disabled: Boolean,
+    type: {
+      type: String,
+      default: 'text'
+    },
+    name: String,
+    autosize: {
+      type: [Boolean, Object],
+      default: false
+    },
+    rows: {
+      type: Number,
+      default: 2
+    },
+    autoComplete: {
+      type: String,
+      default: 'off'
+    },
+    form: String,
+    maxlength: Number,
+    minlength: Number,
+    max: {},
+    min: {},
+    step: {},
+    validateEvent: {
+      type: Boolean,
+      default: true
+    },
+    onIconClick: Function
+  },
+  //
+  computed: {
+    validating() {
+      return this.$parent.validateState === 'validating';
+    },
+    textareaStyle() {
+      return merge({}, this.textareaCalcStyle, {
+        resize: this.resize
+      });
+    }
+  },
+  watch: {
+    'value' (value, oldValue) {
+      //根据不同的类型进行处理操作
+      var type = this.type;
+      switch (type) {
+        case "text":
+          break;
+        case "numbers":
+          // this.placeholder = "请输入大于0的整数";
+          var reg = new RegExp(/^[1-9]+$/);
+          if (!reg.test(value)) {
+            if (value.length == 1) {
+
+              value = value.replace(/[^1-9]/g, '')
+            } else {
+              if (value - 0 == 0) {
+                value = ""
+              }
+              value = value.replace(/\D/g, '')
+            }
+          }
+          break;
+        case "money":
+          // $(".vipprices").keyup(function() {
+          var reg = value.match(/\d+\.?\d{0,2}/);
+          var txt = '';
+          if (reg != null) {
+            txt = reg[0];
+          }
+          value = txt;
+          // }).change(function() {
+          //   $(this).keypress();
+          //   var v = $(this).val();
+          //   if (/\.$/.test(v)) {
+          //     $(this).val(v.substr(0, v.length - 1));
+          //   }
+          // });
+          break;
+
+
+        default:
+          break;
+      }
+      this.setCurrentValue(value);
+    }
+  },
+
+  methods: {
+    dispatch(componentName, eventName, params) {
+      var parent = this.$parent || this.$root;
+      var name = parent.$options.componentName;
+      while (parent && (!name || name !== componentName)) {
+        parent = parent.$parent;
+
+        if (parent) {
+          name = parent.$options.componentName;
+        }
+      }
+      if (parent) {
+        parent.$emit.apply(parent, [eventName].concat(params));
+      }
+    },
+    broadcast(componentName, eventName, params) {
+      broadcast.call(this, componentName, eventName, params);
+    },
+    handleBlur(event) {
+      this.$emit('blur', event);
+      if (this.validateEvent) {
+        this.dispatch('ElFormItem', 'el.form.blur', [this.currentValue]);
+      }
+    },
+    inputSelect() {
+      this.$refs.input.select();
+    },
+    handleFocus(event) {
+      this.$emit('focus', event);
+    },
+    handleInput(event) {
+      const value = event.target.value;
+      this.$emit('input', value);
+      this.setCurrentValue(value);
+      this.$emit('change', value);
+    },
+    handleIconClick(event) {
+      if (this.onIconClick) {
+        this.onIconClick(event);
+      }
+      this.$emit('click', event);
+    },
+    setCurrentValue(value) {
+      if (value === this.currentValue) return;
+      this.currentValue = value;
+      if (this.validateEvent) {
+        this.dispatch('ElFormItem', 'el.form.change', [value]);
+      }
+    }
+  },
+  //组件内数据部分
+  data() {
+
+    var placehs = "";
+
+    if (this.placeholder == undefined) {
+
+      if (this.type == "numbers") {
+        placehs = "请输入数字"
+      }
+    } else {
+      placehs = this.placeholder;
+    }
+
+    return {
+      currentValue: this.value,
+      textareaCalcStyle: {},
+      places: placehs
+    };
+  },
+  created() {
+    this.$on('inputSelect', this.inputSelect);
+    if (this.type == "numbers") {
+      if (this.placeholder == undefined) {
+        this.places = "请输入大于0的整数"
+      }
+    }
+    if (this.type == "money") {
+      if (this.placeholder == undefined) {
+        this.places = "请输入金额，小数点后保留两位小数"
+      }
+    }
+  },
+
+  mounted() {
+    //这个地方我想设置默认的placeholder  但是在添加两个判断条件之后 就会报错  暂时不确定原因
+    if (this.type == "numbers") {
+
+      // if (this.placeholder == undefined) {
+      // this.placeholder = "请输入数字"
+      // }
+    }
+  }
+});
+// 　◆◆◆◆　　　　◆　　　◆◆◆◆　　◆◆◆◆◆　　◆◆◆　　
+// 　　◆　　◆　　　◆　　　　◆　　◆　　　◆　　　◆　　　◆　
+// 　　◆　　◆　　　◆◆　　　◆　　◆　　　◆　　　◆　　　◆　
+// 　　◆◆◆　　　◆　◆　　　◆　　◆　　　◆　　　◆　　　◆　
+// 　　◆　◆　　　◆　◆　　　◆　　◆　　　◆　　　◆　　　◆　
+// 　　◆　　◆　　◆◆◆◆　　◆　　◆　　　◆　　　◆　　　◆　
+// 　　◆　　◆　　◆　　◆　　◆　　◆　　　◆　　　◆　　　◆　
+// 　◆◆◆　◆◆◆◆　　◆◆◆◆◆◆　　◆◆◆◆◆　　◆◆◆　　
+
+Vue.component("ht-radio", {
+  template: '<label class="el-radio">' +
+    '    <span class="el-radio__input"' +
+    '      :class="{' +
+    '        \'is-disabled\': isDisabled,' +
+    '        \'is-checked\': model === label,' +
+    '        \'is-focus\': focus' +
+    '      }"' +
+    '    >' +
+    '      <span class="el-radio__inner"></span>' +
+    '      <input' +
+    '        class="el-radio__original"' +
+    '        :value="label"' +
+    '        type="radio"' +
+    '        v-model="model"' +
+    '        @focus="focus = true"' +
+    '        @blur="focus = false"' +
+    '        @click="click()"' +
+    '        @change="change()"' +
+    '        :name="name"' +
+    '        :disabled="isDisabled">' +
+    '    </span>' +
+    '    <span class="el-radio__label">' +
+    '      <slot></slot>' +
+    '      <template v-if="!$slots.default">{{label}}</template>' +
+    '    </span>' +
+    '  </label>',
+  methods: {
+    dispatch: function dispatch(componentName, eventName, params) {
+      var parent = this.$parent || this.$root;
+      var name = parent.$options.componentName;
+      while (parent && (!name || name !== componentName)) {
+        parent = parent.$parent;
+
+        if (parent) {
+          name = parent.$options.componentName;
+        }
+      }
+      if (parent) {
+        parent.$emit.apply(parent, [eventName].concat(params));
+      }
+    },
+    broadcast: function broadcast(componentName, eventName, params) {
+      _broadcast.call(this, componentName, eventName, params);
+    },
+    //当下点击
+    click: function click() {
+      this.$emit('click');
+    },
+    change: function change() {
+      this.$emit('change');
+    }
+  },
+
+  props: {
+    value: {},
+    label: {},
+    disabled: Boolean,
+    name: String
+  },
+  data: function data() {
+    return {
+      focus: false
+    };
+  },
+
+  computed: {
+    isGroup: function isGroup() {
+      var parent = this.$parent;
+      while (parent) {
+        if (parent.$options.componentName !== 'ElRadioGroup') {
+          parent = parent.$parent;
+        } else {
+          this._radioGroup = parent;
+          return true;
+        }
+      }
+      return false;
+    },
+
+
+    model: {
+      get: function get() {
+        return this.isGroup ? this._radioGroup.value : this.value;
+      },
+      set: function set(val) {
+        if (this.isGroup) {
+          this.dispatch('ElRadioGroup', 'input', [val]);
+        } else {
+          this.$emit('input', val);
+        }
+      }
+    },
+
+    isDisabled: function isDisabled() {
+      return this.isGroup ? this._radioGroup.disabled || this.disabled : this.disabled;
+    }
+  },
+  watch: {
+    label: function label(val) {
+      alert('23131');
     }
   }
 });

@@ -113,7 +113,32 @@
         });
       }
       Vue.component("ht-radio", {
-        template: "#htradio",
+        template: '<label class="el-radio">' +
+          '    <span class="el-radio__input"' +
+          '      :class="{' +
+          '        \'is-disabled\': isDisabled,' +
+          '        \'is-checked\': model === label,' +
+          '        \'is-focus\': focus' +
+          '      }"' +
+          '    >' +
+          '      <span class="el-radio__inner"></span>' +
+          '      <input' +
+          '        class="el-radio__original"' +
+          '        :value="label"' +
+          '        type="radio"' +
+          '        v-model="model"' +
+          '        @focus="focus = true"' +
+          '        @blur="focus = false"' +
+          '        @click="click()"' +
+          '        @change="change()"' +
+          '        :name="name"' +
+          '        :disabled="isDisabled">' +
+          '    </span>' +
+          '    <span class="el-radio__label">' +
+          '      <slot></slot>' +
+          '      <template v-if="!$slots.default">{{label}}</template>' +
+          '    </span>' +
+          '  </label>',
         methods: {
           dispatch: function dispatch(componentName, eventName, params) {
             var parent = this.$parent || this.$root;
@@ -191,7 +216,6 @@
           }
         }
       });
-
       var radioBlock = new Vue({
         el: "#radioBlock",
         //数据部分
