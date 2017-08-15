@@ -1,3 +1,10 @@
+/**
+ * 浩天云项目中部分组件
+ * @authors 马少博 (you@example.org)
+ * @date    2017-08-09 14:22:29
+ * @version 1.0
+ */
+
 //NOTE此处应该为通用方法
 function _broadcast(componentName, eventName, params) {
   this.$children.forEach(function(child) {
@@ -20,36 +27,79 @@ function _broadcast(componentName, eventName, params) {
 // 　　◆◆◆　　◆◆　　◆◆◆◆◆◆　　◆◆◆◆◆◆◆◆◆◆◆　
 //表格组件
 Vue.component('ht-table', {
-  template: '\
-        <div>\
-          <table :class="getClass(classname)">\
-          <thead>\
-          <tr><th v-show="showindex==\'true\'||showindex==null">#</th>\
-          <th v-for="x in rule" :style="getStyle(x)">{{x.name}}</th></tr>\
-          </thead><tbody>\
-            <tr v-for="(x,index) in valuelist">\
-            <td v-show="showindex==\'true\'||showindex==null">{{index+1}}</td>\
-            <td v-for="y in rule" :style="getStyle(y)">\
-               <span v-if="y.ishtml==\'true\'" v-html="render(x[y.dataKey],y.filter)"> </span>\
-               <span v-if="y.ishtml!=\'true\'">{{render(x[y.dataKey],y.filter)}} </span>\
-               \
-              </td>\
-            </tr>\
-          </tbody>\
-          </table>\
-          <div class="pull-right page">\
-           <ul class="pagination"></ul></div>\
-          <span style="display:none;">{{paramss}}{{params}}</span>\
-        </div>',
-  //NOTE 如何在此处将数据进行过滤处理是一个问题
-  //获取当前的过滤器并进行处理
-  //TODO  此处可以改为相关属性的required default值
-  props: ["url", "params", "showindex", "classname"],
+  template: "<div>" +
+    "        <table class=\"table table-hover\">" +
+    "          <thead>" +
+    "            <tr>" +
+    "              <!-- 展示序列号 -->" +
+    "              <th v-show=\"!!showindex\">#</th>" +
+    "              <!-- 遍历当前的列名，进行展示，同时设置列的style样式 -->" +
+    "              <th v-for=\"x in rule\" :width=\"x.width\" :style=\"{textAlign:x.align,width:x.width}\">{{x.name}}</th>" +
+    "            </tr>" +
+    "          </thead>" +
+    "          <tbody>" +
+    "            <!-- 搜索结果进行处理 -->" +
+    "            <tr v-for=\"(x,index) in valuelist\" v-show=\"!showLoading&&valuelist!=null&&valuelist.length>0\">" +
+    "              <td v-show=\"!!showindex\">{{index+1}}</td>" +
+    "              <td v-for=\"y in rule\" :style=\"{textAlign:y.align,width:y.width}\">" +
+    "                <!--Begin: If当前的参数为多参数，进行多参数处理操作 -->" +
+    "                <span v-if=\"y.dataKey.split(\',\').length>1\"> " +
+    "                  <!--NOTE 此处的逻辑有点不正常，难描述。" +
+    "                    每个td中的params参数，先置为空数组，再往数组中逐个添加当前td中的参数。" +
+    "                    目的是防止其他td中多参数与当前td参数拼接到一起 -->" +
+    "                <span v-show=\'false\'>{{x.params=[]}}</span>" +
+    "                <span v-for=\"singleKey in y.dataKey.split(\',\')\" style=\"display:none;\"> " +
+    "                        {{x.params.push(x[singleKey])}}" +
+    "                    </span>" +
+    "                <span v-html=\"render(x.params,y.filter)\"> </span>" +
+    "                </span>" +
+    "                <!-- End:结束多参数判断 -->" +
+    "                <!-- Else当前的参数为单个参数，直接进行处理 -->" +
+    "                <span v-else v-html=\"render(x[y.dataKey],y.filter)\"> </span>" +
+    "              </td>" +
+    "            </tr>" +
+    "            <!-- 当前搜索结果为空时，提示没有搜索结果 -->" +
+    "            <tr v-show=\"!showLoading&&(valuelist==null||valuelist.length==0)\">" +
+    "              <td colspan=\"100\">" +
+    "                <h2 class=\"text-center\" style=\"color:#a78989;\">暂无结果</h2>" +
+    "              </td>" +
+    "            </tr>" +
+    "          </tbody>" +
+    "        </table>" +
+    "        <!-- 加载动画区域 NOTE: 通过修改样式 .cssload-loader 相关参数可以更改动画-->" +
+    "        <div v-show=\"showLoading\" :style=\"loadingHeight\" class=\"relative\">" +
+    "          <div class=\"cssload-loader\"></div>" +
+    "        </div>" +
+    "        <!-- 分页控件模块 -->" +
+    "        <div class=\"pull-right page\">" +
+    "          <ul class=\"pagination\" v-show=\"valuelist!=null&&valuelist.length>0\"></ul>" +
+    "        </div>" +
+    "        <!-- 搜索参数 -->" +
+    "        <span style=\"display:none;\">{{searchDatas}}</span>" +
+    "      </div>",
+  props: {
+    ajaxurl: {
+      required: true
+    },
+    searchData: {
+      default: function() {
+        return {
+          currentPage: 1
+        }
+      }
+    },
+    showindex: {
+      default: true
+    }
+  },
   data: function() {
     return {
       valuelist: [],
       rule: [],
-      nameurl: "李三丰"
+      nameurl: "李三丰",
+      showLoading: false,
+      loadingHeight: "height:300px"
+
     }
   },
   filter: {
@@ -63,61 +113,59 @@ Vue.component('ht-table', {
       this.$emit("chuandi");
     },
     //异步请求数据
-    getlist: function(pageindex) {
-      var data = new Object();
+    getlist: function() {
       var self = this;
       var params = new Object();
-      params = this.params;
-      params.currentPage = pageindex;
+      params = self.searchData;
+      var pageindex = params.currentPage;
+      self.loadingHeight =
+        $(self.$el).find('tbody').height() ?
+        "height:" + (($(self.$el).find('tbody').height() - 0 > 300 ? $(self.$el).find('tbody').height() : 300) + "px") : "height:300px";
       $.ajax({
         type: "GET",
-        url: this.url,
+        url: this.ajaxurl,
+        beforeSend: function(request) {
+          self.showLoading = true;
+        },
         data: params,
         dataType: "json",
         success: function(data) {
           if (data != null && data != "") {
-            if (data.success) {
-              //数据进行处理
-              self.valuelist = data.bean.data;
-              var $page = $(self.$el.childNodes[2]).find("ul");
-              //调用分页方法
-              self.initPageDiv($page, pageindex + 1, data.pageCount, 5, $page, function() {
-                self.getlist($page.data("page") - 1);
-              });
+            self.valuelist = data.bean.data;
+            for (var i = 0; i < self.valuelist.length; i++) {
+              var element = self.valuelist[i];
+              element["params"] = [];
+            }
+            // BootStrap分页控件的声明
+            if (self.valuelist.length > 0) {
+              var $page = $(self.$el.children[2]).find("ul");
+              self.initPageDiv($page,
+                pageindex,
+                data.bean.pageCount,
+                5,
+                $page,
+                function() {
+                  self.searchData.page = $page.data("page") - 1;
+                });
 
-            } else { console.info("当前data.success值为false，数据请求失败！"); }　
-          } else { console.info("当前data为空，数据请求失败！") }
+            }
+          }
         },
-        error: function() {
-          console.info("当前数据请求失败，请校验url地址和搜索参数格式是否正确！");
-        }
+        error: function(response) {
+          self.valuelist = [];
+          if (response.responseText && JSON.parse(response.responseText) && JSON.parse(response.responseText).errorMessage) {} else {}
+        },
+        complete: function() {
+          self.showLoading = false;
+        }　
       });
     },
-    //设置样式
-    getStyle: function(col) {
-      return {
-        "text-align": col.align,
-        "width": col.width
-      }
-    },
-    //样式名称
-    getClass: function(name) {
-      return name ? "table table-hover " + name : "table table-hover";
-    },
-    //处理数据
     render: function(tdData, rule) {
-      //如果filter存在
-      if (rule) {
-        var filter = rule;
-        if (window[filter]) {
-          var newdata = window[filter](tdData);
-          return newdata;
-        } else {
-          console.info("当前未声明" + rule + "方法");
-          return tdData;
-        }
-      } else {
+      if (!rule) {
         return tdData;
+      } else {
+        var filter = rule;
+        return window.HtmlFun && window.HtmlFun[filter] ? (Object.prototype.toString.call(tdData) == '[object Array]' ? window.HtmlFun[filter].apply(this, tdData) : window.HtmlFun[filter](tdData)) : tdData;
       }
     },
     // 分页方法初始化
@@ -144,6 +192,7 @@ Vue.component('ht-table', {
               return page;
           }
         },
+        //单击事件
         onPageClicked: function(event, originalEvent, type, page) { // 异步换页
           $dom2.data("page", page);
           change();
@@ -168,14 +217,14 @@ Vue.component('ht-table', {
     }
   },
   computed: {
-    paramss: function() {
+    searchDatas: function() {
       this.getlist(0);
-      return this.params;
+      return this.searchData;
     }
   },
   //在组件加载完成后的钩子
-  mounted: function() {　
-    this.getlist(0);
+  mounted: function() {
+    var self = this;
     var _this = this;
     _this.$slots.default.forEach(function(child) {
       var obj = {};
@@ -186,20 +235,17 @@ Vue.component('ht-table', {
     })
   }
 });
-// 　　◆◆◆◆　　◆◆◆　　◆◆◆　　　◆◆　　◆◆◆◆　◆◆◆◆◆　◆◆◆　
-// 　◆　　　◆　◆　　　◆　　◆　　　　　◆　　◆　◆◆　◆◆　　◆　　◆　　
-// 　◆　　　　　◆　　　◆　　◆　　　　　◆　　◆　◆◆　◆◆　　◆◆　◆　　
-// 　◆　　　　　◆　　　◆　　◆　　　　　◆　　◆　◆◆　◆◆　　◆◆　◆　　
-// 　◆　　　　　◆　　　◆　　◆　　　　　◆　　◆　◆　◆　◆　　◆　◆◆　　
-// 　◆　　　　　◆　　　◆　　◆　　　　　◆　　◆　◆　◆　◆　　◆　◆◆　　
-// 　◆　　　◆　◆　　　◆　　◆　　　◆　◆　　◆　◆　◆　◆　　◆　　◆　　
-// 　　◆◆◆　　　◆◆◆　　◆◆◆◆◆◆　　◆◆　◆◆　◆　◆◆◆◆◆　◆　　
-//每列组件
+
+/**
+ * table下 column组件声明
+ * 2017年8月4日14:56:51 添加
+ */
 Vue.component('column', {
-  template: '<span style="display: none"></span>',
+  template: '<span style="display: none">123</span>',
   props: {
     dataKey: {
-      type: String
+      type: String,
+      required: true
     },
     name: {
       type: String,
@@ -210,9 +256,9 @@ Vue.component('column', {
       default: 'left'
     },
     filter: [String, Array],
+    style: String,
     width: String,
-    action: [String, Array, Object],
-    ishtml: false
+    action: [String, Array, Object]
   },
   data: function() {
     return {}
@@ -231,7 +277,7 @@ Vue.component('column', {
       }
     }
   }
-});　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+});　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 // 　◆◆◆◆◆　◆◆　◆◆◆◆◆◆◆　　◆◆　　◆◆◆◆◆◆◆　
 // 　　　◆　　　　◆　　◆　　◆　　◆　　◆　　◆　◆　◆　◆　
 // 　　　◆　　　　◆◆　◆　　◆　　◆　　◆　　◆　　　◆　　　

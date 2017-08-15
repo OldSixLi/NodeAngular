@@ -11,6 +11,9 @@
     <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../../Style/vue-index.css">
     <link rel="stylesheet" href="../../Style/vue-base.css">
+    <style>
+
+    </style>
   </head>
 
   <body>
@@ -37,7 +40,7 @@
 
           <!-- 表单布局 -->
           <h3 class="text-center">表单布局</h3>
-          <ht-form :model="form" label-width="100px" label-position="right" style="width:500px;margin:0 auto;">
+          <ht-form :model="form" label-width="100px" label-position="right" style="width:600px;margin:0 auto;">
             <!-- Begin -->
             <label>一人一首成名曲：</label>
             <ht-form-item label="周杰伦：" validateMessage="请输入歌曲名" isRequired="true">
@@ -48,8 +51,10 @@
               <ht-input type="text" v-model="form.suyang" class="form-control" placeholder="请输入金额"></ht-input>
             </ht-form-item>
 
-            <ht-form-item label="帕瓦罗蒂：">
-              <ht-input type="text" v-model="form.pawaluodi" class="form-control" placeholder="请输入金额"></ht-input>
+            <ht-form-item label="帕瓦罗蒂：" class="multi-input">
+              <ht-input type="text" v-model="form.pawaluodi" style="width:45%;" placeholder="请输入金额"></ht-input>
+              <label style="width: 10%;text-align: center;">至</label>
+              <ht-input type="text" v-model="form.pawaluodi" style="width:45%;" placeholder="请输入金额"></ht-input>
             </ht-form-item>
 
             <ht-form-item label="是否购买：">
@@ -59,7 +64,7 @@
             </ht-form-item>
 
             <ht-form-item label="具体歌词：">
-              <textarea name="" id="" cols="30" rows="10" class="form-control"></textarea>
+              <textarea name="" id="" rows="10" class="form-control"></textarea>
             </ht-form-item>
 
             <ht-form-item class="text-center">
@@ -122,7 +127,6 @@
       </div>
     </script>
     <!-- NOTE 模板HTML End-->
-
 
     <!-- 脚本 -->
     <script src='https://cdn.bootcss.com/vue/2.3.3/vue.js'></script>
@@ -335,7 +339,6 @@
             }, (errors, fields) => {
               this.validateState = !errors ? 'success' : 'error';
               this.validateMessage = errors ? errors[0].message : '';
-
               callback(this.validateMessage);
             });
           },
@@ -383,7 +386,6 @@
               this.validateDisabled = false;
               return;
             }
-
             this.validate('change');
           }
         },
@@ -399,9 +401,7 @@
             Object.defineProperty(this, 'initialValue', {
               value: initialValue
             });
-
             let rules = this.getRules();
-
             if (rules.length) {
               rules.every(rule => {
                 if (rule.required) {
@@ -414,7 +414,6 @@
             }
           }
         },
-
         beforeDestroy() {
           this.dispatch('ht-form', 'el.form.removeField', [this]);
         }

@@ -2,139 +2,139 @@
 <!DOCTYPE html>
 <html lang='en'>
 
-<head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
 
 
-  <title>Vue页面</title>
-  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
-  <style>
-    body {
-      font-family: "Microsoft YaHei"
-    }
-    
-    .nopadding {
-      padding: 0;
-    }
-    
-    .panel-heading {
-      cursor: pointer;
-    }
-    
-    .border-right {
-      border-right: 1px solid #ddd;
-    }
-    
-    .row>.col-md-4 {
-      border-right: 1px solid red;
-    }
-    
-    .row>.col-md-4:last-child {
-      border: none;
-    }
-    
-    a {
-      cursor: pointer;
-    }
-    
-    td>img {
-      width: 35px;
-      height: 35px;
-    }
-  </style>
-</head>
-<!--注意：-->
-<!--1.所有的属性值必须在data中被声明后才可以被双向绑定或在页面中使用-->
+    <title>Vue页面</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <style>
+      body {
+        font-family: "Microsoft YaHei"
+      }
+      
+      .nopadding {
+        padding: 0;
+      }
+      
+      .panel-heading {
+        cursor: pointer;
+      }
+      
+      .border-right {
+        border-right: 1px solid #ddd;
+      }
+      
+      .row>.col-md-4 {
+        border-right: 1px solid red;
+      }
+      
+      .row>.col-md-4:last-child {
+        border: none;
+      }
+      
+      a {
+        cursor: pointer;
+      }
+      
+      td>img {
+        width: 35px;
+        height: 35px;
+      }
+    </style>
+  </head>
+  <!--注意：-->
+  <!--1.所有的属性值必须在data中被声明后才可以被双向绑定或在页面中使用-->
 
-<body>
-  <h5>
-    <a href="doc/table.html">表格数据</a>
-    <a href="repeat.html">组件表格</a>
-    <a href="tool/aindex.html">组件列表</a></h5>
-  <h1 class="text-center"> <b>Vue.js入门实践</b></h1>
-  <div class="container" id="example">
+  <body>
+    <h5>
+      <a href="doc/table.html">表格数据</a>
+      <a href="repeat.html">组件表格</a>
+      <a href="tool/aindex.html">组件列表</a></h5>
+    <h1 class="text-center"> <b>Vue.js入门实践</b></h1>
+    <div class="container" id="example">
 
-    <div class="row">
-      <div class="col-md-12">
-        <!--表格-->
-        <div class="panel panel-default">
-          <div class="panel-heading">1.表格数据</div>
-          <div class="panel-body nopadding">
-            <table class="table table-hover" id="table">
-              <thead>
-                <tr>
-                  <th>第一列</th>
-                  <th>添加自定义字符串</th>
-                  <th>{{second}}</th>
-                  <th>{{name}}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="x of data">
-                  <!--模板表达式都被放在沙盒中，只能访问全局变量的一个白名单，如 Math 和 Date 。你不应该在模板表达式中试图访问用户定义的全局变量。-->
-                  <td>{{x.userName}}</td>
-                  <!--表达式添加字符串-->
-                  <td>{{x.userName+"~~表达式添加的字符串"}}</td>
-                  <!--表达式操作-->
-                  <td>{{x.userName.split('').reverse().join('')}}</td>
-                  <!--进行表达式赋值-->
-                  <td>{{x.userName=="M"?"男":"女"}}</td>
-                </tr>
-              </tbody>
-            </table>
+      <div class="row">
+        <div class="col-md-12">
+          <!--表格-->
+          <div class="panel panel-default">
+            <div class="panel-heading">1.表格数据</div>
+            <div class="panel-body nopadding">
+              <table class="table table-hover" id="table">
+                <thead>
+                  <tr>
+                    <th>第一列</th>
+                    <th>添加自定义字符串</th>
+                    <th>{{second}}</th>
+                    <th>{{name}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="x of data">
+                    <!--模板表达式都被放在沙盒中，只能访问全局变量的一个白名单，如 Math 和 Date 。你不应该在模板表达式中试图访问用户定义的全局变量。-->
+                    <td>{{x.userName}}</td>
+                    <!--表达式添加字符串-->
+                    <td>{{x.userName+"~~表达式添加的字符串"}}</td>
+                    <!--表达式操作-->
+                    <td>{{x.userName.split('').reverse().join('')}}</td>
+                    <!--进行表达式赋值-->
+                    <td>{{x.userName=="M"?"男":"女"}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-        <!--双向绑定-->
-        <div class="panel panel-default" id="binding">
-          <div class="panel-heading">2.数据双向绑定</div>
-          <div class="panel-body">
-            <p>{{ message }}　 　　　　<b>倒序值：</b> {{ reversedMessage }}</p>
-            <input class="form-control" v-model="message">
-          </div>
+          <!--双向绑定-->
+          <div class="panel panel-default" id="binding">
+            <div class="panel-heading">2.数据双向绑定</div>
+            <div class="panel-body">
+              <p>{{ message }}　 　　　　<b>倒序值：</b> {{ reversedMessage }}</p>
+              <input class="form-control" v-model="message">
+            </div>
 
-        </div>
-        <!--html字符串绑定-->
-        <div class="panel panel-default" id="BindHtml">
-          <div class="panel-heading">3.绑定HTML</div>
-          <div class="panel-body">
-            <div v-bind:id="dynamicId">本元素当前的ID属性被绑定</div>
-            <p>{{ htmlstr }}</p>
-            <!--<input class="form-control" v-model="message"></div>-->
-
-            <div v-html="htmlstr"></div>
-            <!--<div v-bind:id="htmlstr"> </div>-->
           </div>
-        </div>
-        <!--指令-->
-        <div class="panel panel-default" id="Directives">
-          <div class="panel-heading">4.Vue内置指令</div>
-          <div class="panel-body">
-            <h3>v-if指令</h3>
-            <input type="checkbox" name="" v-model="seen" value="" style="float: left;">
-            <p>当前v-if的值被设置为{{seen}}。<span v-if="seen">所以你可以看到本字段</span>
-              <template v-if="ok">
+          <!--html字符串绑定-->
+          <div class="panel panel-default" id="BindHtml">
+            <div class="panel-heading">3.绑定HTML</div>
+            <div class="panel-body">
+              <div v-bind:id="dynamicId">本元素当前的ID属性被绑定</div>
+              <p>{{ htmlstr }}</p>
+              <!--<input class="form-control" v-model="message"></div>-->
+
+              <div v-html="htmlstr"></div>
+              <!--<div v-bind:id="htmlstr"> </div>-->
+            </div>
+          </div>
+          <!--指令-->
+          <div class="panel panel-default" id="Directives">
+            <div class="panel-heading">4.Vue内置指令</div>
+            <div class="panel-body">
+              <h3>v-if指令</h3>
+              <input type="checkbox" name="" v-model="seen" value="" style="float: left;">
+              <p>当前v-if的值被设置为{{seen}}。<span v-if="seen">所以你可以看到本字段</span>
+                <template v-if="ok">
                 <p>如果指令被包含在template中，则DOM中不会出现此标签，并且你也可以看到我</p> 
               </template>
-            </p>
-            <h3>v-show指令</h3>
-            <input type="checkbox" name="" v-model="isshow" value="" style="float: left;">
-            <p>当前v-show的值被设置为{{isshow}}，<span v-show="isshow">无论你能不能看到本字段，都会存在于DOM中，</span>是因为设置了"display: none;"属性
-            </p><br>
-            <blockquote style="font-size: 14px;">
-              v-if 是“真正的”条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。<br> v-if 也是惰性的：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。 <br>相比之下， v-show 就简单得多——不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换。<br> 一般来说， v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。<br>因此，如果需要非常频繁地切换，则使用
-              v-show 较好；如果在运行时条件不太可能改变，则使用 v-if 较好。
-            </blockquote>
+              </p>
+              <h3>v-show指令</h3>
+              <input type="checkbox" name="" v-model="isshow" value="" style="float: left;">
+              <p>当前v-show的值被设置为{{isshow}}，<span v-show="isshow">无论你能不能看到本字段，都会存在于DOM中，</span>是因为设置了"display: none;"属性
+              </p><br>
+              <blockquote style="font-size: 14px;">
+                v-if 是“真正的”条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。<br> v-if 也是惰性的：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。 <br>相比之下， v-show 就简单得多——不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换。<br> 一般来说， v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。<br>因此，如果需要非常频繁地切换，则使用
+                v-show 较好；如果在运行时条件不太可能改变，则使用 v-if 较好。
+              </blockquote>
 
-            <h3>v-else指令<small> v-else 必须跟在v-if/v-show指令之后，不然不起作用；</small></h3>
-            <input type="checkbox" name="" v-model="gender" style="float: left;">
-            <p>这个小孩是<span v-if="gender"><b>男</b></span><span v-else><b>女</b></span>孩
-            </p>
+              <h3>v-else指令<small> v-else 必须跟在v-if/v-show指令之后，不然不起作用；</small></h3>
+              <input type="checkbox" name="" v-model="gender" style="float: left;">
+              <p>这个小孩是<span v-if="gender"><b>男</b></span><span v-else><b>女</b></span>孩
+              </p>
 
-            <h3>v-else-if指令 <small>v-else-if 必须紧跟在 v-if 或者 v-else-if 元素之后。</small></h3>
-            当前type的值是<b>{{type}}</b>,所以当前的值是<b>
+              <h3>v-else-if指令 <small>v-else-if 必须紧跟在 v-if 或者 v-else-if 元素之后。</small></h3>
+              当前type的值是<b>{{type}}</b>,所以当前的值是<b>
             <span v-if="type === 'A'">
               A
             </span>
@@ -147,302 +147,302 @@
             <span v-else>
               Not A/B/C
             </span></b>
-            <h3>v-bind指令 </h3>
-            <a v-bind:href="'#?id='+id" v-bind:id="domId">绑定v-bind:href</a>
+              <h3>v-bind指令 </h3>
+              <a v-bind:href="'#?id='+id" v-bind:id="domId">绑定v-bind:href</a>
+            </div>
           </div>
-        </div>
-        <!--V-on指令-->
-        <div class="panel panel-default" id="onButton">
-          <div class="panel-heading">5.V-on指令</div>
-          <div class="panel-body">
-            <div class="row">
-              <!-- 消除外边距 -->
-              <div class="col-md-4 col-lg-offset-4">
-                <input class="form-control" v-model="message"><br/>
-                <button type="button" class="btn btn-success btn-block" v-on:click="showInfo">
+          <!--V-on指令-->
+          <div class="panel panel-default" id="onButton">
+            <div class="panel-heading">5.V-on指令</div>
+            <div class="panel-body">
+              <div class="row">
+                <!-- 消除外边距 -->
+                <div class="col-md-4 col-lg-offset-4">
+                  <input class="form-control" v-model="message"><br/>
+                  <button type="button" class="btn btn-success btn-block" v-on:click="showInfo">
                   {{msg}} V-on指令事件</button> <button type="button" class="btn btn-success btn-block" @click="showInfo">
                   @click缩写指令</button></div>
-            </div>
-
-          </div>
-        </div>
-        <!--过滤器-->
-        <div class="panel panel-default" id="filt">
-          <div class="panel-heading">6.过滤器</div>
-          <div class="panel-body">
-            <p>通过过滤方法：<b>capitalize</b>,将原本小写的字符串转化为<b>全部</b>大写形式：{{str| capitalize}}</p>
-
-            <p>通过过滤方法：<b>firstToUpper</b>,将原本小写的字符串转化为<b>首字母</b>大写形式：{{str| firstToUpper}}</p>
-            <p>时间戳过滤成时间：{{times | time}}</p>
-          </div>
-        </div>
-        <!--列表数据绑定-->
-        <div class="panel panel-default" id="bindList">
-          <div class="panel-heading">7.列表数据绑定</div>
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-md-4 border-right">
-                <h3>普通遍历</h3>
-                <ul>
-                  <li v-for="i in ulList">{{i}}</li>
-                </ul>
-                <h3>遍历数字</h3>
-                <div>
-                  <span v-for="n in 10">{{ n }},</span>
-                </div>
               </div>
-              <div class="col-md-4 border-right">
-                <h3>template包裹</h3>
-                <ul>
 
-                  <template v-for="item in ulList">
+            </div>
+          </div>
+          <!--过滤器-->
+          <div class="panel panel-default" id="filt">
+            <div class="panel-heading">6.过滤器</div>
+            <div class="panel-body">
+              <p>通过过滤方法：<b>capitalize</b>,将原本小写的字符串转化为<b>全部</b>大写形式：{{str| capitalize}}</p>
+
+              <p>通过过滤方法：<b>firstToUpper</b>,将原本小写的字符串转化为<b>首字母</b>大写形式：{{str| firstToUpper}}</p>
+              <p>时间戳过滤成时间：{{times | time}}</p>
+            </div>
+          </div>
+          <!--列表数据绑定-->
+          <div class="panel panel-default" id="bindList">
+            <div class="panel-heading">7.列表数据绑定</div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4 border-right">
+                  <h3>普通遍历</h3>
+                  <ul>
+                    <li v-for="i in ulList">{{i}}</li>
+                  </ul>
+                  <h3>遍历数字</h3>
+                  <div>
+                    <span v-for="n in 10">{{ n }},</span>
+                  </div>
+                </div>
+                <div class="col-md-4 border-right">
+                  <h3>template包裹</h3>
+                  <ul>
+
+                    <template v-for="item in ulList">
                     <li>{{ item }}</li>
                     <li class="divider">每次都会出现我</li>
                   </template>
-                </ul>
-              </div>
-              <div class="col-md-4">
-                <h3>对象遍历</h3>
-                <div v-for="(value, key, index) in object">
-                  {{ index }}. {{ key }} : {{ value }}
+                  </ul>
+                </div>
+                <div class="col-md-4">
+                  <h3>对象遍历</h3>
+                  <div v-for="(value, key, index) in object">
+                    {{ index }}. {{ key }} : {{ value }}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <!--props-->
-        <div class="panel panel-default" id="propsBlock">
-          <div class="panel-heading">8.props属性</div>
-          <div class="panel-body">
-            <div class="row">
-              <div id="todo-list-example " class="col-md-6">
-                <input class="form-control" v-model="newTodoText" v-on:keyup.enter="addNewTodo" placeholder="添加待办事项">
-                <ul>
-                  <li is="todo-items" v-for="(todo, index) in todos" v-bind:titles="index+1+'----'+todo" food="食物" v-on:remove="todos.splice(index, 1)"></li>
-                </ul>
-              </div>
-              <div class="col-md-6">
-                <ul>
-                  <li v-for="x in person">{{x}}</li>
-                </ul>
-                <p>以下利用实时监控方法对数组进行了过滤</p>
-                <ul>
-                  <li v-for="n in evenNumbers">{{ n }}</li>
-                </ul>
-                <p>以下利用了methods的方法计算对数组进行了过滤</p>
-                <ul>
-                  <li v-for="n in even(numbers)">{{ n }}</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!--事件处理-->
-        <div class="panel panel-default" id="eventsHandle">
-          <div class="panel-heading">9.事件处理</div>
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-md-4">
-                <button type="button" class="btn btn-primary btn-block" v-on:click="num++">点击加1</button>
-                <p>{{num}}</p>
-              </div>
-              <div class="col-md-4">
-                <button type="button" class="btn btn-block btn-success" v-on:click="tip">BUTTON事件方法</button>
-                <div class="alert alert-danger forbutton">
-                  <strong>你看!</strong> 我状态发生了变化
+          <!--props-->
+          <div class="panel panel-default" id="propsBlock">
+            <div class="panel-heading">8.props属性</div>
+            <div class="panel-body">
+              <div class="row">
+                <div id="todo-list-example " class="col-md-6">
+                  <input class="form-control" v-model="newTodoText" v-on:keyup.enter="addNewTodo" placeholder="添加待办事项">
+                  <ul>
+                    <li is="todo-items" v-for="(todo, index) in todos" v-bind:titles="index+1+'----'+todo" food="食物" v-on:remove="todos.splice(index, 1)"></li>
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <ul>
+                    <li v-for="x in person">{{x}}</li>
+                  </ul>
+                  <p>以下利用实时监控方法对数组进行了过滤</p>
+                  <ul>
+                    <li v-for="n in evenNumbers">{{ n }}</li>
+                  </ul>
+                  <p>以下利用了methods的方法计算对数组进行了过滤</p>
+                  <ul>
+                    <li v-for="n in even(numbers)">{{ n }}</li>
+                  </ul>
                 </div>
               </div>
-              <div class="col-md-4">
+            </div>
+          </div>
 
-                <button type="button" class="btn btn-block btn-success" v-on:click="say('Say hi')">Say hi</button>
-                <h4>内联处理方法<small>该方法利用内置函数传值</small></h4>
+          <!--事件处理-->
+          <div class="panel panel-default" id="eventsHandle">
+            <div class="panel-heading">9.事件处理</div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <button type="button" class="btn btn-primary btn-block" v-on:click="num++">点击加1</button>
+                  <p>{{num}}</p>
+                </div>
+                <div class="col-md-4">
+                  <button type="button" class="btn btn-block btn-success" v-on:click="tip">BUTTON事件方法</button>
+                  <div class="alert alert-danger forbutton">
+                    <strong>你看!</strong> 我状态发生了变化
+                  </div>
+                </div>
+                <div class="col-md-4">
+
+                  <button type="button" class="btn btn-block btn-success" v-on:click="say('Say hi')">Say hi</button>
+                  <h4>内联处理方法<small>该方法利用内置函数传值</small></h4>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <h1 class="text-center"><b>组件</b></h1>
+          <h1 class="text-center"><b>组件</b></h1>
 
-        <!--组件处理-->
-        <div class="panel panel-default" id="tools">
-          <div class="panel-heading">1.简单组件</div>
-          <div class="panel-body" id="exampless">
-            <div class="row">
-              <div class="col-md-4">
-                <my-mashaobo></my-mashaobo>
+          <!--组件处理-->
+          <div class="panel panel-default" id="tools">
+            <div class="panel-heading">1.简单组件</div>
+            <div class="panel-body" id="exampless">
+              <div class="row">
+                <div class="col-md-4">
+                  <my-mashaobo></my-mashaobo>
+                </div>
+                <div class="col-md-4">
+                  <ht-select></ht-select>
+                </div>
+                <div class="col-md-4">
+                  <my-component></my-component>
+                </div>
               </div>
-              <div class="col-md-4">
-                <ht-select></ht-select>
-              </div>
-              <div class="col-md-4">
-                <my-component></my-component>
-              </div>
+
             </div>
-
           </div>
-        </div>
 
-        <!--prop组件处理-->
-        <div class="panel panel-default" id="propsTool">
-          <div class="panel-heading">2.props组件的处理方法</div>
-          <div class="panel-body">
-            <div class="row">
+          <!--prop组件处理-->
+          <div class="panel panel-default" id="propsTool">
+            <div class="panel-heading">2.props组件的处理方法</div>
+            <div class="panel-body">
+              <div class="row">
 
-              <div class="col-md-4">
-                <h3>自定义组件</h3>
-                <select class="form-control"> 
+                <div class="col-md-4">
+                  <h3>自定义组件</h3>
+                  <select class="form-control"> 
                   <option 
                   is="ht-bind" 
                   v-for="x in lists" 
                   v-bind:values="x.name"  v-bind:bindtoselect="x.id"></option>
                 </select>
-              </div>
-              <div class="col-md-4">
-                <h3>动态Prop</h3>
-                <div>
-                  <input v-model="parentMsg" class="form-control">
-                  <br>
-                  <childer :my-message="parentMsg"></childer>
+                </div>
+                <div class="col-md-4">
+                  <h3>动态Prop</h3>
+                  <div>
+                    <input v-model="parentMsg" class="form-control">
+                    <br>
+                    <childer :my-message="parentMsg"></childer>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <h3>组件事件传递</h3>
+                  <p>父元素事件控制:{{otherNum}}</p>
+                  <button-zidingyi type="button" class="btn btn-warning" v-on:chuandi="addNum">
+                    点击
+                  </button-zidingyi>
                 </div>
               </div>
-              <div class="col-md-4">
-                <h3>组件事件传递</h3>
-                <p>父元素事件控制:{{otherNum}}</p>
-                <button-zidingyi type="button" class="btn btn-warning" v-on:chuandi="addNum">
-                  点击
-                </button-zidingyi>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <h3>自定义INPUT组件</h3>
-                <currency-input v-model="price"></currency-input>
-                <p id="price"></p>
+              <div class="row">
+                <div class="col-md-12">
+                  <h3>自定义INPUT组件</h3>
+                  <currency-input v-model="price"></currency-input>
+                  <p id="price"></p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="panel panel-default" id="repeatTool">
-          <div class="panel-heading">3.Table-复用组件</div>
-          <div class="panel-body">
-            <!-- component template -->
-            <script type="text/x-template" id="grid-template">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th v-for="key in columns" @click="sortBy(key)" :class="{ active: sortKey == key }">
-                      {{ key | capitalize }}
-                      <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+          <div class="panel panel-default" id="repeatTool">
+            <div class="panel-heading">3.Table-复用组件</div>
+            <div class="panel-body">
+              <!-- component template -->
+              <script type="text/x-template" id="grid-template">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th v-for="key in columns" @click="sortBy(key)" :class="{ active: sortKey == key }">
+                        {{ key | capitalize }}
+                        <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
                 </span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="entry in filteredData">
-                    <td v-for="key in columns">
-                      {{entry[key]}}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </script>
-            <!-- demo root element -->
-            <div id="demo">
-              <form id="search">
-                Search <input name="query" v-model="searchQuery">
-              </form>
-              <demo-grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery">
-              </demo-grid>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="entry in filteredData">
+                      <td v-for="key in columns">
+                        {{entry[key]}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </script>
+              <!-- demo root element -->
+              <div id="demo">
+                <form id="search">
+                  Search <input name="query" v-model="searchQuery">
+                </form>
+                <demo-grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery">
+                </demo-grid>
+              </div>
+
             </div>
-
           </div>
-        </div>
 
-        <div class="panel panel-default" id="repeatTooler">
-          <div class="panel-heading">4.slot组件</div>
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-md-6">
-                <div>
-                  <h1>以下这个slot-tool中包含内容</h1>
-                  <slot-tool>
-                    <p>现在<b>slot-tool</b>里边有我这个元素，所以我显示出来</p>
-                  </slot-tool>
+          <div class="panel panel-default" id="repeatTooler">
+            <div class="panel-heading">4.slot组件</div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div>
+                    <h1>以下这个slot-tool中包含内容</h1>
+                    <slot-tool>
+                      <p>现在<b>slot-tool</b>里边有我这个元素，所以我显示出来</p>
+                    </slot-tool>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <!--包括-->
+                  <h1>以下这个slot-tool中没有包含内容</h1>
+                  <slot-tool></slot-tool>
                 </div>
               </div>
-              <div class="col-md-6">
-                <!--包括-->
-                <h1>以下这个slot-tool中没有包含内容</h1>
-                <slot-tool></slot-tool>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-md-4">
-                <slot-type>
-                  <h1 slot="header">一个页面标题</h1>
-                  <p>主要内容的一个段落。</p>
-                  <p>另一个主要段落。</p>
-                  <p slot="footer">这里有一些联系信息</p>
-                </slot-type>
-              </div>
-              <div class="col-md-4">
-                <div class="parent">
-                  <slot-send>
-                    <template scope="props">
+              <hr>
+              <div class="row">
+                <div class="col-md-4">
+                  <slot-type>
+                    <h1 slot="header">一个页面标题</h1>
+                    <p>主要内容的一个段落。</p>
+                    <p>另一个主要段落。</p>
+                    <p slot="footer">这里有一些联系信息</p>
+                  </slot-type>
+                </div>
+                <div class="col-md-4">
+                  <div class="parent">
+                    <slot-send>
+                      <template scope="props">
                       <h2>HTML里边本来的消息</h2>
                       <h2>{{ props.text}}</h2>
                       <small>{{props.sends }}</small>
                     </template>
-                  </slot-send>
+                    </slot-send>
+                  </div>
                 </div>
-              </div>
-              <div class="col-md-4">
-                <h3>作用域插槽</h3>
-                <!-BUG:这种写法不对，出不来 -->
-                <ul>
-                  <template slot="item" scope="props">
+                <div class="col-md-4">
+                  <h3>作用域插槽</h3>
+                  <!-BUG:这种写法不对，出不来 -->
+                  <ul>
+                    <template slot="item" scope="props">
                     <slot-list>{{props.text}}</slot-list>
                   </template>
-                </ul>
+                  </ul>
 
-                <!--在外部调用标签啊大哥-->
-                <slot-list :datas="datalist">
-                  <!-- 作用域插槽也可以是具名的 -->
-                  <template slot="item" scope="props">
+                  <!--在外部调用标签啊大哥-->
+                  <slot-list :datas="datalist">
+                    <!-- 作用域插槽也可以是具名的 -->
+                    <template slot="item" scope="props">
                       <li class="">{{ props.text }}</li>
                   </template>
-                </slot-list>
+                  </slot-list>
+                </div>
               </div>
-            </div>
-            <div class="row">
+              <div class="row">
 
-              <div class="col-md-6">
-                <h3 class="alert alert-warning">这个地方，他说是叫动态组件，可能是因为组件来源变了吧</h3>
-                <input type="radio" name="currentView" value="Home" v-model="currentViews" @click="change">
-                <label for="currentView">Home模板</label>
-                <input type="radio" name="currentView" value="anotherHome" v-model="currentViews" @click="change">
-                <label for="currentView">anotherHome模板</label>
-                <component v-bind:is="currentView">
-                  <!-- 组件在 vm.currentview 变化时改变！ -->
-                </component>
-              </div>
-              <div class="col-md-6">
-
-                <h3 class="alert alert-warning"> 据说这个里边添加了&lt;keep-alive&gt;标签，所以未被使用的组件会被缓存起来</h3>
-                <blockquote>如果把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染。为此可以添加一个 keep-alive 指令参数</blockquote>
-                <keep-alive>
-                  <component :is="currentView">
-                    <!-- 非活动组件将被缓存！ -->
+                <div class="col-md-6">
+                  <h3 class="alert alert-warning">这个地方，他说是叫动态组件，可能是因为组件来源变了吧</h3>
+                  <input type="radio" name="currentView" value="Home" v-model="currentViews" @click="change">
+                  <label for="currentView">Home模板</label>
+                  <input type="radio" name="currentView" value="anotherHome" v-model="currentViews" @click="change">
+                  <label for="currentView">anotherHome模板</label>
+                  <component v-bind:is="currentView">
+                    <!-- 组件在 vm.currentview 变化时改变！ -->
                   </component>
-                </keep-alive>
+                </div>
+                <div class="col-md-6">
+
+                  <h3 class="alert alert-warning"> 据说这个里边添加了&lt;keep-alive&gt;标签，所以未被使用的组件会被缓存起来</h3>
+                  <blockquote>如果把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染。为此可以添加一个 keep-alive 指令参数</blockquote>
+                  <keep-alive>
+                    <component :is="currentView">
+                      <!-- 非活动组件将被缓存！ -->
+                    </component>
+                  </keep-alive>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!--　
+          <!--　
           　◆◆◆　　　◆◆　　　◆◆◆◆◆　◆◆◆　　　　　　　◆◆◆　
           　◆◆◆◆　　◆◆　　◆◆◆　　◆◆◆◆◆　　　　　　　◆◆◆　
           　◆◆◆◆　　◆◆　◆◆◆　　　◆◆◆◆◆◆　◆◆◆　　◆◆　　
@@ -453,64 +453,64 @@
           　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
           　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
           -->
-        <div class="panel panel-default" id="canRepeat">
-          <div class="panel-heading">5.可复用组件编写</div>
-          <div class="panel-body">
-            <h3 class="alert alert-info  text-center">可复用组件编写</h3>
-            <blockquote cite="">
-              在编写组件时，记住是否要复用组件有好处。一次性组件跟其它组件紧密耦合没关系，但是可复用组件应当定义一个清晰的公开接口。
-            </blockquote>
-            <h1 v-show="isshow" class="text-center alert alert-success">点击图片,判断我要不要显示出来</h1>
-            <!--{{valuelist}}-->
-            <ceshi-tool :bindtitle="bindtitle" :bindhref="bindhref" :bindsrc="bindsrc" :username="username" @chuandi="panduan"></ceshi-tool>
+          <div class="panel panel-default" id="canRepeat">
+            <div class="panel-heading">5.可复用组件编写</div>
+            <div class="panel-body">
+              <h3 class="alert alert-info  text-center">可复用组件编写</h3>
+              <blockquote cite="">
+                在编写组件时，记住是否要复用组件有好处。一次性组件跟其它组件紧密耦合没关系，但是可复用组件应当定义一个清晰的公开接口。
+              </blockquote>
+              <h1 v-show="isshow" class="text-center alert alert-success">点击图片,判断我要不要显示出来</h1>
+              <!--{{valuelist}}-->
+              <ceshi-tool :bindtitle="bindtitle" :bindhref="bindhref" :bindsrc="bindsrc" :username="username" @chuandi="panduan"></ceshi-tool>
 
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- 脚本 -->
-    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
-    <!--Vue框架相关-->
-    <script src='../Script/Vue/vue.js'></script>
-    <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
-    <script>
-      var filePath = 'Vue/VueIndex.html';
-    </script>
-    <script src='../Script/ScoketByMa.js'></script>
-    <script>
-      $(document).ready(function() {
-        $(".panel-body").not(":last").hide();
-        $(".panel-heading").each(function() {
-          $(this).on('click', function() {
-            var $body = $(this).next(".panel-body");
-            $body.toggle(400);
+      <!-- 脚本 -->
+      <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+      <!--Vue框架相关-->
+      <script src='../Script/Vue/vue.js'></script>
+      <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+      <script>
+        var filePath = 'Vue/VueIndex.html';
+      </script>
+      <script src='../Script/ScoketByMa.js'></script>
+      <script>
+        $(document).ready(function() {
+          $(".panel-body").not(":last").hide();
+          $(".panel-heading").each(function() {
+            $(this).on('click', function() {
+              var $body = $(this).next(".panel-body");
+              $body.toggle(400);
+            });
           });
         });
-      });
-    </script>
-    <script>
-      // 　◆◆◆　　　◆◆　　　◆◆◆◆◆　◆◆◆　　　　　　　◆◆◆　
-      // 　◆◆◆◆　　◆◆　　◆◆◆　　◆◆◆◆◆　　　　　　　◆◆◆　
-      // 　◆◆◆◆　　◆◆　◆◆◆　　　◆◆◆◆◆◆　◆◆◆　　◆◆　　
-      // 　◆◆◆◆◆　◆◆　◆◆◆　　　　◆◆◆◆◆　◆◆◆　　◆◆　　
-      // 　◆◆◆◆◆◆◆◆　◆◆　　　　　◆◆◆◆◆　◆◆◆◆◆◆◆　　
-      // 　◆◆◆　◆◆◆◆　◆◆◆　　　　◆◆　◆◆◆◆◆◆◆◆◆◆　　
-      // 　◆◆◆　◆◆◆◆　◆◆◆　　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
-      // 　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
-      // 　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
-      // *******************************************************
-      Vue.filter('normaltime', function(value) {
-        //这个过滤器必须是毫秒级别的过滤
-        var tm = Date.parse(value);
-        var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
-          hour12: false
-        }).replace(/\//g, "-");
-        return tt;
-      })
+      </script>
+      <script>
+        // 　◆◆◆　　　◆◆　　　◆◆◆◆◆　◆◆◆　　　　　　　◆◆◆　
+        // 　◆◆◆◆　　◆◆　　◆◆◆　　◆◆◆◆◆　　　　　　　◆◆◆　
+        // 　◆◆◆◆　　◆◆　◆◆◆　　　◆◆◆◆◆◆　◆◆◆　　◆◆　　
+        // 　◆◆◆◆◆　◆◆　◆◆◆　　　　◆◆◆◆◆　◆◆◆　　◆◆　　
+        // 　◆◆◆◆◆◆◆◆　◆◆　　　　　◆◆◆◆◆　◆◆◆◆◆◆◆　　
+        // 　◆◆◆　◆◆◆◆　◆◆◆　　　　◆◆　◆◆◆◆◆◆◆◆◆◆　　
+        // 　◆◆◆　◆◆◆◆　◆◆◆　　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
+        // 　◆◆◆　　◆◆◆　　◆◆◆　　◆◆◆　◆◆◆◆　◆◆◆◆　　　
+        // 　◆◆◆　　◆◆◆　　　◆◆◆◆◆　　　　◆◆　　　◆◆◆　　　
+        // *******************************************************
+        Vue.filter('normaltime', function(value) {
+          //这个过滤器必须是毫秒级别的过滤
+          var tm = Date.parse(value);
+          var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
+            hour12: false
+          }).replace(/\//g, "-");
+          return tt;
+        })
 
-      // :href="bindhref"\
-      Vue.component('ceshi-tool', {
-        template: '\
+        // :href="bindhref"\
+        Vue.component('ceshi-tool', {
+          template: '\
         <div>\
           <a\
             :title="bindtitle"\
@@ -529,93 +529,93 @@
           </table>\
         </div>',
 
-        props: ["bindtitle", "bindhref", "bindsrc", "username", "bindurl", ],
-        data: function() {
-          return {
-            valuelist: []
-          }
-        },
-        methods: {
-          toshow: function(e) {
-            e.preventDefault();
-            this.$emit("chuandi");
+          props: ["bindtitle", "bindhref", "bindsrc", "username", "bindurl", ],
+          data: function() {
+            return {
+              valuelist: []
+            }
           },
-          getlist: function() {
-            var data = new Object();
-            var self = this;
-            $.ajax({
-              type: "GET",
-              url: "/users/allUser",
-              dataType: "json",
-              success: function(data) {
-                if (data != null && data != "") {
-                  if (data.dataSuccess) {　
-                    self.valuelist = data.data;
-                    console.log(data)
-                    console.log(this.valuelist)
-                  } else {}　
-                } else {}
-              }　
-            });
-          }
-        }, //在组件加载完成后的钩子
-        mounted: function() {
-          this.getlist();
-        },
-        filter: {
-
-        }
-      });
-      var canRepeat = new Vue({
-        el: "#canRepeat",
-        //数据部分 
-        data: {
-          username: "史今",
-          bindhref: "https://www.zhihu.com/people/guo-zi-501/answers",
-          bindsrc: "../images/11.jpg",
-          bindtitle: "指向史今的用户主页",
-          isshow: true,
-          valuelist: []
-        },
-        //方法
-        methods: {
-          panduan: function() {
-            this.isshow = !this.isshow;
-          }
-        },
-        //过滤器
-        filters: {
-          time: function(value) {
-            //这个过滤器必须是毫秒级别的过滤
-            var tt = new Date(parseInt(value)).toLocaleString('chinese', {
-              hour12: false
-            }).replace(/\//g, "-");
-            return tt;
+          methods: {
+            toshow: function(e) {
+              e.preventDefault();
+              this.$emit("chuandi");
+            },
+            getlist: function() {
+              var data = new Object();
+              var self = this;
+              $.ajax({
+                type: "GET",
+                url: "/users/allUser",
+                dataType: "json",
+                success: function(data) {
+                  if (data != null && data != "") {
+                    if (data.dataSuccess) {　
+                      self.valuelist = data.data;
+                      console.log(data)
+                      console.log(this.valuelist)
+                    } else {}　
+                  } else {}
+                }　
+              });
+            }
+          }, //在组件加载完成后的钩子
+          mounted: function() {
+            this.getlist();
+          },
+          filter: {
 
           }
-        },
-        //实时计算
-        computed: {},
-        //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
-        created: function() {}
-      });
+        });
+        var canRepeat = new Vue({
+          el: "#canRepeat",
+          //数据部分 
+          data: {
+            username: "史今",
+            bindhref: "https://www.zhihu.com/people/guo-zi-501/answers",
+            bindsrc: "../images/11.jpg",
+            bindtitle: "指向史今的用户主页",
+            isshow: true,
+            valuelist: []
+          },
+          //方法
+          methods: {
+            panduan: function() {
+              this.isshow = !this.isshow;
+            }
+          },
+          //过滤器
+          filters: {
+            time: function(value) {
+              //这个过滤器必须是毫秒级别的过滤
+              var tt = new Date(parseInt(value)).toLocaleString('chinese', {
+                hour12: false
+              }).replace(/\//g, "-");
+              return tt;
 
-      // ******************************************************
-      //slot组件（真心不知道这个组件是干毛的）
-      // 说是内容分发，什么父子组件之间通信，到底有啥用，求解中。。
-      // 声明一个组件
-      Vue.component("slot-tool", {
-        template: '\
+            }
+          },
+          //实时计算
+          computed: {},
+          //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
+          created: function() {}
+        });
+
+        // ******************************************************
+        //slot组件（真心不知道这个组件是干毛的）
+        // 说是内容分发，什么父子组件之间通信，到底有啥用，求解中。。
+        // 声明一个组件
+        Vue.component("slot-tool", {
+          template: '\
         <div>\
           <h3>我是子组件的标题</h3>\
           <slot>\
             <b style="color:red;">只有在没有要分发的内容时才会显示出来</b>\
           </slot>\
         </div>'
-      });
+        });
 
-      Vue.component("slot-type", {
-        template: '\
+        Vue.component("slot-type", {
+          template: '\
           <div> \
             <header  style="border:1px dotted #ddd;">\
             <span style="color:red;">我是附加内容，我被包裹在header元素中</span>\
@@ -630,406 +630,406 @@
               <slot name="footer"></slot>\
             </footer>\
           </div>'
-      });
-      // NOTE终于来到了最牛逼的传递元素的组件了，这个如果看懂了 那就可以上手写东西了
-      Vue.component("slot-send", {
-        template: '\
+        });
+        // NOTE终于来到了最牛逼的传递元素的组件了，这个如果看懂了 那就可以上手写东西了
+        Vue.component("slot-send", {
+          template: '\
         <div class="child">\
           <slot text="子组件，叫别人爸爸" sends="声明模板传递过来的消息"></slot>\
         </div>'
-      });
-      Vue.component("slot-list", {
-        template: '<ul><slot name="item" v-for="item in datas"  :text="item.text+\'--我是摇摆哥\'"> </slot></ul>',
-        // 这个地方代表他要从他爸爸那获取元素
-        props: ["datas"]
-      })
-      var Home = {
-          template: '<p style="background:#ddd;">在当前这个组件中，仅仅是声明了自己的一个HTML模板数据，然后在声明的new Vue中，使用了此模板</p>'
-        },
-        anotherHome = {
-          template: '<p>这个是另外一个声明的模板，两个互相改变，在data中的currentView选择使用哪个，就会显示出相应的模板</p>'
-        }
+        });
+        Vue.component("slot-list", {
+          template: '<ul><slot name="item" v-for="item in datas"  :text="item.text+\'--我是摇摆哥\'"> </slot></ul>',
+          // 这个地方代表他要从他爸爸那获取元素
+          props: ["datas"]
+        })
+        var Home = {
+            template: '<p style="background:#ddd;">在当前这个组件中，仅仅是声明了自己的一个HTML模板数据，然后在声明的new Vue中，使用了此模板</p>'
+          },
+          anotherHome = {
+            template: '<p>这个是另外一个声明的模板，两个互相改变，在data中的currentView选择使用哪个，就会显示出相应的模板</p>'
+          }
 
-      //NOTE  注意了啊，如果想使用模板元素的话 必须声明一哈这个所在的元素，否则Vue都不声明这个元素的话。那还搞毛啊
-      // ┗( ▔, ▔ )┛┗( ▔, ▔ )┛
-      var repeatTooler = new Vue({
-        el: "#repeatTooler",
-        data: {
-          datalist: [{
-            value: 1,
-            text: "王杰666"
-          }, {
-            value: 123,
-            text: "陈奕迅"
-          }, {
-            value: 13221,
-            text: "刘三峰"
-          }, {
-            value: 1321,
-            text: "郑秀文"
-          }],
-          currentView: Home,
-          currentViews: 'Home'
-        },
-        methods: {
-          change: function() {
-            if (this.currentViews == 'Home') {
-              this.currentView = Home;
-            } else {
-              this.currentView = anotherHome;
-            }
-          }
-        }
-      });
-
-      // **********************************************************
-      // Table复用组件
-      Vue.component('demo-grid', {
-        template: '#grid-template',
-        props: {
-          data: Array,
-          columns: Array,
-          filterKey: String
-        },
-        data: function() {
-          var sortOrders = {}
-          this.columns.forEach(function(key) {
-            sortOrders[key] = 1
-          })
-          return {
-            sortKey: '',
-            sortOrders: sortOrders
-          }
-        },
-        computed: {
-          filteredData: function() {
-            var sortKey = this.sortKey
-            var filterKey = this.filterKey && this.filterKey.toLowerCase()
-            var order = this.sortOrders[sortKey] || 1
-            var data = this.data
-            if (filterKey) {
-              data = data.filter(function(row) {
-                return Object.keys(row).some(function(key) {
-                  return String(row[key]).toLowerCase().indexOf(filterKey) > -1
-                })
-              })
-            }
-            if (sortKey) {
-              data = data.slice().sort(function(a, b) {
-                a = a[sortKey]
-                b = b[sortKey]
-                return (a === b ? 0 : a > b ? 1 : -1) * order
-              })
-            }
-            return data
-          }
-        },
-        filters: {
-          capitalize: function(str) {
-            return str.charAt(0).toUpperCase() + str.slice(1);
-          }
-        },
-        methods: {
-          sortBy: function(key) {
-            this.sortKey = key
-            this.sortOrders[key] = this.sortOrders[key] * -1
-          }
-        }
-      })
-
-      // bootstrap the demo
-      var demo = new Vue({
-          el: '#demo',
+        //NOTE  注意了啊，如果想使用模板元素的话 必须声明一哈这个所在的元素，否则Vue都不声明这个元素的话。那还搞毛啊
+        // ┗( ▔, ▔ )┛┗( ▔, ▔ )┛
+        var repeatTooler = new Vue({
+          el: "#repeatTooler",
           data: {
-            searchQuery: '',
-            gridColumns: ['name', 'power'],
-            gridData: [{
-              name: 'Chuck Norris',
-              power: Infinity
+            datalist: [{
+              value: 1,
+              text: "王杰666"
             }, {
-              name: 'Bruce Lee',
-              power: 9000
+              value: 123,
+              text: "陈奕迅"
             }, {
-              name: 'Jackie Chan',
-              power: 7000
+              value: 13221,
+              text: "刘三峰"
             }, {
-              name: 'Jet Li',
-              power: 8000
-            }]
+              value: 1321,
+              text: "郑秀文"
+            }],
+            currentView: Home,
+            currentViews: 'Home'
+          },
+          methods: {
+            change: function() {
+              if (this.currentViews == 'Home') {
+                this.currentView = Home;
+              } else {
+                this.currentView = anotherHome;
+              }
+            }
+          }
+        });
+
+        // **********************************************************
+        // Table复用组件
+        Vue.component('demo-grid', {
+          template: '#grid-template',
+          props: {
+            data: Array,
+            columns: Array,
+            filterKey: String
+          },
+          data: function() {
+            var sortOrders = {}
+            this.columns.forEach(function(key) {
+              sortOrders[key] = 1
+            })
+            return {
+              sortKey: '',
+              sortOrders: sortOrders
+            }
+          },
+          computed: {
+            filteredData: function() {
+              var sortKey = this.sortKey
+              var filterKey = this.filterKey && this.filterKey.toLowerCase()
+              var order = this.sortOrders[sortKey] || 1
+              var data = this.data
+              if (filterKey) {
+                data = data.filter(function(row) {
+                  return Object.keys(row).some(function(key) {
+                    return String(row[key]).toLowerCase().indexOf(filterKey) > -1
+                  })
+                })
+              }
+              if (sortKey) {
+                data = data.slice().sort(function(a, b) {
+                  a = a[sortKey]
+                  b = b[sortKey]
+                  return (a === b ? 0 : a > b ? 1 : -1) * order
+                })
+              }
+              return data
+            }
+          },
+          filters: {
+            capitalize: function(str) {
+              return str.charAt(0).toUpperCase() + str.slice(1);
+            }
+          },
+          methods: {
+            sortBy: function(key) {
+              this.sortKey = key
+              this.sortOrders[key] = this.sortOrders[key] * -1
+            }
           }
         })
-        // **************************************************
-      var table = new Vue({
-        el: '#table',
-        data: {
-          //此处开始为页面数据绑定部分，所有的数据为当前模块元素下变量
-          data: [{
-            userName: "李老666666666六"
-          }, {
-            userName: "李老器"
-          }, {
-            userName: "李老把"
-          }, {
-            userName: "李老就"
-          }, {
-            userName: "M"
-          }],
 
-          name: "绑定的元素", // （被下方代码改变原来的值）
-          second: "表达式翻转字符串",
-        },
-      });
-      //直接访问data中的属性值，可以改变页面中的数据部分
-      table.name = "性别";
-      //在函数外部，也可以访问到相关的属性 
-      console.log(table.$el === $("#table").get(0)); //返回T
-      // *******************************************************
-      var app = new Vue({
-        el: '#binding',
-        data: {
-          message: '页面加载时绑定的初始值'
-        },
-        created: function() {
-          // created 这个钩子在实例被创建之后被调用：
-          // alert('message is: ' + this.message)
-          $("#binding input").after("<b>本来没有此DOM，是回调函数执行了才添加到页面中，当前值为：" + this.message + "</b>")
-        },
-        //实时计算的方法
-        computed: {
-          // 只要 message 还没有发生改变，多次访问 reversedMessage 计算属性会立即返回之前的计算结果，而不必再次执行函数。
-          reversedMessage: function() {
-            return this.message.split('').reverse().join('')
+        // bootstrap the demo
+        var demo = new Vue({
+            el: '#demo',
+            data: {
+              searchQuery: '',
+              gridColumns: ['name', 'power'],
+              gridData: [{
+                name: 'Chuck Norris',
+                power: Infinity
+              }, {
+                name: 'Bruce Lee',
+                power: 9000
+              }, {
+                name: 'Jackie Chan',
+                power: 7000
+              }, {
+                name: 'Jet Li',
+                power: 8000
+              }]
+            }
+          })
+          // **************************************************
+        var table = new Vue({
+          el: '#table',
+          data: {
+            //此处开始为页面数据绑定部分，所有的数据为当前模块元素下变量
+            data: [{
+              userName: "李老666666666六"
+            }, {
+              userName: "李老器"
+            }, {
+              userName: "李老把"
+            }, {
+              userName: "李老就"
+            }, {
+              userName: "M"
+            }],
+
+            name: "绑定的元素", // （被下方代码改变原来的值）
+            second: "表达式翻转字符串",
           },
-          //这个方法不会实时更新，因为没有依赖
-          now: function() {
-            return Date.now()
-          }
-        }
-      });
-      //变量监控与回调函数
-      app.$watch('message', function(newVal, oldVal) {
-        console.log("当前值改变为：" + app.message);
-      });
-      // ***************************************************************
-      var htmlstr = new Vue({
-        el: '#BindHtml',
-        data: {
-          dynamicId: 1221,
-          htmlstr: '<p><b>我是一段HTML字符串，只有遇到v-html指令才会正常解析</b></p>'
-        }
-      });
-      // ***************************************************************
-      var directive = new Vue({
-        el: '#Directives',
-        data: {
-          seen: true,
-          isshow: false,
-          gender: false,
-          id: "15645", //绑定ID
-          domId: "aLink",
-          ok: true,
-          type: "阿斯顿"
-        }
-      });
-      // *********************************************************
-      var button = new Vue({
-        el: '#onButton', //el指代选择器如 id，class，tagName
-        data: {
-          msg: '点击按钮',
-          message: 'Vue.js'
-        },
-        methods: { //在methods对象中定义方法
-          showInfo: function(e) {
-            //方法中的this，指代new Vue这个实例对象，可以再次验证下
-            console.log(this);
-            //event 是原生DOM事件
-            console.log(e.target); //打印出事件源对象button
-            alert('Hello ' + this.message + '!');
-          }
-        }
-      });
-      // ***********************************************************
-      var filt = new Vue({
-        el: '#filt', //el指代选择器如 id，class，tagName
-        data: {
-          str: "aaaaaaaaaaaaa",
-          times: 1493716453000
-        },
-        computed: {
-
-        },
-        methods: {
-
-        },
-        filters: {
-          capitalize: function(value) {
-            if (!value) return ''
-            value = value.toString()
-            return value.toUpperCase();
+        });
+        //直接访问data中的属性值，可以改变页面中的数据部分
+        table.name = "性别";
+        //在函数外部，也可以访问到相关的属性 
+        console.log(table.$el === $("#table").get(0)); //返回T
+        // *******************************************************
+        var app = new Vue({
+          el: '#binding',
+          data: {
+            message: '页面加载时绑定的初始值'
           },
-          firstToUpper: function(value) {
-            if (!value) return ''
-            value = value.toString()
-            return value.charAt(0).toUpperCase() + value.slice(1)
+          created: function() {
+            // created 这个钩子在实例被创建之后被调用：
+            // alert('message is: ' + this.message)
+            $("#binding input").after("<b>本来没有此DOM，是回调函数执行了才添加到页面中，当前值为：" + this.message + "</b>")
           },
-          time: function(value) {
-            //这个过滤器必须是毫秒级别的过滤
-            var tt = new Date(parseInt(value)).toLocaleString('chinese', {
-              hour12: false
-            }).replace(/\//g, "-");
-            return tt;
+          //实时计算的方法
+          computed: {
+            // 只要 message 还没有发生改变，多次访问 reversedMessage 计算属性会立即返回之前的计算结果，而不必再次执行函数。
+            reversedMessage: function() {
+              return this.message.split('').reverse().join('')
+            },
+            //这个方法不会实时更新，因为没有依赖
+            now: function() {
+              return Date.now()
+            }
+          }
+        });
+        //变量监控与回调函数
+        app.$watch('message', function(newVal, oldVal) {
+          console.log("当前值改变为：" + app.message);
+        });
+        // ***************************************************************
+        var htmlstr = new Vue({
+          el: '#BindHtml',
+          data: {
+            dynamicId: 1221,
+            htmlstr: '<p><b>我是一段HTML字符串，只有遇到v-html指令才会正常解析</b></p>'
+          }
+        });
+        // ***************************************************************
+        var directive = new Vue({
+          el: '#Directives',
+          data: {
+            seen: true,
+            isshow: false,
+            gender: false,
+            id: "15645", //绑定ID
+            domId: "aLink",
+            ok: true,
+            type: "阿斯顿"
+          }
+        });
+        // *********************************************************
+        var button = new Vue({
+          el: '#onButton', //el指代选择器如 id，class，tagName
+          data: {
+            msg: '点击按钮',
+            message: 'Vue.js'
+          },
+          methods: { //在methods对象中定义方法
+            showInfo: function(e) {
+              //方法中的this，指代new Vue这个实例对象，可以再次验证下
+              console.log(this);
+              //event 是原生DOM事件
+              console.log(e.target); //打印出事件源对象button
+              alert('Hello ' + this.message + '!');
+            }
+          }
+        });
+        // ***********************************************************
+        var filt = new Vue({
+          el: '#filt', //el指代选择器如 id，class，tagName
+          data: {
+            str: "aaaaaaaaaaaaa",
+            times: 1493716453000
+          },
+          computed: {
 
-          }
-        },
-        methods: { //在methods对象中定义方法
-          showInfo: function(e) {
-            //方法中的this，指代new Vue这个实例对象，可以再次验证下
-            console.log(this);
-            //event 是原生DOM事件
-            console.log(e.target); //打印出事件源对象button
-            alert('Hello ' + this.message + '!');
-          }
-        }
-      });
-      // ***********************************************************
-      var bindList = new Vue({
-        el: "#bindList",
-        data: {
-          ulList: ['oop', 'java', 'lunix', 'cpu'],
-          object: {
-            name: "小米",
-            age: 37,
-            job: '销售'
-          }
-        }
-      });
+          },
+          methods: {
 
-      // ***********************************************************
-      // 声明一个模板
-      Vue.component('todo-items', {
-        //NOTE 这个地方本人理解就是写个什么东西，模板名字一对上，就把那个原来的父节点给套路（取代）了，完以后自己这边声明变量，然后再获取父节点的变量的值，然后生成，暂时只看出来了复杂，根本不知道有鸡毛用/(ㄒoㄒ)/~~
-        // titles 和food这两个变量都需要去父节点里边寻找
-        // 神TM知道原来的节点是不是父节点
-        // 具体这个click和那个remove如何联系起来的，暂时闹不懂
-        template: '\
+          },
+          filters: {
+            capitalize: function(value) {
+              if (!value) return ''
+              value = value.toString()
+              return value.toUpperCase();
+            },
+            firstToUpper: function(value) {
+              if (!value) return ''
+              value = value.toString()
+              return value.charAt(0).toUpperCase() + value.slice(1)
+            },
+            time: function(value) {
+              //这个过滤器必须是毫秒级别的过滤
+              var tt = new Date(parseInt(value)).toLocaleString('chinese', {
+                hour12: false
+              }).replace(/\//g, "-");
+              return tt;
+
+            }
+          },
+          methods: { //在methods对象中定义方法
+            showInfo: function(e) {
+              //方法中的this，指代new Vue这个实例对象，可以再次验证下
+              console.log(this);
+              //event 是原生DOM事件
+              console.log(e.target); //打印出事件源对象button
+              alert('Hello ' + this.message + '!');
+            }
+          }
+        });
+        // ***********************************************************
+        var bindList = new Vue({
+          el: "#bindList",
+          data: {
+            ulList: ['oop', 'java', 'lunix', 'cpu'],
+            object: {
+              name: "小米",
+              age: 37,
+              job: '销售'
+            }
+          }
+        });
+
+        // ***********************************************************
+        // 声明一个模板
+        Vue.component('todo-items', {
+          //NOTE 这个地方本人理解就是写个什么东西，模板名字一对上，就把那个原来的父节点给套路（取代）了，完以后自己这边声明变量，然后再获取父节点的变量的值，然后生成，暂时只看出来了复杂，根本不知道有鸡毛用/(ㄒoㄒ)/~~
+          // titles 和food这两个变量都需要去父节点里边寻找
+          // 神TM知道原来的节点是不是父节点
+          // 具体这个click和那个remove如何联系起来的，暂时闹不懂
+          template: '\
               <p>\
                 {{ titles }}{{food}}\
                 <button v-on:click="$emit(\'remove\')" class="btn btn-link btn-sm"  >X</button>\
               </p>\
               ',
-        props: ['titles', 'food']
-      })
-      var propsBlock = new Vue({
-        el: "#propsBlock",
-        data: {
-          newTodoText: '做一顿饭',
-          todos: [
-            '事项1',
-            '待做事项',
-            '完成代码质量规范'
-          ],
-          person: [
-            "小何",
-            "小李",
-            "小清",
-            "小王",
-            "本来我们有六个，但是利用propsBlock.person.splice(5)方法截取只剩下五个",
-            "小生"
-          ],
-          numbers: [1, 2, 3, 4, 5]
-        },
-        //添加方法
-        methods: {
-          addNewTodo: function() {
-            this.todos.push(this.newTodoText)
-            this.newTodoText = ''
-          }
-        },
-        computed: {
-          evenNumbers: function() {
-            return this.numbers.filter(function(number) {
-              return number % 2 === 0
-            })
-          }
-        },
-        methods: {
-          even: function(numbers) {
-            return numbers.filter(function(number) {
-              return number % 2 === 0
-            })
-          }
-        }
-      });
-      // 关于数组的方法push()pop()shift()unshift()splice()sort()reverse()这些会改变原始值，所有叫做NOTE变异方法
-      propsBlock.todos.push("买菜做好吃的");
-
-      //  filter(), concat(), slice()这些不会修改原来数组，叫做NOTE非变异方法
-      propsBlock.todos.concat(["跑步", "锻炼"]);
-
-      // NOTE 在原生的JS中arr[i]=1，arr.length=1都会改变原来数组的值，但是Vue里不能触发更新("由于 JavaScript 的限制， Vue 不能检测这些变动的数组：")
-      Vue.set(propsBlock.person, 1, "我是利用Vue.set修改后的名称，否则你看不到我");
-      //或者
-      propsBlock.person.splice(2, 1, "我是利用splice方法修改后的名字");
-      //
-      propsBlock.person.splice(5);　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
-
-      var handle = new Vue({
-        el: "#eventsHandle",
-        data: {
-          num: 10,
-        },
-        methods: {
-          tip: function() {
-            $(".forbutton").toggleClass('alert-danger');
+          props: ['titles', 'food']
+        })
+        var propsBlock = new Vue({
+          el: "#propsBlock",
+          data: {
+            newTodoText: '做一顿饭',
+            todos: [
+              '事项1',
+              '待做事项',
+              '完成代码质量规范'
+            ],
+            person: [
+              "小何",
+              "小李",
+              "小清",
+              "小王",
+              "本来我们有六个，但是利用propsBlock.person.splice(5)方法截取只剩下五个",
+              "小生"
+            ],
+            numbers: [1, 2, 3, 4, 5]
           },
-          say: function(str) {
-            alert(str);
+          //添加方法
+          methods: {
+            addNewTodo: function() {
+              this.todos.push(this.newTodoText)
+              this.newTodoText = ''
+            }
+          },
+          computed: {
+            evenNumbers: function() {
+              return this.numbers.filter(function(number) {
+                return number % 2 === 0
+              })
+            }
+          },
+          methods: {
+            even: function(numbers) {
+              return numbers.filter(function(number) {
+                return number % 2 === 0
+              })
+            }
           }
-        }
-      });
-      //在外部可以调用本方法
-      handle.tip();
-      // *********************************************************
-      Vue.component('ht-bind', {
-        // 声明 props
-        //NOTE在这要声明自定义的要绑定的属性,然后使用
-        props: ['values', 'bindtoselect'],
-        // 就像 data 一样，prop 可以用在模板内
-        // 同样也可以在 vm 实例中像 “this.message” 这样使用
-        template: '<option v-bind:value="bindtoselect">{{bindtoselect}}--{{ values }}</option>'
-      });
+        });
+        // 关于数组的方法push()pop()shift()unshift()splice()sort()reverse()这些会改变原始值，所有叫做NOTE变异方法
+        propsBlock.todos.push("买菜做好吃的");
 
-      Vue.component('childer', {
-        props: ['myMessage'],
-        template: '<span>{{ myMessage }}---</span>',
-        // data: function() {
-        //   return {
-        //     myMessage: "测试"
-        //   }
-        // }
+        //  filter(), concat(), slice()这些不会修改原来数组，叫做NOTE非变异方法
+        propsBlock.todos.concat(["跑步", "锻炼"]);
 
-      });
+        // NOTE 在原生的JS中arr[i]=1，arr.length=1都会改变原来数组的值，但是Vue里不能触发更新("由于 JavaScript 的限制， Vue 不能检测这些变动的数组：")
+        Vue.set(propsBlock.person, 1, "我是利用Vue.set修改后的名称，否则你看不到我");
+        //或者
+        propsBlock.person.splice(2, 1, "我是利用splice方法修改后的名字");
+        //
+        propsBlock.person.splice(5);　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 
-      Vue.component("button-zidingyi", {
-        template: '<button v-on:click="chuandi">{{ totalNum }}</button>',
-        data: function() {
-          return {
-            totalNum: 0
+        var handle = new Vue({
+          el: "#eventsHandle",
+          data: {
+            num: 10,
+          },
+          methods: {
+            tip: function() {
+              $(".forbutton").toggleClass('alert-danger');
+            },
+            say: function(str) {
+              alert(str);
+            }
           }
-        },
-        methods: {
-          //子元素的单击事件,对父元素传递时,父元素可以监听到此事件
-          chuandi: function() {
-            this.totalNum++;
-            //在此处向父元素传递方法
-            this.$emit('chuandi');
-            this.totalNum *= 10;
-          }
-        }
-      });
+        });
+        //在外部可以调用本方法
+        handle.tip();
+        // *********************************************************
+        Vue.component('ht-bind', {
+          // 声明 props
+          //NOTE在这要声明自定义的要绑定的属性,然后使用
+          props: ['values', 'bindtoselect'],
+          // 就像 data 一样，prop 可以用在模板内
+          // 同样也可以在 vm 实例中像 “this.message” 这样使用
+          template: '<option v-bind:value="bindtoselect">{{bindtoselect}}--{{ values }}</option>'
+        });
 
-      Vue.component('currency-input', {
-        template: '\
+        Vue.component('childer', {
+          props: ['myMessage'],
+          template: '<span>{{ myMessage }}---</span>',
+          // data: function() {
+          //   return {
+          //     myMessage: "测试"
+          //   }
+          // }
+
+        });
+
+        Vue.component("button-zidingyi", {
+          template: '<button v-on:click="chuandi">{{ totalNum }}</button>',
+          data: function() {
+            return {
+              totalNum: 0
+            }
+          },
+          methods: {
+            //子元素的单击事件,对父元素传递时,父元素可以监听到此事件
+            chuandi: function() {
+              this.totalNum++;
+              //在此处向父元素传递方法
+              this.$emit('chuandi');
+              this.totalNum *= 10;
+            }
+          }
+        });
+
+        Vue.component('currency-input', {
+          template: '\
             <span>\
                   $\
                   <input\
@@ -1040,96 +1040,96 @@
                 </span>\
               ',
 
-        //  v-on:input="updateValue($event.target.value)"\
-        props: ['value'],
-        methods: {
-          // 不是直接更新值，而是使用此方法来对输入值进行格式化和位数限制
-          updateValue: function(value) {
-            var formattedValue = value
-              // 删除两侧的空格符
-              .trim()
-              // 保留 2 位小数
-              .slice(0, value.indexOf('.') + 3)
-              // 如果值不统一，手动覆盖以保持一致
-            if (formattedValue !== value) {
-              this.$refs.input.value = formattedValue
+          //  v-on:input="updateValue($event.target.value)"\
+          props: ['value'],
+          methods: {
+            // 不是直接更新值，而是使用此方法来对输入值进行格式化和位数限制
+            updateValue: function(value) {
+              var formattedValue = value
+                // 删除两侧的空格符
+                .trim()
+                // 保留 2 位小数
+                .slice(0, value.indexOf('.') + 3)
+                // 如果值不统一，手动覆盖以保持一致
+              if (formattedValue !== value) {
+                this.$refs.input.value = formattedValue
+              }
+              // 通过 input 事件发出数值
+              this.$emit('input', Number(formattedValue));
+              return formattedValue;
+            },
+            append: function(value) {
+              // alert(value);
+              $("#price").prepend(value + "<br/>");
             }
-            // 通过 input 事件发出数值
-            this.$emit('input', Number(formattedValue));
-            return formattedValue;
+          }
+        });
+
+        var propsTool = new Vue({
+          el: "#propsTool",
+          data: {
+            parentMsg: "11",
+            lists: [{
+              "name": "张三，李四，王五",
+              id: 1
+            }, {
+              "name": "老六，和尚，老井",
+              id: 2
+            }, {
+              "name": "小涛，小蛇，于洪",
+              id: 3
+            }],
+            otherNum: 0,
+            price: 0
           },
-          append: function(value) {
-            // alert(value);
-            $("#price").prepend(value + "<br/>");
+          methods: {
+            //父元素的方法
+            addNum: function() {
+              //必须指定当前的this.才可以获取到当前变量,否则作用域中的此变量无法更改
+              this.otherNum++;
+            }
           }
-        }
-      });
+        });
 
-      var propsTool = new Vue({
-        el: "#propsTool",
-        data: {
-          parentMsg: "11",
-          lists: [{
-            "name": "张三，李四，王五",
-            id: 1
-          }, {
-            "name": "老六，和尚，老井",
-            id: 2
-          }, {
-            "name": "小涛，小蛇，于洪",
-            id: 3
-          }],
-          otherNum: 0,
-          price: 0
-        },
-        methods: {
-          //父元素的方法
-          addNum: function() {
-            //必须指定当前的this.才可以获取到当前变量,否则作用域中的此变量无法更改
-            this.otherNum++;
+        // *************************************************
+        //NOTE:注册了一个全局组件
+        //对于标签起名，最好小写，并且包含一个短杠（不强制）
+        Vue.component('my-mashaobo', {
+          template: '<input type="text" class="form-control" placeholder="我是一个自定义选项" v-model="normalizedSize">',
+          //NOTE 在此处返回的DATA，必须是函数
+          data: function() {
+            return {
+              mine: "#CE5BF3" //初始值
+            }
+          },
+          //组件初始化值
+          computed: {
+            normalizedSize: function() {
+              return this.mine.trim().toLowerCase()
+            }
           }
-        }
-      });
+        });
+        Vue.component('ht-select', {
+          template: '<select class="form-control">' +
+            '<option>1</option>' +
+            '<option>2</option>' +
+            '<option>3</option>' +
+            '<option>4</option>' +
+            '</select>'
+            // 选项
+        });
 
-      // *************************************************
-      //NOTE:注册了一个全局组件
-      //对于标签起名，最好小写，并且包含一个短杠（不强制）
-      Vue.component('my-mashaobo', {
-        template: '<input type="text" class="form-control" placeholder="我是一个自定义选项" v-model="normalizedSize">',
-        //NOTE 在此处返回的DATA，必须是函数
-        data: function() {
-          return {
-            mine: "#CE5BF3" //初始值
-          }
-        },
-        //组件初始化值
-        computed: {
-          normalizedSize: function() {
-            return this.mine.trim().toLowerCase()
-          }
+        var Child = {
+          template: "<h3>我不是全局组件</h3>"
         }
-      });
-      Vue.component('ht-select', {
-        template: '<select class="form-control">' +
-          '<option>1</option>' +
-          '<option>2</option>' +
-          '<option>3</option>' +
-          '<option>4</option>' +
-          '</select>'
-          // 选项
-      });
-
-      var Child = {
-        template: "<h3>我不是全局组件</h3>"
-      }
-      var tools = new Vue({
-        el: "#tools",
-        components: {
-          // <my-component> 将只在父模板可用
-          'my-component': Child
-        }
-      });
-    </script>
-</body>
+        var tools = new Vue({
+          el: "#tools",
+          components: {
+            // <my-component> 将只在父模板可用
+            'my-component': Child
+          }
+        });
+      </script>
+  </body>
 
 </html>

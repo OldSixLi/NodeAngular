@@ -18,8 +18,31 @@
     font-weight: normal;
 }
 
+
+/* NOTE 原来为22px,底部间隙过高,修改为15px */
+
 .el-form-item {
     margin-bottom: 15px;
+}
+
+
+/* form表单内 每行有多个元素时,<ht-form-item>应用 .multi-input 样式  目的:取消控件之间的左右缝隙*/
+
+.multi-input>.el-form-item__content {
+    font-size: 0;
+}
+
+.multi-input>.el-form-item__content span,
+.multi-input>.el-form-item__content label {
+    display: inline-block;
+    font-size: 14px;
+}
+
+
+/* 在行内元素时,向上对齐inline-block元素 */
+
+.el-form--inline .el-form-item__content .btn {
+    vertical-align: top;
 }
 
 
