@@ -11,6 +11,15 @@
     <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
     <link href="https://cdn.bootcss.com/jquery-confirm/3.2.3/jquery-confirm.min.css" rel="stylesheet">
     <link href="../Style/spider.css" rel="stylesheet">
+    <style>
+      .jconfirm-buttons {
+        width: 100%;
+      }
+      
+      .jconfirm .jconfirm-box.jconfirm-type-green {
+        border-top: none;
+      }
+    </style>
   </head>
 
   <body>
@@ -106,7 +115,15 @@
           console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
           console.log(src);
           console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-          tool.alert("图片详情", "<img src='" + src + "' style='width:100%' class='img-responsive img-thumbnail'>");
+          tool.confirm("图片详情", "<img src='" + src + "' style='width:100%' class='img-responsive img-thumbnail'>", function() {
+            // \images\zhihu_Down\55952517\147075281--8--4200211_r.jpg
+            var arr = src.split('zhihu_Down\\')[1].split('\\');
+            var queId = arr[0]; //问题ID
+            var ansId = arr[1].split('--')[0] //回答ID
+            var url = "https://www.zhihu.com/question/" + queId + "/answer/" + ansId;
+            // alert(answerId);
+            window.open(url);
+          }, function() {});
         })
       });
 
@@ -124,137 +141,57 @@
         }
       }
 
-      //判断浏览器版本
-      function myBrowser() {
-        var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
-        var isOpera = userAgent.indexOf("Opera") > -1; //判断是否Opera浏览器
-        var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera; //判断是否IE浏览器
-        var isFF = userAgent.indexOf("Firefox") > -1; //判断是否Firefox浏览器
-        var isSafari = userAgent.indexOf("Safari") > -1; //判断是否Safari浏览器
-        if (isIE) {
-          var IE5 = IE55 = IE6 = IE7 = IE8 = false;
-          var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
-          reIE.test(userAgent);
-          var fIEVersion = parseFloat(RegExp["$1"]);
-          IE55 = fIEVersion == 5.5;
-          IE6 = fIEVersion == 6.0;
-          IE7 = fIEVersion == 7.0;
-          IE8 = fIEVersion == 8.0;
-          if (IE55) {
-            return "IE55";
-          }
-          if (IE6) {
-            return "IE6";
-          }
-          if (IE7) {
-            return "IE7";
-          }
-          if (IE8) {
-            return "IE8";
-          }
-        } //isIE end
-        if (isFF) {
-          return "FF";
-        }
-        if (isOpera) {
-          return "Opera";
-        }
-      };
 
       var JSTOOL = function() {
-
         /* 弹窗 */
         this.alert = function(title, content, callback, className) {
           var confirm = callback && typeof callback === "function" ? callback : function() {};
-          if (myBrowser() == "IE8") {
-
-            $.alert({
-              buttons: {
-                ok: {
-                  label: '关闭',
-                  className: 'btn-primary'
-                }
-              },
-              message: content,
-              callback: function() {
-                confirm();
-              },
-              title: title,
-            });
-
-
+          var alertClass = "";
+          if (typeof className == "undefined") {
+            alertClass = 'offset2 col-md-8 col-md-offset-2';
           } else {
-            var alertClass = "";
-            if (typeof className == "undefined") {
-              alertClass = 'offset2 col-md-8 col-md-offset-2';
-            } else {
-              alertClass = className;
-            }
-            $.alert({
-              title: title,
-              content: content,
-              confirm: confirm,
-              confirmButton: '确定',
-              cancelButton: '取消',
-              backgroundDismiss: false,
-              confirmButtonClass: 'btn-primary',
-              animation: 'zoom',
-              closeAnimation: 'scale',
-              columnClass: alertClass,
-              buttons: [{
-                text: "确定",
-                btnClass: "btn-primary"
-              }]
-            });
+            alertClass = className;
           }
+          $.alert({
+            title: title,
+            content: content,
+            confirm: confirm,
+            confirmButton: '确定',
+            cancelButton: '取消',
+            backgroundDismiss: false,
+            confirmButtonClass: 'btn-primary',
+            animation: 'zoom',
+            closeAnimation: 'scale',
+            columnClass: alertClass,
+            buttons: [{
+              text: "确定",
+              btnClass: "btn-primary"
+            }]
+          });
         };
 
 
         this.confirm = function(title, content, okCallback, cancelCallback) {
-          var confirm = okCallback && typeof okCallback === "function" ? okCallback :
-            function() {};
-          var cancel = cancelCallback && typeof cancelCallback === "function" ? cancelCallback :
-            function() {};
-          if (myBrowser() == "IE8") {
-            window.confirm({
-              buttons: {
-                confirm: {
-                  label: '确认',
-                  className: 'btn-primary'
-                },
-                cancel: {
-                  label: '取消',
-                  className: 'btn-danger'
-                }
+          var confirm = okCallback && typeof okCallback === "function" ? okCallback : function() {};
+          var cancel = cancelCallback && typeof cancelCallback === "function" ? cancelCallback : function() {};
+          $.confirm({
+            title: title,
+            content: content,
+            type: 'green',
+            buttons: {
+              ok: {
+                text: "查看原答案",
+                btnClass: 'btn-link pull-left',
+                keys: ['enter'],
+                action: confirm
               },
-              message: content,
-              callback: function(result) {
-                if (result) {
-                  confirm();
-                } else {
-                  cancel();
-                }
-              },
-              title: title,
-            });
-          } else {
-            var confirm = okCallback && typeof okCallback === "function" ? okCallback : function() {};
-            var cancel = cancelCallback && typeof cancelCallback === "function" ? cancelCallback : function() {};
-            $.confirm({
-              title: title,
-              offsetTop: 10,
-              content: content,
-              confirm: confirm,
-              cancel: cancel,
-              confirmButton: '确定',
-              cancelButton: '取消',
-              confirmButtonClass: 'btn-primary',
-              cancelButtonClass: 'btn-danger',
-              backgroundDismiss: false,
-              animation: 'zoom',
-              closeAnimation: 'scale'
-            });
-          }
+              cancel: {
+                text: "确定",
+                btnClass: 'btn-primary pull-right',
+                action: cancel
+              }
+            }
+          });
         };
         this.dialog = function(title, content) {
           window.top.$.dialog({

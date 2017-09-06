@@ -41,14 +41,11 @@ app.use(bodyParser.urlencoded({ //此项必须在 bodyParser.json 下面,为参�
 // 　◆◆◆　　　◆◆◆◆◆◆　　　　◆◆◆◆◆◆◆◆◆　　　　◆◆　　◆◆◆　　　　◆◆◆◆　　　　　　
 /* 获取用户请求,进行相关处理 */
 router.get('/', function(req, res, next) {
-  console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-  console.log("TODO");
-  console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
   res.send('此接口不返回任何有效信息!');
 });
 
 //请求的是/users/users接口才会访问到此处
-router.get('/users', function(req, res, next) {
+router.all('/users', function(req, res, next) {
   //允许跨域
   res.header("Access-Control-Allow-Origin", "*");
   var absolutePath = path.resolve(__dirname, '../public/JSON/uu.json');
@@ -60,30 +57,32 @@ router.get('/users', function(req, res, next) {
   }, 0);
 });
 //请求的是/users/users接口才会访问到此处
-router.get('/allUser', function(req, res, next) {
+router.all('/allUser', function(req, res, next) {
   var returnObj = {};
-  var result = DBhelper.getAll(function(result) {
-    if (result) {
-      //查询成功dataSuccess = false;
-      returnObj.dataSuccess = true;
-      returnObj.data = result;
-      returnObj.totalPages = 10;
-      returnObj.currentPage = 4;
-      setTimeout(function() {
-        res.json(returnObj);
-      }, 1000);
+  console.log("POST:" + JSON.stringify(req.body));
+  var name = req.body.name; //用户名称
+  var age = req.body.age; //年龄
+  var currentPage = req.body.currentPage ? req.body.currentPage : 1;
+  var resolveResult = function(result) {
+      if (result) {
+        returnObj.success = true;
+        returnObj.bean = {
+          data: result,
+          totalPages: 10,
+          currentPage: currentPage
+        }
 
-    } else {
-      //查询失败处理操作
-      returnObj.errorMessage = '没数据' + new Date().getSeconds();
+      } else {
+        //查询失败处理操作
+        returnObj.success = false;
+        returnObj.message = "对不起,当前没有查询到相关结果";
+        returnObj.bean = null;
+      }
       res.json(returnObj);
     }
-
-    //控制延时返回数据
-    var obj = JSON.parse(data);
-    setTimeout(function() {
-      res.json(obj);
-    }, 5000);
+    // if (name || age) {
+  var results = DBhelper.getList(name, age, function(result) {
+    resolveResult(result);
   });
 });
 

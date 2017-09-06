@@ -31,7 +31,6 @@ router.get('/', function(req, res, next) {
 // 　　　　　◆◆◆　　　　◆◆◆　　　◆◆◆◆◆◆◆◆◆◆◆◆◆◆　◆◆◆◆◆◆◆◆◆　
 //zTree资源
 router.all('/tree', function(req, res, next) {
-
   var data = fs.readFileSync("/PersonCodes/ListPage/public/JSON/tree.json", "utf-8");
   //控制延时返回数据
   var obj = JSON.parse(data);

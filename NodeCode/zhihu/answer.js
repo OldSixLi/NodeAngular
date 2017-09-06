@@ -104,8 +104,8 @@ function GetSingleQuestion(questionId, _socket) {
     //返回答案数
     var ansCount = getNum($(data).find('.List-headerText').text());
     //在遍历问题下的答案时，优质答案一般不会超过20页，后期答案不再进行遍历
-    if (ansCount > 200) {
-      ansCount = 200;
+    if (ansCount > 500) {
+      ansCount = 500;
     }
     var filePath = path.resolve(__dirname, '../../public/images/zhihu_Down/' + questionId);
     if (!fs.existsSync(filePath)) {

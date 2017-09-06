@@ -91,6 +91,37 @@ function getAll(next) {
 };
 
 
+/**
+ * 有查询条件时查询
+ * 
+ * @param {any} name 
+ * @param {any} age 
+ * @param {any} next 
+ */
+function getSingleModel(name, age, next) {
+  var sql = 'select * from  user where 1=1 ';
+  if (name) {
+    sql += "and name like '%" + name + "%'";
+  }
+  if (age) {
+    sql += "and age = " + age;
+  }
+
+  client.query(sql, function(err, result) {
+    if (!err) {
+      try {
+        var json = JSON.parse(JSON.stringify(result));
+        next(json);
+      } catch (error) {
+        console.log("line-40:当前数据转化的错误为:" + error);
+      }
+    } else {
+      console.log(err);
+    }
+  });
+}
+
+
 
 
 
@@ -101,3 +132,4 @@ function getAll(next) {
 exports.getAll = getAll;
 exports.getDS = finds;
 exports.addModel = start;
+exports.getList = getSingleModel;

@@ -1,0 +1,58 @@
+<!-- 马少博  创建于 2017年9月4日17:25:30 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+    <title> 标题</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+  </head>
+
+  <body>
+
+    <!-- 脚本 -->
+    <!-- <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script> -->
+    <!-- <script src='https://cdn.bootcss.com/vue/2.3.3/vue.js'></script> -->
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+    <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+    <script>
+      function callback() {
+        console.log('Done');
+      }
+      console.log('before setTimeout()');
+      setTimeout(callback, 1000); // 1秒钟后调用callback函数
+      console.log('after setTimeout()');
+
+      function test(resolve, reject) {
+        var timeOut = Math.random() * 2;
+        log('set timeout to: ' + timeOut + ' seconds.');
+        setTimeout(function() {
+          if (timeOut < 1) {
+            log('call resolve()...');
+            resolve('200 OK');
+          } else {
+            log('call reject()...');
+            reject('timeout in ' + timeOut + ' seconds.');
+          }
+        }, timeOut * 1000);
+      }
+
+      var p1 = new Promise(test);
+      var p2 = p1.then(function(result) {
+        console.log('成功：' + result);
+      });
+      var p3 = p2.catch(function(reason) {
+        console.log('失败：' + reason);
+      });
+
+      function log(str) {
+        console.log(str)
+      }
+    </script>
+
+  </body>
+
+</html>

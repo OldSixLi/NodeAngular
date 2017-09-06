@@ -6,9 +6,9 @@
  */
 
 var getmoudle_path = 'C:/Program Files/nodejs/node_modules/';
-var mysql = require(getmoudle_path + 'mysql');
-var TEST_DATABASE = 'zhihuspiderdata';
-var TEST_TABLE = 'Answers';
+var mysql = require('mysql');
+var TEST_DATABASE = 'nodesql';
+var TEST_TABLE = 'user';
 
 //创建连接
 var client = mysql.createConnection({
@@ -52,6 +52,26 @@ function start(questrionModel) {
 
 }
 
+/**
+ * 歌单插入数据库
+ * 
+ * @param {any} model 
+ */
+function musicPayListAdd(model) {
+  var sql = "insert  into paylist(name,href,src,collectnum,createtime) values(?,?,?,?,NOW())";
+  var param = [model.name, model.href, model.imgSrc, model.collectCount];
+  //增 add
+  client.query(sql, param, function(err, result) {
+    if (err) {
+      console.log('[INSERT ERROR] - ', err.message);
+      return;
+    }
+    console.log('~~~~~~~~~~~~~~~~~~~数据插入成功~~~~~~~~~~~~~~~~~~~~~~~');
+    console.log('名称：' + model.name);
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n');
+
+  });
+}
 //查询当前的问题是否已经遍历过
 /**
  * 
@@ -75,3 +95,4 @@ function finds(questionId, next) {
 //输出函数
 exports.start = start;
 exports.finds = finds;
+exports.listAdd = musicPayListAdd;
