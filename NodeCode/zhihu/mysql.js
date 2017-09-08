@@ -92,7 +92,79 @@ function finds(questionId, next) {
     });
   };
 }
+
+
+
+function getMusicList(pageInedx, pageNum, next) {
+  var start = (pageInedx - 1) * pageNum;
+  var end = pageNum;
+  var sql = "select id,mid from music where comment=0  LIMIT " + start + "," + pageNum;
+  client.query(sql, function(err, result) {
+    if (!err) {
+      next(result);
+    } else {
+      next(0);
+    }
+  })
+}
+
+function getHighQualityMusicList(next) {
+  // var sql = "select mid from music where COMMENT>50000";
+  var sql = "select DISTINCT mid from music where COMMENT>10000 and COMMENT<=50000 order by id limit 500,100 ";
+  client.query(sql, function(err, result) {
+    if (!err) {
+      next(result);
+    } else {
+      next(0);
+    }
+  })
+}
+
+function updateMusic(model) {
+  var sql = "update music set comment=" + model.total + " where id=" + model.id + " and comment=0";
+  client.query(sql, function(err, result) {
+    if (err) {
+      console.log('[INSERT ERROR] - ', err.message);
+      return;
+    }
+    console.log('~~~~~~~~~~~~~~~~~~~数据更新成功~~~~~~~~~~~~~~~~~~~~~~~');
+    console.log('名称：' + getfullStr(model.id) + ",▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇评论量:" + model.total);
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n');
+  });
+}
+
+function getfullStr(str) {
+  var a = (10 - str.length);
+  var nullstr = "";
+  for (var index = 0; index < a; index++) {
+    nullstr += ' ';
+  }
+  return str + nullstr;
+}
+
+
+function musicAdd(model) {
+  var sql = "insert  into music(mid,name,comment,collectid,createtime) values(?,?,?,?,NOW())";
+  var param = [model.id, model.name, model.comment, model.collectid];
+  //增 add
+  client.query(sql, param, function(err, result) {
+    if (err) {
+      console.log('[INSERT ERROR] - ', err.message);
+      return;
+    }
+    console.log('歌曲ID:▇▇▇▇▇▇▇▇' + model.id);
+  });
+
+  //删除重复音乐ID
+  // delete from music
+  // where mid  in( select mid from (select  mid  from music  group  by  mid   having  count(mid) > 1) a)
+  // and id not in (select id from(select min(id) as id from  music  group by mid  having count(mid )>1) b)
+}
 //输出函数
 exports.start = start;
 exports.finds = finds;
-exports.listAdd = musicPayListAdd;
+exports.listAdd = musicPayListAdd; //歌单添加内容
+exports.musicAdd = musicAdd;
+exports.getMusicList = getMusicList;
+exports.updateMusic = updateMusic;
+exports.getHighQualityMusicList = getHighQualityMusicList;

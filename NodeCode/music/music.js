@@ -13,6 +13,7 @@ var path = require('path');
 var io = require('socket.io')();
 var xssEscape = require('xss-escape');
 var DbHelper = require('F:/PersonCodes/NodeAngular项目/NodeCode/zhihu/mysql.js');
+var async = require('async');
 
 for (var i = 0; i < 38; i++) {
   (function(i) {
