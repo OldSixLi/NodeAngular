@@ -44,45 +44,44 @@ function getlist(num) {
         tenThousandNum = collectCount.split('万')[0] > 50 ? collectCount.split('万')[0] : 0;
       }
       if (tenThousandNum > 0) {
-
         console.log(tenThousandNum + "万");
         var paylistUrl = $(this).find(".u-cover .msk").attr("href");
         playListObj.name = $(this).find(".u-cover .msk").attr("title").trim().replace(/[&\|\\\*^%$#@\-]/g, "");
         playListObj.collectCount = tenThousandNum;
         playListObj.imgSrc = $(this).find("img.j-flag").attr("src");
         playListObj.href = paylistUrl;
-        // DbHelper.listAdd(playListObj); //数据库添加 
-        var paylistDetailUrl = "http://localhost:9999/playlist" + paylistUrl.replace('playlist', 'detail');
-        //获取歌单中的歌曲列表
-        (function(paylistDetailUrl) {
-          setTimeout(function() {
-            nodegrass.get(paylistDetailUrl, function(data) {
-              if (data) {
-                var payListJson = JSON.parse(data);
+        DbHelper.listAdd(playListObj); //数据库添加 
+        // var paylistDetailUrl = "http://localhost:9999/playlist" + paylistUrl.replace('playlist', 'detail');
+        // //获取歌单中的歌曲列表
+        // (function(paylistDetailUrl) {
+        //   setTimeout(function() {
+        //     nodegrass.get(paylistDetailUrl, function(data) {
+        //       if (data) {
+        //         var payListJson = JSON.parse(data);
 
-                PAYLISTINDEX += 1;
-                //遍历歌单中的歌曲
-                for (var songIndex = 0; songIndex < payListJson.privileges.length; songIndex++) {
-                  var element = payListJson.privileges[songIndex];
-                  console.log("第" + SPIDERINDEX + "首" + element.id);
-                  LISTARR.push(element.id);
-                  SPIDERINDEX++;
-                  // (function(id) {
-                  //   setTimeout(function() {
-                  //     nodegrass.get("http://localhost:9999/comment/music?id=" + id, function(data) {
-                  //       if (data) {
-                  //         var musicCommentDetailJson = JSON.parse(data);
-                  //         console.log("第" + SPIDERINDEX + "首:" + "歌曲ID:" + id + "....." + "评论量:" + musicCommentDetailJson.total);
-                  //         SPIDERINDEX++;
-                  //       }
-                  //     });
-                  //   }, SPIDERINDEX * 1000);
-                  // })(element.id)
-                }
-              }
-            })
-          }, PAYLISTINDEX * 0);
-        })(paylistDetailUrl)
+        //         PAYLISTINDEX += 1;
+        //         //遍历歌单中的歌曲
+        //         for (var songIndex = 0; songIndex < payListJson.privileges.length; songIndex++) {
+        //           var element = payListJson.privileges[songIndex];
+        //           console.log("第" + SPIDERINDEX + "首" + element.id);
+        //           LISTARR.push(element.id);
+        //           SPIDERINDEX++;
+        //           // (function(id) {
+        //           //   setTimeout(function() {
+        //           //     nodegrass.get("http://localhost:9999/comment/music?id=" + id, function(data) {
+        //           //       if (data) {
+        //           //         var musicCommentDetailJson = JSON.parse(data);
+        //           //         console.log("第" + SPIDERINDEX + "首:" + "歌曲ID:" + id + "....." + "评论量:" + musicCommentDetailJson.total);
+        //           //         SPIDERINDEX++;
+        //           //       }
+        //           //     });
+        //           //   }, SPIDERINDEX * 1000);
+        //           // })(element.id)
+        //         }
+        //       }
+        //     })
+        //   }, PAYLISTINDEX * 0);
+        // })(paylistDetailUrl)
 
 
       }

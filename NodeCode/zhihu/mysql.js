@@ -110,7 +110,8 @@ function getMusicList(pageInedx, pageNum, next) {
 
 function getHighQualityMusicList(next) {
   // var sql = "select mid from music where COMMENT>50000";
-  var sql = "select DISTINCT mid from music where COMMENT>10000 and COMMENT<=50000 order by id limit 500,100 ";
+  var sql = "select * from music where comment>=40000 and comment<=50000 order by id ";
+  // and COMMENT<=50000 order by id limit 1400,200
   client.query(sql, function(err, result) {
     if (!err) {
       next(result);
@@ -157,7 +158,7 @@ function musicAdd(model) {
 
   //删除重复音乐ID
   // delete from music
-  // where mid  in( select mid from (select  mid  from music  group  by  mid   having  count(mid) > 1) a)
+  // where mid  in(   ) a)
   // and id not in (select id from(select min(id) as id from  music  group by mid  having count(mid )>1) b)
 }
 //输出函数

@@ -140,7 +140,7 @@ function getPlayList(href, callback) {
   }, 1000);
 
 }
-getMusicList(1, 1000);
+// getMusicList(1, 1000);
 var MUSICLIST = [];
 
 function getMusicList(pageIndex, pageNum) {
@@ -197,21 +197,21 @@ function getSingleMusic(item, callback) {
     })
   }, 1000);
 }
-// DbHelper.getHighQualityMusicList(function(result) {
-//   if (result) {
-//     console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-//     console.log(result.length);
-//     console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-//     var list = [];
-//     for (var index = 0; index < result.length; index++) {
-//       var element = result[index];
-//       list.push(element.mid);
-//     }
-//     console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-//     console.log(list.join(','));
-//     console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-//   }
-// });
+DbHelper.getHighQualityMusicList(function(result) {
+  if (result) {
+    console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+    console.log(result.length);
+    console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+    var list = [];
+    for (var index = 0; index < result.length; index++) {
+      var element = result[index];
+      list.push(element.mid);
+    }
+    console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+    console.log(list.join(','));
+    console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+  }
+});
 
 
 // nodegrass.get("http://localhost:9999/login/cellphone?phone=18222603560&password=ma18222603560", function(data) {
