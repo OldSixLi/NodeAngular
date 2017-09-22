@@ -12,13 +12,37 @@
     <link rel="stylesheet" href="../../Style/vue-index.css">
     <link rel="stylesheet" href="../../Style/vue-base.css">
     <style>
-
+      .error {
+        /* height: 0;*/
+        /* display: none; */
+      }
+      
+      .error.active {
+        animation: cssAnimation .3s 1 ease forwards;
+      }
+      
+      @keyframes cssAnimation {
+        from {
+          display: none;
+          height: 0;
+          transform: scale(1, 0);
+        }
+        to {
+          display: block;
+          height: 100%;
+          transform: scale(1);
+        }
+      }
     </style>
   </head>
 
   <body>
+
+
     <!--NOTE 此处声明Vue-->
     <div id="vueBlock">
+      <!-- <h1 class="error active" v-if="isshow">你们说的事情</h1>
+      <button type="button" class="btn btn-primary" @click="addClass">添加样式</button> -->
       <!-- <h1 class="text-center">FORM表单组件</h1> -->
       <br>
       <div class="row">
@@ -40,7 +64,7 @@
 
           <!-- 表单布局 -->
           <h3 class="text-center">表单布局</h3>
-          <ht-form :model="form" label-width="100px" label-position="right" style="width:600px;margin:0 auto;">
+          <ht-form :model="form" label-width="100px" label-position="right" style="width:900px;margin:0 auto;">
             <!-- Begin -->
             <label>一人一首成名曲：</label>
             <ht-form-item label="周杰伦：" validateMessage="请输入歌曲名" isRequired="true">
@@ -134,6 +158,10 @@
     <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
     <script src='../../Script/vue/component.js'></script>
     <script>
+      // $(document).ready(function() {
+      //   $(".error").addClass("active");
+      // });
+
       // 　◆◆◆◆◆　　◆◆◆　　◆◆◆◆　◆◆◆　◆◆◆　
       // 　　◆　　◆　◆　　　◆　　◆　　◆　◆◆　◆◆　　
       // 　　◆　◆　　◆　　　◆　　◆　　◆　◆◆　◆◆　　
@@ -475,6 +503,7 @@
         el: "#vueBlock",
         //数据部分
         data: {
+          isshow: false,
           form: {
             zhoujielun: '双节棍',
             suyang: '贺兰山下',
@@ -491,6 +520,9 @@
               pawaluodi: '',
               isBuy: 'NO'
             }
+          },
+          addClass: function() {
+            this.isshow = !this.isshow;
           }
         },
         //过滤器
