@@ -7,20 +7,260 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='shortcut icon' href='../../images/ico/horse.ico' />
-    <title> 标题</title>
+    <title> 组件</title>
     <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../Style/vue-index.css">
+    <link rel="stylesheet" href="../../Style/vue-base.css">
+    <style>
+      select.form-control {
+        font-family: "MicroSoft YaHei";
+        /* border: 5px solid #ddd; */
+        appearance: none;
+        -moz-appearance: none;
+        /*for firefox*/
+        -webkit-appearance: none;
+        /*for chrome*/
+        padding-right: 10px;
+        color: #000;
+        font-size: 16px;
+        /* width: 200px; */
+        height: 50px;
+        overflow: hidden;
+        background: url(arrow.png) no-repeat right #fff;
+      }
+      
+      .form-control option {
+        color: #000;
+      }
+      
+      .hover span {
+        display: inline-block;
+        transform-origin: 0% 0%;
+        /* transition: .5s; */
+        transform: scale(1, 2);
+      }
+      
+      #id {
+        width: 100px;
+        height: 100px;
+        background-color: #000;
+        /* transform: scale(0);*/
+        /* display: none; */
+        animation: mymove 5s 1 forwards;
+        -webkit-animation: mymove 5s 1 forwards;
+        position: relative;
+      }
+      
+      @keyframes mymove {
+        from {
+          top: -100px;
+        }
+        to {
+          top: 0px;
+        }
+      }
+      
+      @-webkit-keyframes mymove
+      /*Safari and Chrome*/
+      
+      {
+        from {
+          top: -100px;
+        }
+        to {
+          top: 0px;
+        }
+      }
+    </style>
   </head>
 
   <body>
-    <!--NOTE 此处声明Vue-->
+
+
+
     <div id="vueBlock">
+      <div class="row" id="lists">
+        <!-- <div id="id"></div> -->
+        <!-- <button type="button" class="btn btn-primary" id="btn">点击</button> -->
+
+        <!-- 消除外边距 -->
+        <div class="col-md-8 col-md-offset-2">
+          <!-- <select class="form-control">
+            <option value="刀锋">刀锋</option>
+            <option value="飞虎队">飞虎队</option>
+            <option value="曼陀罗">曼陀罗</option>
+            <option value="乔峰">乔峰</option>
+            <option value="猎狐者">猎狐者</option>
+            <option value="灵狐者">灵狐者</option>
+            </select> -->
+          <ht-option current-label="豫章故郡 洪都新府" value="90"> </ht-option>
+        </div>
+      </div>
 
     </div>
+    <script type="text/x-template" id="ht-select">
+      <div class="el-select" v-clickoutside="handleClose">
+        <div class="el-select__tags" v-if="multiple" @click.stop="toggleMenu" ref="tags" :style="{ 'max-width': inputWidth - 32 + 'px' }">
+          <transition-group @after-leave="resetInputHeight">
+            <el-tag v-for="item in selected" :key="item.value" closable :hit="item.hitState" type="primary" @close="deleteTag($event, item)" close-transition>
+              <span class="el-select__tags-text">{{ item.currentLabel }}</span>
+            </el-tag>
+          </transition-group>
+
+          <input type="text" class="el-select__input" :class="`is-${ size }`" @focus="visible = true" :disabled="disabled" @keyup="managePlaceholder" @keydown="resetInputState" @keydown.down.prevent="navigateOptions('next')" @keydown.up.prevent="navigateOptions('prev')"
+            @keydown.enter.prevent="selectOption" @keydown.esc.prevent="visible = false" @keydown.delete="deletePrevTag" v-model="query" :debounce="remote ? 300 : 0" v-if="filterable" :style="{ width: inputLength + 'px', 'max-width': inputWidth - 42 + 'px' }"
+            ref="input">
+        </div>
+        <el-input ref="reference" v-model="selectedLabel" type="text" :placeholder="currentPlaceholder" :name="name" :size="size" :disabled="disabled" :readonly="!filterable || multiple" :validate-event="false" @focus="handleFocus" @click="handleIconClick" @mousedown.native="handleMouseDown"
+          @keyup.native="debouncedOnInputChange" @keydown.native.down.prevent="navigateOptions('next')" @keydown.native.up.prevent="navigateOptions('prev')" @keydown.native.enter.prevent="selectOption" @keydown.native.esc.prevent="visible = false" @keydown.native.tab="visible = false"
+          @paste.native="debouncedOnInputChange" @mouseenter.native="inputHovering = true" @mouseleave.native="inputHovering = false" :icon="iconClass">
+        </el-input>
+        <transition name="el-zoom-in-top" @after-leave="doDestroy" @after-enter="handleMenuEnter">
+          <el-select-menu ref="popper" v-show="visible && emptyText !== false">
+            <el-scrollbar tag="ul" wrap-class="el-select-dropdown__wrap" view-class="el-select-dropdown__list" :class="{ 'is-empty': !allowCreate && filteredOptionsCount === 0 }" v-show="options.length > 0 && !loading">
+              <el-option :value="query" created v-if="showNewOption">
+              </el-option>
+              <slot></slot>
+            </el-scrollbar>
+            <p class="el-select-dropdown__empty" v-if="emptyText && !allowCreate">{{ emptyText }}</p>
+          </el-select-menu>
+        </transition>
+      </div>
+    </script>
+    <!-- OPTION 组件-->
+    <script type="text/x-template" id="ht-option">
+      <li @mouseenter="hoverItem" @mouseleave="leaveItem" @click.stop="selectOptionClick" class="el-select-dropdown__item" v-show="visible" :class="{
+      'selected': itemSelected,
+      'is-disabled': disabled,
+      'hover': parent.hoverIndex === index}">
+        <slot>
+          <span>{{ currentLabel }}</span>
+        </slot>
+      </li>
+    </script>
     <!-- 脚本 -->
     <script src='https://cdn.bootcss.com/vue/2.3.3/vue.js'></script>
     <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
     <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+    <script src='../../Script/vue/component.js'></script>
     <script>
+      Vue.component('ht-option', {
+        template: '#ht-option',
+        props: {
+          value: {
+            required: true
+          },
+          label: [String, Number],
+          created: Boolean,
+          disabled: {
+            type: Boolean,
+            default: false
+          }
+        },
+
+        data() {
+          return {
+            index: -1,
+            groupDisabled: false,
+            visible: true,
+            hitState: false
+          };
+        },
+
+        computed: {
+          currentLabel() {
+            return this.label || ((typeof this.value === 'string' || typeof this.value === 'number') ? this.value : '');
+          },
+
+          currentValue() {
+            return this.value || this.label || '';
+          },
+
+          parent() {
+            let result = this.$parent;
+            while (!result.isSelect) {
+              result = result.$parent;
+            }
+            return result;
+          },
+
+          itemSelected() {
+            if (!this.parent.multiple) {
+              return this.value === this.parent.value;
+            } else {
+              return this.parent.value.indexOf(this.value) > -1;
+            }
+          },
+
+          limitReached() {
+            if (this.parent.multiple) {
+              return !this.itemSelected &&
+                this.parent.value.length >= this.parent.multipleLimit &&
+                this.parent.multipleLimit > 0;
+            } else {
+              return false;
+            }
+          }
+        },
+
+        watch: {
+          currentLabel() {
+            if (!this.created && !this.parent.remote) this.dispatch('ElSelect', 'setSelected');
+          },
+          value() {
+            if (!this.created && !this.parent.remote) this.dispatch('ElSelect', 'setSelected');
+          }
+        },
+
+        methods: {
+          handleGroupDisabled(val) {
+            this.groupDisabled = val;
+          },
+
+          hoverItem() {
+            if (!this.disabled && !this.groupDisabled) {
+              this.parent.hoverIndex = this.parent.options.indexOf(this);
+            }
+          },
+
+          selectOptionClick() {
+            if (this.disabled !== true && this.groupDisabled !== true) {
+              this.dispatch('ElSelect', 'handleOptionClick', this);
+            }
+          },
+
+          queryChange(query) {
+            // query 里如果有正则中的特殊字符，需要先将这些字符转义
+            let parsedQuery = String(query).replace(/(\^|\(|\)|\[|\]|\$|\*|\+|\.|\?|\\|\{|\}|\|)/g, '\\$1');
+            this.visible = new RegExp(parsedQuery, 'i').test(this.currentLabel) || this.created;
+            if (!this.visible) {
+              this.parent.filteredOptionsCount--;
+            }
+          },
+
+          resetIndex() {
+            this.$nextTick(() => {
+              this.index = this.parent.options.indexOf(this);
+            });
+          }
+        },
+
+        created() {
+          this.parent.options.push(this);
+          this.parent.cachedOptions.push(this);
+          this.parent.optionsCount++;
+          this.parent.filteredOptionsCount++;
+          this.index = this.parent.options.indexOf(this);
+
+          this.$on('queryChange', this.queryChange);
+          this.$on('handleGroupDisabled', this.handleGroupDisabled);
+          this.$on('resetIndex', this.resetIndex);
+        },
+
+        beforeDestroy() {
+          this.dispatch('ElSelect', 'onOptionDestroy', this);
+        }
+      });
       var vueBlock = new Vue({
         el: "#vueBlock",
         //数据部分 
@@ -31,8 +271,10 @@
         filters: {},
         //实时计算
         computed: {},
-        //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
-        created: function() {}
+        //立即执行
+        created: function() {
+
+        }
       });
     </script>
   </body>

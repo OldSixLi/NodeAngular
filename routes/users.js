@@ -57,7 +57,7 @@ router.all('/users', function(req, res, next) {
   }, 0);
 });
 //请求的是/users/users接口才会访问到此处
-router.all('/allUser', function(req, res, next) {
+router.post('/allUser', function(req, res, next) {
   var returnObj = {};
   console.log("POST:" + JSON.stringify(req.body));
   var name = req.body.name; //用户名称
@@ -66,9 +66,13 @@ router.all('/allUser', function(req, res, next) {
   var resolveResult = function(result) {
       if (result) {
         returnObj.success = true;
+        for (var index = 0; index < result.length; index++) {
+          var element = result[index];
+          element.Regtime = toTimestamp(element.Regtime)
+        }
         returnObj.bean = {
           data: result,
-          totalPages: 10,
+          pageCount: 10,
           currentPage: currentPage
         }
 
@@ -86,6 +90,12 @@ router.all('/allUser', function(req, res, next) {
   });
 });
 
+
+
+function toTimestamp(timestr) {
+  //   return new Date(timestr).setHours(0); //设置时间为一天开始
+  return Date.parse(new Date(timestr)).toString() == "NaN" ? 0 : Date.parse(new Date(timestr));
+}
 // /users/name地址
 router.get('/name', function(req, res, next) {
   res.send("马三立老师");

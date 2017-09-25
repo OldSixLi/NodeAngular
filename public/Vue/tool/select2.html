@@ -1,0 +1,129 @@
+<!-- 马少博  创建于 2017年9月22日14:48:28 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+    <title> 标题</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <link href="https://cdn.bootcss.com/select2/4.0.1/css/select2.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../Style/vue-index.css">
+    <link rel="stylesheet" href="../../Style/vue-base.css">
+    <style>
+
+    </style>
+  </head>
+
+  <body>
+    <div id="vueBlock">
+      <div class="container">
+        <h1>select组件封装</h1>
+        <p>注:组件实现了对select2的封装 所以需引入相关的js和css文件 对当前组件的样式稍作修改 和Bootstrap风格统一</p>
+        <br>
+        <ht-select id="select" :options="sltOptions" v-model="people">
+          <option value="1">刀锋</option>
+          <option value="2">飞虎队</option>
+          <option value="3">曼陀罗</option>
+          <option value="4">乔峰</option>
+          <option value="5">猎狐者</option>
+          <option value="6">灵狐者</option>
+        </ht-select>
+        <p>当前select选择的结果是:<b>{{people}}</b></p>
+        <!-- 代码展示部分 -->
+        <h3 class="text-center">示例代码</h3>
+        <p><b>HTML代码</b></p>
+        <pre>
+          &lt;ht-select id=&quot;select&quot; :options=&quot;sltOptions&quot; v-model=&quot;people&quot;&gt;
+            &lt;option value=&quot;1&quot;&gt;刀锋&lt;/option&gt;
+            &lt;option value=&quot;2&quot;&gt;飞虎队&lt;/option&gt;
+            &lt;option value=&quot;3&quot;&gt;曼陀罗&lt;/option&gt;
+            &lt;option value=&quot;4&quot;&gt;乔峰&lt;/option&gt;
+            &lt;option value=&quot;5&quot;&gt;猎狐者&lt;/option&gt;
+            &lt;option value=&quot;6&quot;&gt;灵狐者&lt;/option&gt;
+          &lt;/ht-select&gt;
+        </pre>
+        <p><b>Javascript代码</b></p>
+        <pre>
+          var vm = new Vue({
+            el: &quot;#vueBlock&quot;,
+            //数据部分 
+            data: {
+              people: &quot;4&quot;,//当前select组件默认选中值为乔峰
+              sltOptions: {
+                //注:以下为options默认设置值,实际开发中根据需要配置
+                tags: false,
+                minimumResultsForSearch: -1
+              }
+            }
+          });
+        </pre>
+      </div>
+    </div>
+    <!-- 脚本 -->
+    <script src='https://cdn.bootcss.com/vue/2.3.3/vue.js'></script>
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+    <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+    <script src="https://cdn.bootcss.com/select2/4.0.1/js/select2.min.js"></script>
+    <script>
+      'use strict';
+      Vue.component('ht-select', {
+        props: {
+          options: {
+            type: Object,
+            default: function() {
+              //NOTE:在prop设置默认值为对象时,需用方法返回值(不能直接设置值)
+              return {
+                tags: false,
+                minimumResultsForSearch: -1
+              }
+            }
+          },
+          value: String
+        },
+        template: '<select class="form-control"> <slot></slot> </select>',
+        //在元素值被挂载以后运行此方法
+        mounted: function() {
+          var _self = this;
+          $(this.$el)
+            .select2(this.options)
+            .val(this.value)
+            .trigger('change')
+            .on('change', function() {
+              _self.$emit('input', this.value);
+            });
+        },
+        watch: {
+          value: function(value) {
+            // 更新值
+            $(this.$el).val(value).trigger('change');
+          },
+          options: function(options) {
+            // 更新设置
+            $(this.$el).select2(options)
+          }
+        },
+        destroyed: function() {
+          //删除配置
+          $(this.$el).off().select2('destroy');
+        }
+      });
+
+      var vms = new Vue({
+        el: "#vueBlock",
+        //数据部分 
+        data: {
+          people: "4", //当前select组件默认选中值为乔峰
+          sltOptions: {
+            //注:以下为options默认设置值,实际开发中根据需要配置
+            tags: false,
+            minimumResultsForSearch: -1
+          }
+        }
+      });
+    </script>
+  </body>
+
+</html>

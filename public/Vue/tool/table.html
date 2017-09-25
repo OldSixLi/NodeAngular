@@ -9,7 +9,6 @@
     <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
     <title> Vue表格</title>
     <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
-
     <link rel="stylesheet" href="../../Style/vue-index.css">
     <link rel="stylesheet" href="../../Style/vue-base.css">
     <style>
@@ -47,13 +46,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-4">
-          <!--<div class="cssload-loader"></div>-->
-        </div>
-        <div class="col-md-4"></div>
-        <div class="col-md-4"></div>
-      </div>
+
       <div class="panel panel-default">
         <div class="panel-heading">表格复用组件示例</div>
         <!--外部组件-->
@@ -61,20 +54,109 @@
           <!--内部组件-->
           <column slot name="名称" data-key="name"></column>
           <column slot name="性别" data-key="gender" align="center" filter="toGender"></column>
-          <column slot name="时间" data-key="Regtime" align="center" filter="normaltime"></column>
+          <column slot name="时间" data-key="Regtime" align="center" filter="toNormalTime"></column>
           <column slot name="头像" data-key="iconUrl" align="center" filter="toImg"></column>
-          <column slot name="编辑" data-key="ID" align="center" filter="toHref"></column>
+          <column slot name="编辑" data-key="ID,name,Regtime" align="center" filter="testMultiParams"></column>
         </ht-table>
       </div>
+      <!--示例代码-->
+      <h3 class="text-center">示例代码</h3>
 
-      <!--NOTE 下一个表格-->
-      <!-- <ht-table ajaxurl="/users/users" :search-data="otherData">
-        <column slot name="名称" data-key="name" align="center"></column>
-        <column slot name="性别" data-key="gender" align="center" filter="toGender"></column>
-        <column slot name="头像" data-key="iconUrl" align="center" filter="toImg"></column>
-        <column slot name="编辑" data-key="ID" align="center" filter="toHref"></column>
-      </ht-table> -->
+      <p><b>HTML代码</b></p>
+      <pre>
+    &lt;!--外部组件--&gt;
+    &lt;ht-table ajaxurl=&quot;/users/allUser&quot; :search-data=&quot;searchData&quot;&gt;
+      &lt;!--内部组件--&gt;
+      &lt;column slot name=&quot;名称&quot; data-key=&quot;name&quot;&gt;&lt;/column&gt;
+      &lt;column slot name=&quot;性别&quot; data-key=&quot;gender&quot; align=&quot;center&quot; filter=&quot;toGender&quot;&gt;&lt;/column&gt;
+      &lt;column slot name=&quot;时间&quot; data-key=&quot;Regtime&quot; align=&quot;center&quot; filter=&quot;toNormalTime&quot;&gt;&lt;/column&gt;
+      &lt;column slot name=&quot;头像&quot; data-key=&quot;iconUrl&quot; align=&quot;center&quot; filter=&quot;toImg&quot;&gt;&lt;/column&gt;
+      &lt;column slot name=&quot;编辑&quot; data-key=&quot;ID&quot; align=&quot;center&quot; filter=&quot;toHref&quot;&gt;&lt;/column&gt;
+    &lt;/ht-table&gt;
+   </pre>
 
+      <p><b>Javascript代码</b></p>
+      <pre> 
+          var HtmlFun = {
+            //扩展
+            extend: function(obj) {
+              if (obj) {
+                HtmlFun = $.extend(HtmlFun, obj);
+              }
+            },
+            /**
+             * 转化为图片代码
+             * @returns
+             */
+            toImg: function(value) {
+              var str = &quot;&lt;img src=&#x27;&quot; + value + &quot;&#x27;/&gt;&quot;;
+              return str;
+            },
+    
+            /**
+             * 时间戳转化为正常时间 
+             * @param {any} shijianchuo  时间戳 精确到毫秒
+             * @returns 正常时间
+             */
+            toNormalTime: function(shijianchuo) {
+              var time = new Date(parseInt(shijianchuo));
+              var y = time.getFullYear();
+              var m = time.getMonth() + 1;
+              var d = time.getDate();
+              var h = time.getHours();
+              var mm = time.getMinutes();
+              var s = time.getSeconds();
+              return y + &#x27;-&#x27; + this.add0(m) + &#x27;-&#x27; + this.add0(d) + &#x27; &#x27; + this.add0(h) + &#x27;:&#x27; + this.add0(mm) + &#x27;:&#x27; + this.add0(s);
+            },
+            toGender: function(value) {
+              return value == &quot;M&quot; ? &quot;男&quot; : &quot;女&quot;;
+            },
+            add0: function(m) {
+              return m &lt; 10 ? &#x27;0&#x27; + m : m;
+            },
+            testMultiParams: function(id, name, problem) {
+              return &#x27;&lt;a href=&quot;javascript:;&quot; onclick=&quot;test(\&#x27;&#x27; + id + &#x27;\&#x27;,\&#x27;&#x27; + name + &#x27;\&#x27;,\&#x27;&#x27; + problem + &#x27;\&#x27;)&quot;&gt;弹出&lt;/a&gt;&#x27;;
+            },
+            getName: function(id, name) {
+              return id + &#x27;...&#x27; + name;
+            }
+          }
+    
+          function test(id, name, problem) {
+            alert(&#x27;id是&#x27; + id + &#x27;\r\n名称是：&#x27; + name + &#x27;\r\n问题是：&#x27; + problem);
+          }
+
+          var tableContent = new Vue({
+            el: &quot;#tableContent&quot;,
+            //数据部分
+            data: {
+              ajaxurl: &quot;http://healthshare.com.cn/admin/api/user&quot;,
+              littleUrl: &quot;http://healthshare.com.cn/admin/api/demand&quot;,
+              age: &quot;&quot;,
+              name: &quot;&quot;,
+              searchData: {
+                // currentPage: 1
+              },
+              otherData: {
+                sex: &quot;&quot;,
+                age: &quot;&quot;
+              }
+            },
+    
+            //方法
+            methods: {
+              toSearch: function() {
+                //NOTE 此处调用时必须声明page的参数
+                this.searchData = {
+                  age: this.age ? this.age : &quot;&quot;,
+                  name: this.name ? this.name : &quot;&quot;,
+                  // currentPage: 1
+                };
+    
+              }
+            }
+          });
+   </pre>
 
 
     </div>
@@ -169,7 +251,7 @@
       // 　　◆　◆　　　　　　　　◆　　◆◆　◆　◆　◆　
       // 　◆　　　◆◆◆◆◆◆◆　　　◆　　　◆◆◆　　　
       //NOTE 全局过滤插件　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
-      Vue.filter('normaltime', function(value) {
+      Vue.filter('toNormalTime', function(value) {
         //这个过滤器必须是毫秒级别的过滤
         var tm = Date.parse(value);
         var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
@@ -179,40 +261,18 @@
       });　　
       Vue.filter('toGender', function(value) {
         return value == "M" ? "男" : "女";
-      });　　
-
-      function toGender(value) {
-        return value == "M" ? "男" : "女";
-      };
-
-      function toHref(value) {
-        var str = "<a href='www.baidu.com?id=" + value + "'>好的</a>";
-        return str;
-      }
-
-      function toImg(value) {
-        var str = "<img src='" + value + "'/>";
-        return str;
-      }
-
-      function normaltime(value) {
-        try {
-          //这个过滤器必须是毫秒级别的过滤
-          var tm = Date.parse(value);
-          var tt = new Date(parseInt(tm)).toLocaleString('chinese', {
-            hour12: false
-          }).replace(/\//g, "-");
-          return tt;
-        } catch (error) {
-          return value;
-        }
-
-      }
+      });
       /**
        * 当前对象为将参数转化为Html的方法集合
        * @returns
        */
       var HtmlFun = {
+        //扩展
+        extend: function(obj) {
+          if (obj) {
+            HtmlFun = $.extend(HtmlFun, obj);
+          }
+        },
         /**
          * 转化为图片代码
          * @returns
@@ -266,13 +326,18 @@
       // 　　　◆　◆◆◆◆◆◆◆　　　◆　　◆　　◆　　　
       // 　　　◆　　　◆　◆　　　　　◆　◆　　◆　◆　　
       // 　　　◆　◆◆　　　◆◆　　　◆◆　　◆　　　◆　
-      /**
-       * table组件声明
-       * 
-       */
+      // 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+      // 　◆◆◆◆◆　　　◆　　　◆◆◆◆　　◆◆◆　　　◆◆◆◆◆　
+      // 　◆　◆　◆　　　◆　　　　◆　　◆　　◆　　　　　◆　　◆　
+      // 　　　◆　　　　　◆◆　　　◆　　◆　　◆　　　　　◆　◆　　
+      // 　　　◆　　　　◆　◆　　　◆◆◆　　　◆　　　　　◆◆◆　　
+      // 　　　◆　　　　◆　◆　　　◆　　◆　　◆　　　　　◆　◆　　
+      // 　　　◆　　　　◆◆◆◆　　◆　　◆　　◆　　　　　◆　　　　
+      // 　　　◆　　　　◆　　◆　　◆　　◆　　◆　　　◆　◆　　◆　
+      // 　　◆◆◆　　◆◆　　◆◆◆◆◆◆　　◆◆◆◆◆◆◆◆◆◆◆　
+      //表格组件
       Vue.component('ht-table', {
-        // template: "<div>" + "        <table class=\"table table-hover\">" + "          <thead>" + "            <tr>" + "              <!-- 展示序列号 -->" + "              <th v-show=\"!!showindex\">#</th>" + "              <!-- 遍历当前的列名，进行展示，同时设置列的style样式 -->" + "              <th v-for=\"x in rule\" :width=\"x.width\" :style=\"{textAlign:x.align,width:x.width}\">{{x.name}}</th>" + "            </tr>" + "          </thead>" + "          <tbody>" + "            <!-- 搜索结果进行处理 -->" + "            <tr v-for=\"(x,index) in valuelist\" v-show=\"!showLoading&&valuelist!=null&&valuelist.length>0\">" + "              <td v-show=\"!!showindex\">{{index+1}}</td>" + "              <td v-for=\"y in rule\" :style=\"{textAlign:y.align,width:y.width}\">" + "                <!--Begin: If当前的参数为多参数，进行多参数处理操作 -->" + "                <span v-if=\"y.dataKey.split(\',\').length>1\"> " + "                  <!--NOTE 此处的逻辑有点不正常，难描述。" + "                    每个td中的params参数，先置为空数组，再往数组中逐个添加当前td中的参数。" + "                    目的是防止其他td中多参数与当前td参数拼接到一起 -->" + "                <span v-show=\'false\'>{{x.params=[]}}</span>" + "                <span v-for=\"singleKey in y.dataKey.split(\',\')\" style=\"display:none;\"> " + "                        {{x.params.push(x[singleKey])}}" + "                    </span>" + "                <span v-html=\"render(x.params,y.filter)\"> </span>" + "                </span>" + "                <!-- End:结束多参数判断 -->" + "                <!-- Else当前的参数为单个参数，直接进行处理 -->" + "                <span v-else v-html=\"render(x[y.dataKey],y.filter)\"> </span>" + "              </td>" + "            </tr>" + "            <!-- 当前搜索结果为空时，提示没有搜索结果 -->" + "            <tr v-show=\"!showLoading&&(valuelist==null||valuelist.length==0)\">" + "              <td colspan=\"100\">" + "                <h2 class=\"text-center\" style=\"color:#a78989;\">{{errorInfo}}</h2>" + "              </td>" + "            </tr>" + "          </tbody>" + "        </table>" + "        <!-- 加载动画区域 NOTE: 通过修改样式 .cssload-loader 相关参数可以更改动画-->" + "        <div v-show=\"showLoading\" :style=\"loadingHeight\" class=\"relative\">" + "          <div class=\"cssload-loader\"></div>" + "        </div>" + "        <!-- 分页控件模块 -->" + "        <div class=\"pull-right page\">" + "          <ul class=\"pagination\" v-show=\"valuelist!=null&&valuelist.length>0\"></ul>" + "        </div>" + "        <!-- 搜索参数 -->" + "        <span style=\"display:none;\">{{searchDatas}}</span>" + "      </div>",
-        template: "#ht-table",
+        template: "<div>" + "        <table class=\"table table-hover\">" + "          <thead>" + "            <tr>" + "              <!-- 展示序列号 -->" + "              <th v-show=\"!!showindex\">#</th>" + "              <!-- 遍历当前的列名，进行展示，同时设置列的style样式 -->" + "              <th v-for=\"x in rule\" :width=\"x.width\" :style=\"{textAlign:x.align,width:x.width}\">{{x.name}}</th>" + "            </tr>" + "          </thead>" + "          <tbody>" + "            <!-- 搜索结果进行处理 -->" + "            <tr v-for=\"(x,index) in valuelist\" v-show=\"!showLoading&&valuelist!=null&&valuelist.length>0\">" + "              <td v-show=\"!!showindex\">{{index+1}}</td>" + "              <td v-for=\"y in rule\" :style=\"{textAlign:y.align,width:y.width}\">" + "                <!--Begin: If当前的参数为多参数，进行多参数处理操作 -->" + "                <span v-if=\"y.dataKey.split(\',\').length>1\"> " + "                  <!--NOTE 此处的逻辑有点不正常，难描述。" + "                    每个td中的params参数，先置为空数组，再往数组中逐个添加当前td中的参数。" + "                    目的是防止其他td中多参数与当前td参数拼接到一起 -->" + "                <span v-show=\'false\'>{{x.params=[]}}</span>" + "                <span v-for=\"singleKey in y.dataKey.split(\',\')\" style=\"display:none;\"> " + "                        {{x.params.push(x[singleKey])}}" + "                    </span>" + "                <span v-html=\"render(x.params,y.filter)\"> </span>" + "                </span>" + "                <!-- End:结束多参数判断 -->" + "                <!-- Else当前的参数为单个参数，直接进行处理 -->" + "                <span v-else v-html=\"render(x[y.dataKey],y.filter)\"> </span>" + "              </td>" + "            </tr>" + "            <!-- 当前搜索结果为空时，提示没有搜索结果 -->" + "            <tr v-show=\"!showLoading&&(valuelist==null||valuelist.length==0)\">" + "              <td colspan=\"100\">" + "                <h2 class=\"text-center\" style=\"color:#a78989;\">{{errorInfo}}</h2>" + "              </td>" + "            </tr>" + "          </tbody>" + "        </table>" + "        <!-- 加载动画区域 NOTE: 通过修改样式 .cssload-loader 相关参数可以更改动画-->" + "        <div v-show=\"showLoading\" :style=\"loadingHeight\" class=\"relative\">" + "          <div class=\"cssload-loader\"></div>" + "        </div>" + "        <!-- 分页控件模块 -->" + "        <div class=\"pull-right page\">" + "          <ul class=\"pagination\" v-show=\"valuelist!=null&&valuelist.length>0\"></ul>" + "        </div>" + "        <!-- 搜索参数 -->" + "        <span style=\"display:none;\">{{searchDatas}}</span>" + "      </div>",
         props: {
           ajaxurl: {
             required: true
@@ -312,10 +377,6 @@
           //异步请求数据
           getlist: function getlist() {
             var self = this;
-            if (!self.searchData.currentPage) {
-              //如果没有相关的参数,则在组件库上添加currentPage属性
-              self.$set(self.searchData, "currentPage", 1);
-            }
             var params = new Object();
             params = self.searchData;
             var pageindex = params.currentPage;
@@ -340,11 +401,8 @@
                       // BootStrap分页控件的声明
                       if (self.valuelist.length > 0) {
                         var $page = $(self.$el.children[2]).find("ul");
-                        self.initPageDiv($page, data.bean.currentPage, data.bean.totalPages, 5, $page, function() {
+                        self.initPageDiv($page, pageindex, data.bean.pageCount, 5, $page, function() {
                           self.searchData.currentPage = $page.data("page");
-                          console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-                          console.log($page.data("page"));
-                          console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
                         });
                       }
                     } else {
@@ -445,8 +503,8 @@
       });
 
       /**
-       * column组件声明
-       * 
+       * table下 column组件声明
+       * 2017年8月4日14:56:51 添加
        */
       Vue.component('column', {
         template: '<span style="display: none">123</span>',
@@ -468,10 +526,10 @@
           width: String,
           action: [String, Array, Object]
         },
-        data: function() {
-          return {}
+        data: function data() {
+          return {};
         },
-        mounted: function() {
+        mounted: function mounted() {
           // 把{key:1}变成object
           var filter = this.filter;
           if (filter && !$.isPlainObject(filter)) {

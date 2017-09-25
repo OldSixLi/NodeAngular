@@ -42,18 +42,41 @@
                 <div id="changeRecord" class="col-md-6"></div>
               </div>
             </div>
-            <!--代码-->
-            <div class="panel panel-default">
-              <div class="panel-heading">代码使用</div>
-              <div class="panel-body code">
-                <textarea disabled class="form-control" rows="8" style="cursor:default;">
-              </textarea>
-              </div>
-            </div>
+            <!--示例代码-->
+            <h3 class="text-center">示例代码</h3>
+
+            <p><b>HTML代码</b></p>
+            <pre>
+    &lt;ht-radio class=&quot;radio&quot; v-model=&quot;radio&quot; label=&quot;1&quot; @click=&quot;alerts()&quot; @change=&quot;change()&quot; disabled&gt;第一个&lt;/ht-radio&gt;
+    &lt;ht-radio class=&quot;radio&quot; v-model=&quot;radio&quot; label=&quot;2&quot; @click=&quot;alerts()&quot; @change=&quot;change()&quot;&gt;第二个&lt;/ht-radio&gt;
+    &lt;ht-radio class=&quot;radio&quot; v-model=&quot;radio&quot; label=&quot;3&quot; @click=&quot;alerts()&quot; @change=&quot;change()&quot;&gt;第三个&lt;/ht-radio&gt;
+    &lt;ht-radio class=&quot;radio&quot; v-model=&quot;radio&quot; label=&quot;4&quot; @click=&quot;alerts()&quot; @change=&quot;change()&quot;&gt;第三个&lt;/ht-radio&gt;
+  </pre>
+
+            <p><b>Javascript代码</b></p>
+            <pre> 
+    var radioBlock = new Vue({
+      el: &quot;#radioBlock&quot;,
+      //数据部分
+      data: {
+        radio: &#x27;2&#x27;
+      },
+      methods: {
+        // 注:以下仅为示例,Vue框架实际应用中尽量避免操作DOM,应由数据驱动
+        alerts: function alerts(e) {
+          $(&quot;#clickRecord&quot;).append(&#x27;&lt;p&gt;&lt;b&gt;@click&lt;/b&gt;事件：每次&lt;b&gt;点击&lt;/b&gt;都会增加内容，当前点击的值为：&#x27; + this.radio + &#x27;，可以根据此来进行相关操作&lt;/p&gt;&#x27;);
+        },
+        change: function change() {
+          $(&quot;#changeRecord&quot;).append(&#x27;&lt;p&gt;&lt;b&gt;@change&lt;/b&gt;事件：如果值发生改变，提示当前改变后的值为：&#x27; + this.radio + &#x27;可以根据此进行相关操作&lt;/p&gt;&#x27;);
+          return false;
+        }
+      }
+    });
+  </pre>
             <!--说明-->
             <div class="panel panel-default">
               <div class="panel-heading">说明</div>
-              <div class="panel-body"> </div>
+
             </div>
           </div>
         </div>
@@ -222,9 +245,8 @@
         data: {
           radio: '2'
         },
-        //方法
         methods: {
-          //这个是radio上的方法
+          // 注:以下仅为示例,Vue框架实际应用中尽量避免操作DOM,应由数据驱动
           alerts: function alerts(e) {
             $("#clickRecord").append('<p><b>@click</b>事件：每次<b>点击</b>都会增加内容，当前点击的值为：' + this.radio + '，可以根据此来进行相关操作</p>');
           },
@@ -232,13 +254,7 @@
             $("#changeRecord").append('<p><b>@change</b>事件：如果值发生改变，提示当前改变后的值为：' + this.radio + '可以根据此进行相关操作</p>');
             return false;
           }
-        },
-        //过滤器
-        filters: {},
-        //实时计算
-        computed: {},
-        //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
-        created: function created() {}
+        }
       });
     </script>
   </body>

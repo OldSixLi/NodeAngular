@@ -2,7 +2,7 @@
 
 /**
  * 浩天云项目中部分组件
- * @authors 马少博 (you@example.org)
+ * @authors 马少博 (1030809514@qq.com)
  * @date    2017-08-09 14:22:29
  * @version 1.0
  */
@@ -534,5 +534,57 @@ Vue.component("ht-radio", {
     label: function label(val) {
       alert('23131');
     }
+  }
+});
+// 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+// 　　◆◆◆◆　◆◆◆◆◆　◆◆◆　　　◆◆◆◆◆　　◆◆◆◆　◆◆◆◆◆　　◆◆◆　　
+// 　◆　　　◆　　◆　　◆　　◆　　　　　◆　　◆　◆　　　◆　◆　◆　◆　◆　　　◆　
+// 　◆　　　　　　◆　◆　　　◆　　　　　◆　◆　　◆　　　　　　　◆　　　◆　　　◆　
+// 　　◆◆　　　　◆◆◆　　　◆　　　　　◆◆◆　　◆　　　　　　　◆　　　　　　◆　　
+// 　　　　◆　　　◆　◆　　　◆　　　　　◆　◆　　◆　　　　　　　◆　　　　　◆　　　
+// 　　　　　◆　　◆　　　　　◆　　　　　◆　　　　◆　　　　　　　◆　　　　◆　　　　
+// 　◆　　　◆　　◆　　◆　　◆　　　◆　◆　　◆　◆　　　◆　　　◆　　　◆　　　　　
+// 　◆◆◆◆　　◆◆◆◆◆　◆◆◆◆◆◆◆◆◆◆◆　　◆◆◆　　　◆◆◆　　◆◆◆◆◆　
+
+// 马少博 2017年9月25日10:48:58 添加
+Vue.component('ht-select', {
+  props: {
+    options: {
+      type: Object,
+      default: function() {
+        //NOTE:在prop设置默认值为对象时,需用方法返回值(不能直接设置值)
+        return {
+          tags: false,
+          minimumResultsForSearch: -1
+        }
+      }
+    },
+    value: String
+  },
+  template: '<select class="form-control"> <slot></slot> </select>',
+  //在元素值被挂载以后运行此方法
+  mounted: function() {
+    var _self = this;
+    $(this.$el)
+      .select2(this.options)
+      .val(this.value)
+      .trigger('change')
+      .on('change', function() {
+        _self.$emit('input', this.value);
+      });
+  },
+  watch: {
+    value: function(value) {
+      // 更新值
+      $(this.$el).val(value).trigger('change');
+    },
+    options: function(options) {
+      // 更新设置
+      $(this.$el).select2(options)
+    }
+  },
+  destroyed: function() {
+    //删除配置
+    $(this.$el).off().select2('destroy');
   }
 });

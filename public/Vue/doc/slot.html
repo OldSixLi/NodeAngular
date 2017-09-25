@@ -1,0 +1,98 @@
+<!-- 马少博  创建于 2017年9月25日11:26:35 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+    <title> SLOT方法使用</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+  </head>
+
+  <body>
+    <!--NOTE 此处声明Vue-->
+    <div id="vueBlock">
+      <child-slot data-key="evil">绿巨人</child-slot>
+      <ht-slot>
+        <li slot='laoliu'>疯狂宝贝</li>
+        <child-slot data-key="evil" slot>绿巨人</child-slot>
+      </ht-slot>
+    </div>
+    <!-- 脚本 -->
+    <script src='https://cdn.bootcss.com/vue/2.3.3/vue.js'></script>
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+    <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+    <script>
+      Vue.component('ht-slot', {
+        template: '<ul>\
+        <slot name="laoliu">\
+            <li>\
+          <h1>穿越火线</h1>\
+        </li>\
+        </slot>\
+        <li>\
+        <slot>\
+          </slot>\
+          </li>\
+        <li>灵魂忍者</li>\
+        <li>迷雾森林</li>\
+      </ul>',
+        //对外获取的数据
+        props: {},
+        //组件内数据部分
+        data: function() {
+          return {}
+        },
+        //组件生成时调用
+        mounted: function() {
+          var self = this;
+          var _this = this;
+          console.log(_this.$slots); //NOTE slots 如果有名字  就把名字当做key  如果没名字  就把default当做key
+          _this.$slots.default.forEach(function(child) {
+            var obj = {};
+            for (var p in child.componentOptions.propsData) {
+              console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+              console.log(p);
+              console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+            }
+          });
+        }
+      });
+
+      Vue.component('child-slot', {
+        template: '<span>  {{dataKey}}  </span>',
+        //对外获取的数据
+        props: {
+          dataKey: {
+            type: String,
+            default: "453"
+          }
+        },
+        //组件内数据部分
+        data: function() {
+          return {}
+        },
+        //组件生成时调用
+        mounted: function() {}
+      });
+
+
+      var vueBlock = new Vue({
+        el: "#vueBlock",
+        //数据部分 
+        data: {},
+        //方法
+        methods: {},
+        //过滤器
+        filters: {},
+        //实时计算
+        computed: {},
+        //加载后立即执行的方法(created 这个钩子在实例被创建之后被调用)
+        created: function() {}
+      });
+    </script>
+  </body>
+
+</html>
