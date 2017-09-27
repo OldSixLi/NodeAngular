@@ -98,16 +98,28 @@ function getAll(next) {
  * @param {any} age 
  * @param {any} next 
  */
-function getSingleModel(name, age, next) {
-  var sql = 'select * from  user where 1=1 ';
-  if (name) {
-    sql += "and name like '%" + name + "%'";
-  }
-  if (age) {
-    sql += "and age = " + age;
+function getSingleModel(name, age, currentPage, next) {
+  if (currentPage < 1) {
+    currentPage = 1
   }
 
-  client.query(sql, function(err, result) {
+  var sql = 'select * from  user where 1=1 '; //查询语句
+  var countSql = "select COUNT(ID) from user "; //查询总行数语句
+  var termSql = ""; //条件语句
+
+  //进行判断
+  if (name) {
+    termSql += "and name like '%" + name + "%'";
+  }
+  if (age) {
+    termSql += "and age = " + age;
+  }
+
+  //执行Sql
+  var execSql = "select cs.* ,(" + countSql + termSql + ") as totalNum from  (" + sql + termSql + " limit " + (currentPage - 1) * 10 + "," + 10 + ")cs";
+
+  //方法进行执行
+  client.query(execSql, function(err, result) {
     if (!err) {
       try {
         var json = JSON.parse(JSON.stringify(result));

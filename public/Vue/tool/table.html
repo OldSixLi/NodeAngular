@@ -29,7 +29,6 @@
 　　◆　　◆　　　◆　　　◆　◆　◆　　◆　　　◆　
 　◆◆　　◆◆　◆◆◆　◆◆　◆　◆◆◆◆◆◆◆◆　
 　　　　　　　　　　　　　　　　　　　　　　　　　　-->
-
     <div class="container" id="tableContent">
       <h1 class="text-center">表格复用插件</h1>
       <div class="row" style="margin-bottom: 15px;">
@@ -46,24 +45,37 @@
           </div>
         </div>
       </div>
-
-      <div class="panel panel-default">
-        <div class="panel-heading">表格复用组件示例</div>
-        <!--外部组件-->
-        <ht-table ajaxurl="/users/allUser" :search-data="searchData">
-          <!--内部组件-->
-          <column slot name="名称" data-key="name"></column>
-          <column slot name="性别" data-key="gender" align="center" filter="toGender"></column>
-          <column slot name="时间" data-key="Regtime" align="center" filter="toNormalTime"></column>
-          <column slot name="头像" data-key="iconUrl" align="center" filter="toImg"></column>
-          <column slot name="编辑" data-key="ID,name,Regtime" align="center" filter="testMultiParams"></column>
-        </ht-table>
+      <div class="row">
+        <!-- 消除外边距 -->
+        <div class="col-md-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">表格复用组件示例</div>
+            <!--外部组件-->
+            <ht-table ajaxurl="/users/allUser" :search-data="searchData">
+              <!--内部组件-->
+              <column slot name="名称" data-key="name"></column>
+              <column slot name="性别" data-key="gender" align="center" filter="toGender"></column>
+              <column slot name="时间" data-key="Regtime" align="center" filter="toNormalTime"></column>
+              <column slot name="头像" data-key="iconUrl" align="center" filter="toImg"></column>
+              <column slot name="编辑" data-key="ID,name,Regtime" align="center" filter="testMultiParams"></column>
+            </ht-table>
+          </div>
+        </div>
       </div>
       <!--示例代码-->
       <h3 class="text-center">示例代码</h3>
 
       <p><b>HTML代码</b></p>
       <pre>
+    &lt;div class=&quot;form-inline pull-right&quot;&gt;
+      &lt;div class=&quot;form-group&quot;&gt;
+        &lt;label for=&quot;&quot;&gt;年龄&lt;/label&gt;
+        &lt;input type=&quot;text&quot; class=&quot;form-control&quot; id=&quot;age&quot; name=&quot;age&quot; v-model=&quot;age&quot; placeholder=&quot;请输入用户年龄&quot;&gt;
+        &lt;label for=&quot;&quot;&gt;名称&lt;/label&gt;
+        &lt;input type=&quot;text&quot; class=&quot;form-control&quot; id=&quot;name&quot; name=&quot;name&quot; v-model=&quot;name&quot; placeholder=&quot;请输入用户昵称&quot;&gt;
+        &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot; @click=&quot;toSearch&quot;&gt;搜索&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
     &lt;!--外部组件--&gt;
     &lt;ht-table ajaxurl=&quot;/users/allUser&quot; :search-data=&quot;searchData&quot;&gt;
       &lt;!--内部组件--&gt;
@@ -71,91 +83,85 @@
       &lt;column slot name=&quot;性别&quot; data-key=&quot;gender&quot; align=&quot;center&quot; filter=&quot;toGender&quot;&gt;&lt;/column&gt;
       &lt;column slot name=&quot;时间&quot; data-key=&quot;Regtime&quot; align=&quot;center&quot; filter=&quot;toNormalTime&quot;&gt;&lt;/column&gt;
       &lt;column slot name=&quot;头像&quot; data-key=&quot;iconUrl&quot; align=&quot;center&quot; filter=&quot;toImg&quot;&gt;&lt;/column&gt;
-      &lt;column slot name=&quot;编辑&quot; data-key=&quot;ID&quot; align=&quot;center&quot; filter=&quot;toHref&quot;&gt;&lt;/column&gt;
+      &lt;column slot name=&quot;编辑&quot; data-key=&quot;ID,name,Regtime&quot; align=&quot;center&quot; filter=&quot;testMultiParams&quot;&gt;&lt;/column&gt;
     &lt;/ht-table&gt;
    </pre>
-
       <p><b>Javascript代码</b></p>
-      <pre> 
-          var HtmlFun = {
-            //扩展
-            extend: function(obj) {
-              if (obj) {
-                HtmlFun = $.extend(HtmlFun, obj);
-              }
-            },
-            /**
-             * 转化为图片代码
-             * @returns
-             */
-            toImg: function(value) {
-              var str = &quot;&lt;img src=&#x27;&quot; + value + &quot;&#x27;/&gt;&quot;;
-              return str;
-            },
-    
-            /**
-             * 时间戳转化为正常时间 
-             * @param {any} shijianchuo  时间戳 精确到毫秒
-             * @returns 正常时间
-             */
-            toNormalTime: function(shijianchuo) {
-              var time = new Date(parseInt(shijianchuo));
-              var y = time.getFullYear();
-              var m = time.getMonth() + 1;
-              var d = time.getDate();
-              var h = time.getHours();
-              var mm = time.getMinutes();
-              var s = time.getSeconds();
-              return y + &#x27;-&#x27; + this.add0(m) + &#x27;-&#x27; + this.add0(d) + &#x27; &#x27; + this.add0(h) + &#x27;:&#x27; + this.add0(mm) + &#x27;:&#x27; + this.add0(s);
-            },
-            toGender: function(value) {
-              return value == &quot;M&quot; ? &quot;男&quot; : &quot;女&quot;;
-            },
-            add0: function(m) {
-              return m &lt; 10 ? &#x27;0&#x27; + m : m;
-            },
-            testMultiParams: function(id, name, problem) {
-              return &#x27;&lt;a href=&quot;javascript:;&quot; onclick=&quot;test(\&#x27;&#x27; + id + &#x27;\&#x27;,\&#x27;&#x27; + name + &#x27;\&#x27;,\&#x27;&#x27; + problem + &#x27;\&#x27;)&quot;&gt;弹出&lt;/a&gt;&#x27;;
-            },
-            getName: function(id, name) {
-              return id + &#x27;...&#x27; + name;
-            }
-          }
-    
-          function test(id, name, problem) {
-            alert(&#x27;id是&#x27; + id + &#x27;\r\n名称是：&#x27; + name + &#x27;\r\n问题是：&#x27; + problem);
-          }
+      <pre>
+    /**
+    * 当前对象为将参数转化为Html的方法集合
+    * @returns
+    */
+   var HtmlFun = {
+     //扩展
+     extend: function(obj) {
+       if (obj) {
+         HtmlFun = $.extend(HtmlFun, obj);
+       }
+     },
+     toGender: function(value) {
+       return value == &quot;M&quot; ? &quot;男&quot; : &quot;女&quot;;
+     },
+     /**
+      * 时间戳转化为正常时间 
+      * @param {any} shijianchuo  时间戳 精确到毫秒
+      * @returns 正常时间
+      */
+     toNormalTime: function(shijianchuo) {
+       var time = new Date(parseInt(shijianchuo));
+       var y = time.getFullYear();
+       var m = time.getMonth() + 1;
+       var d = time.getDate();
+       var h = time.getHours();
+       var mm = time.getMinutes();
+       var s = time.getSeconds();
+       return y + &#x27;-&#x27; + this.add0(m) + &#x27;-&#x27; + this.add0(d) + &#x27; &#x27; + this.add0(h) + &#x27;:&#x27; + this.add0(mm) + &#x27;:&#x27; + this.add0(s);
+     },
+     /**
+      * 转化为图片代码
+      * @returns
+      */
+     toImg: function(value) {
+       var str = &quot;&lt;img src=&#x27;&quot; + value + &quot;&#x27;/&gt;&quot;;
+       return str;
+     },
+     testMultiParams: function(id, name, problem) {
+       return &#x27;&lt;a href=&quot;javascript:;&quot; onclick=&quot;test(\&#x27;&#x27; + id + &#x27;\&#x27;,\&#x27;&#x27; + name + &#x27;\&#x27;,\&#x27;&#x27; + problem + &#x27;\&#x27;)&quot;&gt;弹出&lt;/a&gt;&#x27;;
+     },
+     add0: function(m) {
+       return m &lt; 10 ? &#x27;0&#x27; + m : m;
+     }
+   }
 
-          var tableContent = new Vue({
-            el: &quot;#tableContent&quot;,
-            //数据部分
-            data: {
-              ajaxurl: &quot;http://healthshare.com.cn/admin/api/user&quot;,
-              littleUrl: &quot;http://healthshare.com.cn/admin/api/demand&quot;,
-              age: &quot;&quot;,
-              name: &quot;&quot;,
-              searchData: {
-                // currentPage: 1
-              },
-              otherData: {
-                sex: &quot;&quot;,
-                age: &quot;&quot;
-              }
-            },
-    
-            //方法
-            methods: {
-              toSearch: function() {
-                //NOTE 此处调用时必须声明page的参数
-                this.searchData = {
-                  age: this.age ? this.age : &quot;&quot;,
-                  name: this.name ? this.name : &quot;&quot;,
-                  // currentPage: 1
-                };
-    
-              }
-            }
-          });
+   function test(id, name, problem) {
+     alert(&#x27;id是&#x27; + id + &#x27;\r\n名称是：&#x27; + name + &#x27;\r\n问题是：&#x27; + problem);
+   }　　
+   //VUE声明
+   var tableContent = new Vue({
+    el: &quot;#tableContent&quot;,
+    //数据部分
+    data: {
+      age: &quot;&quot;,
+      name: &quot;&quot;,
+      searchData: {
+        currentPage: 1
+      },
+      otherData: {
+        sex: &quot;&quot;,
+        age: &quot;&quot;
+      }
+    },
+    methods: {
+      toSearch: function() {
+        //NOTE 此处调用时必须声明page的参数
+        this.searchData = {
+          age: this.age ? this.age : &quot;&quot;,
+          name: this.name ? this.name : &quot;&quot;,
+          currentPage: 1
+        };
+      }
+    }
+  });
    </pre>
 
 
@@ -273,15 +279,9 @@
             HtmlFun = $.extend(HtmlFun, obj);
           }
         },
-        /**
-         * 转化为图片代码
-         * @returns
-         */
-        toImg: function(value) {
-          var str = "<img src='" + value + "'/>";
-          return str;
+        toGender: function(value) {
+          return value == "M" ? "男" : "女";
         },
-
         /**
          * 时间戳转化为正常时间 
          * @param {any} shijianchuo  时间戳 精确到毫秒
@@ -297,17 +297,19 @@
           var s = time.getSeconds();
           return y + '-' + this.add0(m) + '-' + this.add0(d) + ' ' + this.add0(h) + ':' + this.add0(mm) + ':' + this.add0(s);
         },
-        toGender: function(value) {
-          return value == "M" ? "男" : "女";
-        },
-        add0: function(m) {
-          return m < 10 ? '0' + m : m;
+        /**
+         * 转化为图片代码
+         * @returns
+         */
+        toImg: function(value) {
+          var str = "<img src='" + value + "'/>";
+          return str;
         },
         testMultiParams: function(id, name, problem) {
           return '<a href="javascript:;" onclick="test(\'' + id + '\',\'' + name + '\',\'' + problem + '\')">弹出</a>';
         },
-        getName: function(id, name) {
-          return id + '...' + name;
+        add0: function(m) {
+          return m < 10 ? '0' + m : m;
         }
       }
 
@@ -565,24 +567,21 @@
           age: "",
           name: "",
           searchData: {
-            // currentPage: 1
+            currentPage: 1
           },
           otherData: {
             sex: "",
             age: ""
           }
         },
-
-        //方法
         methods: {
           toSearch: function() {
             //NOTE 此处调用时必须声明page的参数
             this.searchData = {
               age: this.age ? this.age : "",
               name: this.name ? this.name : "",
-              // currentPage: 1
+              currentPage: 1
             };
-
           }
         }
       });

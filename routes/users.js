@@ -72,8 +72,8 @@ router.post('/allUser', function(req, res, next) {
         }
         returnObj.bean = {
           data: result,
-          pageCount: 10,
-          currentPage: currentPage
+          currentPage: currentPage,
+          pageCount: result.length <= 0 ? 0 : Math.ceil(result[0].totalNum / 10)
         }
 
       } else {
@@ -85,7 +85,7 @@ router.post('/allUser', function(req, res, next) {
       res.json(returnObj);
     }
     // if (name || age) {
-  var results = DBhelper.getList(name, age, function(result) {
+  var results = DBhelper.getList(name, age, currentPage, function(result) {
     resolveResult(result);
   });
 });
