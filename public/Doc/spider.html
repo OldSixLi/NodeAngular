@@ -127,10 +127,42 @@
         })
       });
 
+      function buttonAddDisabled() {
+        setTimeout(function() {
+          if ($(".jconfirm-buttons button").length > 0) {
+            $(".jconfirm-buttons button").addClass('disabled');
+            console.log("开始禁用");
+            setTimeout(function() {
+              $(".jconfirm-buttons button").removeClass('disabled');
+              console.log("结束禁用");
+            }, 10000);
+          } else {
+            console.log("查找禁用");
+            buttonAddDisabled();
+          }
+        }, 100);
+      }
+
+
+
+      // function buttonAddDisabled() {
+      //   setTimeout(function() {
+      //     if ($(".jconfirm-box .buttons button").length > 0) {
+      //       $(".jconfirm-box .buttons button").addClass('disabled');
+      //       setTimeout(function() {
+      //         $(".jconfirm-box .buttons button").removeClass('disabled');
+      //       }, 10000);
+      //     } else {
+      //       buttonAddDisabled();
+      //     }
+      //   }, 100);
+      // }
+
       function beginSpider() {
         var word = $("#questionUrl").val();
         if (!word) {
-          tool.alert("提示", "请输入内容");
+          tool.alert("提示", "请输入内容", function() {}, "col-md-4 col-md-offset-4");
+          buttonAddDisabled();
         } else {
           $("#searchInfo").show();
           $("#searchInput").hide();
