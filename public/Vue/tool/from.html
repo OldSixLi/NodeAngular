@@ -67,11 +67,11 @@
           <ht-form :model="form" label-width="100px" label-position="right" style="width:900px;margin:0 auto;">
             <!-- Begin -->
             <label>一人一首成名曲：</label>
-            <ht-form-item label="周杰伦：" validateMessage="请输入歌曲名" isRequired="true">
+            <ht-form-item label="周杰伦：" validate-message="请输入歌曲名" isRequired="true">
               <ht-input type="text" v-model="form.zhoujielun" class="form-control" placeholder="请输入金额"></ht-input>
             </ht-form-item>
 
-            <ht-form-item label="苏阳：">
+            <ht-form-item label="苏阳：" :validate-message="errorStr">
               <ht-input type="text" v-model="form.suyang" class="form-control" placeholder="请输入金额"></ht-input>
             </ht-form-item>
 
@@ -92,8 +92,8 @@
             </ht-form-item>
 
             <ht-form-item class="text-center">
-              <button type="submit" class="btn btn-primary">保存</button>
-              <button type="button" class="btn btn-default">取消</button>
+              <button type="submit" class="btn btn-primary" @click="save()">保存</button>
+              <button type="button" class="btn btn-default" @click="cancel()">取消</button>
               <button type="button" class="btn btn-danger pull-right" @click="resertForm()">重置表单</button>
             </ht-form-item>
             <!-- End -->
@@ -145,7 +145,8 @@
         <div class="el-form-item__content" v-bind:style="contentStyle">
           <slot></slot>
           <transition name="el-zoom-in-top">
-            <div class="el-form-item__error" v-if="validateState === 'error' && showMessage && form.showMessage">{{validateMessage}}</div>
+            <div class="el-form-item__error">{{validateMessage}}</div>
+            <!-- v-if="validateState === 'error' && showMessage && form.showMessage" -->
           </transition>
         </div>
       </div>
@@ -273,7 +274,8 @@
           showMessage: {
             type: Boolean,
             default: true
-          }
+          },
+          validateMessage: String
         },
 
         //组件内数据部分
@@ -322,7 +324,6 @@
         data() {
           return {
             validateState: '',
-            validateMessage: '',
             validateDisabled: false,
             validator: {},
             isRequired: false
@@ -509,7 +510,8 @@
             suyang: '贺兰山下',
             pawaluodi: '我的太阳',
             isBuy: 'NO'
-          }
+          },
+          errorStr: "我是苏阳的错误信息啊啊啊啊啊啊"
         },
         //方法
         methods: {

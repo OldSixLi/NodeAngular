@@ -36,7 +36,6 @@ io.on('connection', function(_socket) {
   });
 });
 
-
 exports.listen = function(_server) {
   return io.listen(_server);
 };
