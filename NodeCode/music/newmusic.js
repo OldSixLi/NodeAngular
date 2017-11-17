@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 网易云音乐爬虫
  * @returns
  */
@@ -56,8 +56,9 @@ function radomNum(start, end) {
 
 function getlist(num) {
   nodegrass.get('http://music.163.com/discover/playlist/?order=hot&cat=%E5%85%A8%E9%83%A8&limit=35&offset=' + num * 35, function(data, status, headers) {
-
+    // console.log(data);
     var $ = cheerio.load(data);
+
     var resultArr = $("#m-disc-pl-c #m-pl-container").find("li");
     if (resultArr.length > 0) {
       $("#m-disc-pl-c #m-pl-container").find("li").each(function(i, item) {
@@ -70,6 +71,19 @@ function getlist(num) {
           console.log(tenThousandNum + "万");
           var listHref = "http://localhost:9999/playlist" + $(this).find(".u-cover .msk").attr("href").replace('playlist', 'detail');
 
+          var playListObj = {
+            name: "",
+            collectCount: "",
+            imgSrc: "",
+            href: ""
+          }
+          var paylistUrl = $(this).find(".u-cover .msk").attr("href");
+          playListObj.name = $(this).find(".u-cover .msk").attr("title").trim().replace(/[&\|\\\*^%$#@\-]/g, "");
+          playListObj.collectCount = tenThousandNum;
+          playListObj.imgSrc = $(this).find("img.j-flag").attr("src");
+          playListObj.href = paylistUrl;
+          playListObj.playId = paylistUrl.split('id=')[1];
+          DbHelper.listAdd(playListObj); //数据库添加 
           //插入相关的列表数组
           PAYLISTARR.push(listHref);
         }
@@ -81,7 +95,7 @@ function getlist(num) {
         console.log("第" + num + "页面");
         console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
         getlist(num);
-      }, 100)
+      }, 1000)
 
     } else {
       console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
@@ -124,12 +138,12 @@ function getPlayList(href, callback) {
     nodegrass.get(href, function(data) {
       if (data && JSON.parse(data)) {
         var payListJson = JSON.parse(data);
-
+        //存储歌曲信息进music表
         for (var songIndex = 0; songIndex < payListJson.privileges.length; songIndex++) {
           var element = payListJson.privileges[songIndex];
           var model = { id: element.id, collectid: playid, name: "", comment: "" }
           DbHelper.musicAdd(model); //数据库添加 
-          // console.log(payListJson.playlist.name + "第" + SPIDERINDEX + "首:" + element.id);
+          console.log(payListJson.playlist.name + "第" + SPIDERINDEX + "首:" + element.id);
           SPIDERINDEX++;
         }
         callback(null, "successful !");
@@ -140,7 +154,7 @@ function getPlayList(href, callback) {
   }, 1000);
 
 }
-// getMusicList(1, 1000);
+getMusicList(1, 1000);
 var MUSICLIST = [];
 
 function getMusicList(pageIndex, pageNum) {
@@ -169,7 +183,7 @@ function getMusic(asyncNum) {
   console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
   async.mapLimit(MUSICLIST, asyncNum, function(item, callback) {
     setTimeout(function() {
-      getSingleMusic(item, callback);
+      getSingleMusicComment(item, callback);
     }, 1000);
   }, function(err, result) {
     if (err) {
@@ -179,16 +193,19 @@ function getMusic(asyncNum) {
     }
   });
 }
-
-function getSingleMusic(item, callback) {
+/**
+ * 获取单个歌曲的评论量
+ * 
+ * @param {any} item 
+ * @param {any} callback 
+ */
+function getSingleMusicComment(item, callback) {
   var musicId = item.mid; //歌曲ID
   var id = item.id; //主键
   console.log(musicId);
   setTimeout(function() {
-    nodegrass.get("http://localhost:9999/comment/music?id=" + musicId, function(data) {
-      var total = JSON.parse(data).total;
-      // console.log("评论量" + total);
-      item.total = total;
+    nodegrass.get("http://localhost:9999/comment/music?id=" + musicId + '&limit=1&offset=2', function(data) {
+      item.total = JSON.parse(data).total || 0;
       DbHelper.updateMusic(item)
       callback(null, 'success');
     }).on('error', function(e) {
@@ -197,21 +214,21 @@ function getSingleMusic(item, callback) {
     })
   }, 1000);
 }
-DbHelper.getHighQualityMusicList(function(result) {
-  if (result) {
-    console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-    console.log(result.length);
-    console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-    var list = [];
-    for (var index = 0; index < result.length; index++) {
-      var element = result[index];
-      list.push(element.mid);
-    }
-    console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-    console.log(list.join(','));
-    console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-  }
-});
+// DbHelper.getHighQualityMusicList(function(result) {
+//   if (result) {
+//     console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+//     console.log(result.length);
+//     console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+//     var list = [];
+//     for (var index = 0; index < result.length; index++) {
+//       var element = result[index];
+//       list.push(element.mid);
+//     }
+//     console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+//     console.log(list.join(','));
+//     console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+//   }
+// });
 
 
 // nodegrass.get("http://localhost:9999/login/cellphone?phone=18222603560&password=ma18222603560", function(data) {

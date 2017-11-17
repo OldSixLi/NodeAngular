@@ -52,26 +52,50 @@ function start(questrionModel) {
 
 }
 
+
 /**
  * 歌单插入数据库
  * 
  * @param {any} model 
  */
 function musicPayListAdd(model) {
-  var sql = "insert  into paylist(name,href,src,collectnum,createtime) values(?,?,?,?,NOW())";
-  var param = [model.name, model.href, model.imgSrc, model.collectCount];
-  //增 add
-  client.query(sql, param, function(err, result) {
-    if (err) {
-      console.log('[INSERT ERROR] - ', err.message);
-      return;
+  var findSql = "select * from paylist where playid=" + model.playId;
+  var sql = "insert  into paylist(playId,name,href,src,collectnum,createtime) values(?,?,?,?,?,NOW())";
+  var param = [model.playId, model.name, model.href, model.imgSrc, model.collectCount];
+  //查
+  client.query(findSql, function(err, result) {
+    if (!err && result.length == 0) {
+      //增 add
+      client.query(sql, param, function(err, result) {
+        if (err) {
+          console.log('[INSERT ERROR] - ', err.message);
+          return;
+        }
+        console.log('~~~~~~~~~~~~~~~~~~~数据插入成功~~~~~~~~~~~~~~~~~~~~~~~');
+        console.log('名称：' + model.name);
+        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n');
+      });
+    } else {
+      console.log(result.length + '个结果已存在');
     }
-    console.log('~~~~~~~~~~~~~~~~~~~数据插入成功~~~~~~~~~~~~~~~~~~~~~~~');
-    console.log('名称：' + model.name);
-    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n');
-
   });
 }
+
+/**
+ * 获取歌单ID列表
+ * @returns
+ */
+function playList(next) {
+  var sql = 'select DISTINCT playid from paylist';
+  client.query(sql, function(err, result) {
+    if (!err) {
+      next(result);
+    } else {
+      next([]);
+    }
+  })
+}
+
 //查询当前的问题是否已经遍历过
 /**
  * 
@@ -105,12 +129,16 @@ function getMusicList(pageInedx, pageNum, next) {
     } else {
       next(0);
     }
-  })
+  });
 }
-
+/**
+ * 获取高评论量歌曲
+ * 
+ * @param {any} next 
+ */
 function getHighQualityMusicList(next) {
-  // var sql = "select mid from music where COMMENT>50000";
-  var sql = "select * from music where comment>=40000 and comment<=50000 order by id ";
+  // var sql = "select mid from music where COMMENT>100000";
+  var sql = "select * from music where comment>=50000 and comment<=100000 order by id ";
   // and COMMENT<=50000 order by id limit 1400,200
   client.query(sql, function(err, result) {
     if (!err) {
@@ -120,17 +148,19 @@ function getHighQualityMusicList(next) {
     }
   })
 }
-
+/**
+ * 更新评论数量以及歌曲名称
+ * 
+ * @param {any} model 
+ */
 function updateMusic(model) {
-  var sql = "update music set comment=" + model.total + " where id=" + model.id + " and comment=0";
+  var sql = "update music set comment=" + model.total + "  where id=" + model.id + " and comment=0";
   client.query(sql, function(err, result) {
     if (err) {
       console.log('[INSERT ERROR] - ', err.message);
       return;
     }
-    console.log('~~~~~~~~~~~~~~~~~~~数据更新成功~~~~~~~~~~~~~~~~~~~~~~~');
     console.log('名称：' + getfullStr(model.id) + ",▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇评论量:" + model.total);
-    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n');
   });
 }
 
@@ -145,8 +175,11 @@ function getfullStr(str) {
 
 
 function musicAdd(model) {
+  // var findsql = 'select * from music where mid=' + model.mid;
   var sql = "insert  into music(mid,name,comment,collectid,createtime) values(?,?,?,?,NOW())";
   var param = [model.id, model.name, model.comment, model.collectid];
+  // client.query(findsql, function(err, result) {
+  // if (!err && result != undefined && result.length == 0) {
   //增 add
   client.query(sql, param, function(err, result) {
     if (err) {
@@ -155,10 +188,13 @@ function musicAdd(model) {
     }
     console.log('歌曲ID:▇▇▇▇▇▇▇▇' + model.id);
   });
+  //   } else {
+  //     console.log(model.id + '已存在此歌曲');
+  //   }
+  // })
 
-  //删除重复音乐ID
   // delete from music
-  // where mid  in(   ) a)
+  // where mid  in(select mid from(select mid from  music  group by mid  having count(mid )>1) a)
   // and id not in (select id from(select min(id) as id from  music  group by mid  having count(mid )>1) b)
 }
 //输出函数
@@ -169,3 +205,4 @@ exports.musicAdd = musicAdd;
 exports.getMusicList = getMusicList;
 exports.updateMusic = updateMusic;
 exports.getHighQualityMusicList = getHighQualityMusicList;
+exports.playList = playList;
