@@ -18,30 +18,8 @@ var async = require('async');
 var SPIDERINDEX = 1; //抓取到的数量
 var PAYLISTINDEX = 0; //可用的歌单
 var PAYLISTARR = [];
-// getlist(1)
 
-
-// async.mapLimit([1, 2, 3, 4, 5], 2, function(item, callback) {
-//   setTimeout(function() {
-//     clog(item, callback)
-//   }, 1000);
-// }, function(err, results) {
-//   console.log("mapLimit:" + results);
-// })
-// var cindex = 1;
-
-// function clog(item, callback) {
-//   setTimeout(function() {
-//     console.log(item);
-//     var num = radomNum(100, 150);
-//     for (var index = 0; index < 1000; index++) {
-//       console.log(cindex + ":" + item + "...." + num);
-//       cindex += 1;
-//     }
-//     callback(null, 'success')
-//   }, 1000);
-
-// }
+getlist(1)
 
 /**
  * 生成随机数（不包含起止点）
@@ -154,7 +132,7 @@ function getPlayList(href, callback) {
   }, 1000);
 
 }
-getMusicList(1, 1000);
+// getMusicList(1, 1000);
 var MUSICLIST = [];
 
 function getMusicList(pageIndex, pageNum) {

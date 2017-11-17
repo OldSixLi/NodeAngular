@@ -27,7 +27,11 @@ var clc = require('cli-color');
 //     }, index * 1000);
 //   })(element, index)
 // }
-console.log(clc.yellowBright.bgMagentaBright('Text in red'));
+// process.stdout.write(clc.move.right(2));
+// process.stdout.write(clc.erase.lineLeft);
+// process.stdout.write(clc.erase.line);
+console.log(clc.bgWhiteBright.bgBlueBright('Text in red') + "LLLLLLLLLLLL");
+// console.log(clc.erase.lineLeft);
 
 function tolist(element, index) {
   console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
