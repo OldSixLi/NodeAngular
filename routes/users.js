@@ -59,7 +59,7 @@ router.all('/users', function(req, res, next) {
 //请求的是/users/users接口才会访问到此处
 router.post('/allUser', function(req, res, next) {
   var returnObj = {};
-  console.log("POST:" + JSON.stringify(req.body));
+  console.log(req);
   var name = req.body.name; //用户名称
   var age = req.body.age; //年龄
   var currentPage = req.body.currentPage ? req.body.currentPage : 1;
@@ -167,9 +167,7 @@ router.post('/infoAdd', function(req, res, next) {
       gender: postData.gender,
       age: postData.age,
       iconUrl: postData.iconUrls
-    }
-
-
+    };
     // 数据库添加操作
     DBhelper.addModel(model, function(issuccess) { //返回T/F,是否插入数据成功
       var obj = {

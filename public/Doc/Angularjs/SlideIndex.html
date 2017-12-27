@@ -1,7 +1,7 @@
 <!-- 马少博  创建于 2017年4月11日09:06:11 -->
 <!DOCTYPE html>
 <html lang='en'>
-<!--　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+  <!--　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 　　　　　　　　　　　◆◆◆　　　　　　　　　　　　　　　　◆◆　　　　　　　　
 　　◆◆◆◆◆◆◆　◆◆◆　　　　　　　　　　　　　　　　　◆◆　　　　　　　　
 　　◆◆◆　◆◆◆　◆◆◆◆◆◆◆◆◆　　　　　　　　　　　◆◆　　　　　　　　
@@ -22,80 +22,158 @@
 　　　　　　　　　　◆◆　　　◆◆◆　　　　◆◆◆◆　　　　　　　　　　◆◆◆　
 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　-->
 
-<head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/myapp/public/images/my.ico' />
-  <title> 标题</title>
-  <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
-  <link href='../../Style/angular.css' rel='stylesheet'>
-  <link href="../../Script/jquery-confirm/jquery-confirm.min.css" rel="stylesheet">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/myapp/public/images/my.ico' />
+    <title> 标题</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='../../Style/angular.css' rel='stylesheet'>
+    <link href="../../Script/jquery-confirm/jquery-confirm.min.css" rel="stylesheet">
 
-</head>
+  </head>
 
-<body ng-app='myApp'>
-  <div class="row">
-    <div class="col-md-2">
+  <body ng-app='myApp'>
+    <div class="row">
+      <div class="col-md-2">
 
 
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4>功能</h4>
-        </div>
-        <!--table-bordered   边框
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>功能</h4>
+          </div>
+          <!--table-bordered   边框
               table-condensed  收缩
               table-striped    斑马色-->
-        <table class="table table-hover table-bordered table-condensed table-striped">
-          <tbody>
-            <tr>
-              <td><a href="#/" class="btn btn-link">Index页面</a></td>
-            </tr>
-            <tr>
-              <td><a href="#/data" class="btn btn-link">数据绑定</a>
-              </td>
-            </tr>
-            <tr>
-              <td><a href="#/info" class="btn btn-link">信息详情</a></td>
-            </tr>
-            <tr>
-              <td><a href="#/form" class="btn btn-link">表单提交</a></td>
-            </tr>
-            <tr>
-              <td><a href="#/upload" class="btn btn-link">文件上传</a></td>
-            </tr>
-            <tr>
-              <td><a href="#/talk" class="btn btn-link">聊天室</a></td>
-            </tr>
-          </tbody>
-        </table>
+          <table class="table table-hover table-bordered table-condensed table-striped">
+            <tbody>
+              <tr>
+                <td><a href="#/" class="btn btn-link">Index页面</a></td>
+              </tr>
+              <tr>
+                <td><a href="#/data" class="btn btn-link">数据绑定</a>
+                </td>
+              </tr>
+              <tr>
+                <td><a href="#/info" class="btn btn-link">信息详情</a></td>
+              </tr>
+              <tr>
+                <td><a href="#/form" class="btn btn-link">表单提交</a></td>
+              </tr>
+              <tr>
+                <td><a href="#/upload" class="btn btn-link">文件上传</a></td>
+              </tr>
+              <tr>
+                <td><a href="#/talk" class="btn btn-link">聊天室</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
+      <!--显示内容区域-->
+      <!-- https://rawgit.com/ -->
+      <!-- http://www.bootcdn.cn/ -->
+      <!--贴你github上的文件地址，就能自动变成CDN地址 -->
+      <div class="col-md-8" ng-view> </div>
 
     </div>
-    <!--显示内容区域-->
 
-    <div class="col-md-8" ng-view> </div>
+    <!-- 脚本 -->
+    <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script>
+    <script src='http://apps.bdimg.com/libs/angular-route/1.3.13/angular-route.js'></script>
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+    <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+    <!--JQ插件-->
+    <script src="../../Script/jquery-confirm/jquery-confirm.min.js"></script>
+    <script src='../../Script/jquery-form.js'></script>
+    <!--通用脚本-->
+    <script src='../../Script/node-angular.js'></script>
+    <!--路由-->
+    <script src='../../Script/Angularjs/route.js'></script>
+    <!--服务-->
+    <script src='../../Script/Angularjs/service.js'></script>
+    <!--控制器-->
+    <script src='../../Script/Angularjs/controller.js'></script>
 
-  </div>
-
-  <!-- 脚本 -->
-  <script src='http://cdn.bootcss.com/angular.js/1.4.1/angular.js'></script>
-  <script src='http://apps.bdimg.com/libs/angular-route/1.3.13/angular-route.js'></script>
-  <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
-  <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
-  <!--JQ插件-->
-  <script src="../../Script/jquery-confirm/jquery-confirm.min.js"></script>
-  <script src='../../Script/jquery-form.js'></script>
-  <!--通用脚本-->
-  <script src='../../Script/node-angular.js'></script>
-  <!--路由-->
-  <script src='../../Script/Angularjs/route.js'></script>
-  <!--服务-->
-  <script src='../../Script/Angularjs/service.js'></script>
-  <!--控制器-->
-  <script src='../../Script/Angularjs/controller.js'></script>
-  <script>
-  </script>
-</body>
+    <script src="https://cdn.rawgit.com/OldSixLi/oldSixLi.github.io/master/script/QiniuCloud/plupload.full.min.js"></script>
+    <script src="https://cdn.rawgit.com/OldSixLi/oldSixLi.github.io/master/script/QiniuCloud/moxie.js"></script>
+    <script src="https://cdn.rawgit.com/OldSixLi/oldSixLi.github.io/master/script/QiniuCloud/qiniu.min.js"></script>
+    <script>
+      $(function() {
+        var domainUrl = "http://om6fr85l4.bkt.clouddn.com/"; //←←←←←←←修改上传的空间地址←←←←←←←
+        //获取七牛uptoken　
+        uploader = Qiniu.uploader({
+          runtimes: 'html5,flash,html4',
+          browse_button: 'pickfiles', //上传按钮的ID
+          container: 'btn-uploader', //上传按钮的上级元素ID
+          drop_element: 'btn-uploader',
+          max_file_size: '100mb', //最大文件限制　
+          dragdrop: false,
+          chunk_size: '4mb', //分块大小  
+          save_key: true,
+          uptoken_func: function() { // 在需要获取uptoken时，该方法会被调用　
+            var token = "";
+            $.ajax({
+              type: "get",
+              url: "/token", //←←←←←←←修改请求token的地址←←←←←←←
+              async: false,
+              dataType: "json",
+              success: function(data) {
+                token = data.uptoken; //←←←←←←←修改字段名称←←←←←←←
+              }
+            });
+            return token;
+          },
+          unique_names: false,
+          domain: domainUrl, //自己的七牛云存储空间域名
+          multi_selection: false, //是否允许同时选择多文件
+          //文件类型过滤，这里限制为图片类型
+          filters: {
+            mime_types: [{
+              title: "Image files",
+              extensions: "jpg,jpeg,gif,png"
+            }]
+          },
+          auto_start: true,
+          init: {
+            'FilesAdded': function(up, files) {
+              //do something
+            },
+            'BeforeUpload': function(up, file) {
+              //do something
+            },
+            'UploadProgress': function(up, file) {
+              //可以在这里控制上传进度的显示
+              console.log(up);
+              console.log(file);
+              //可参考七牛的例子
+            },
+            'UploadComplete': function() {
+              //do something
+            },
+            'FileUploaded': function(up, file, info) {　
+              var json = JSON.parse(info);
+              alert("上传成功");
+              //图片压缩处理:限制图片长宽均为200px ,且图片质量为原来75%;←←←←←←←图片质量自定义
+              // ?imageView2/1/w/350/h/200/q/100|imageslim //设置长度宽度
+              var imgSrc = domainUrl + json.key + "?imageView2/1/q/100|imageslim";
+              $("#img").attr("src", imgSrc);
+              $("[name='iconUrl']").val(imgSrc);
+            },
+            'Error': function(up, err, errTip) {
+              alert(errTip);
+            },
+            'Key': function(up, file) {
+              return file.name;
+            }
+          }
+        });
+      })
+    </script>
+    <script>
+    </script>
+  </body>
 
 </html>

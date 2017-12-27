@@ -23,7 +23,7 @@
         <h1>select组件封装</h1>
         <p>注:组件实现了对select2的封装 所以需引入相关的js和css文件 对当前组件的样式稍作修改 和Bootstrap风格统一</p>
         <br>
-        <ht-select id="select" :options="sltOptions" v-model="people">
+        <ht-select id="select" :options="sltOptions" v-model="people" :search="true">
           <option value="1">刀锋</option>
           <option value="2">飞虎队</option>
           <option value="3">曼陀罗</option>
@@ -81,12 +81,17 @@
               }
             }
           },
-          value: String
+          value: String,
+          search: {
+            type: Boolean,
+            default: false
+          }
         },
         template: '<select class="form-control"> <slot></slot> </select>',
         //在元素值被挂载以后运行此方法
         mounted: function() {
           var _self = this;
+          this.options.minimumResultsForSearch = this.search ? 0 : -1;
           $(this.$el)
             .select2(this.options)
             .val(this.value)
