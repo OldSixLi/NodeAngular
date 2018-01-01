@@ -1,18 +1,31 @@
+// import { log } from 'util';
+
 /*
  * 遍历某个目录下文件
  * @Author:马少博 (ma.shaobo@qq.com)
  * @Date: 2017年4月19日14:40:20
  * @Last Modified by: 马少博 
  */
-var fs = require('fs')
+var fs = require('fs');
+var path = require('path');
 
+//在此输入路径
+var reslovePath = "F:/个人资料/图片/0524";
+var filesList = geFileList(reslovePath);
+filesList.sort(_sortHandler);
+
+//循环写入文件
+filesList.forEach(x => {
+  var str = "文件名:" + normalStr(x.name, 50) + " " +
+    "Size:" + normalStr((x.size / 1024).toFixed(2) + "/kb", 20) + " " +
+    "路径:" + x.path + '\r\n';
+  writeFile(path.resolve(reslovePath, "当前路径.txt"), str);
+});
 
 //遍历文件夹，获取所有文件夹里面的文件信息
 /*
  * @param path 路径
- *
  */
-
 function geFileList(path) {
   var filesList = [];
   readFile(path, filesList);
@@ -21,10 +34,10 @@ function geFileList(path) {
 
 //遍历读取文件
 function readFile(path, filesList) {
-  files = fs.readdirSync(path); //需要用到同步读取
-  files.forEach(walk);
+  files = fs.readdirSync(path); //需要用到同步读取(因为后期需要汇总进行大小排序)
+  files.forEach(_walk);
 
-  function walk(file) {
+  function _walk(file) {
     states = fs.statSync(path + '/' + file);
     if (states.isDirectory()) {
       readFile(path + '/' + file, filesList);
@@ -41,49 +54,31 @@ function readFile(path, filesList) {
 
 //写入文件utf-8格式 
 function writeFile(fileName, data) {
-  //   fs.writeFile(fileName, data, 'utf-8', complete);
+  //追加内容
+  fs.appendFile(fileName, data, 'utf-8');
+  //写入文件
+  // fs.writeFile(fileName, data, 'utf-8');
   console.log(data);
-
-  // function complete() {
-  //   console.log("文件生成成功");
-  // }
 }
 
-//在此输入路径
-var filesList = geFileList("./public/images/zhihu_Down");
-filesList.sort(sortHandler);
-
-function sortHandler(a, b) {
-  if (a.size > b.size)
-    return -1;
-  else if (a.size < b.size) return 1
-  return 0;
+function _sortHandler(a, b) {
+  // return a.size - b.size; //倒序
+  return b.size - a.size; //正序
 }
-var str = '';
-for (var i = 0; i < filesList.length; i++) {
-  var item = filesList[i];
-  // var desc = (i + 1) + "文件名:" + chuliStr(item.name, 40) + " " +
-  //   "Size:" + chuliStr((item.size / 1024).toFixed(2) + "/kb", 20) + " " +
-  //   "路径:" + item.path;
-  var desc = "<img src='" + item.path + "' >"
-  str += desc + "\n"
-}
-
-
-writeFile("test.txt", str);
 
 /**
  * 处理字符长度固定（方便输出处理）
- * BUG:未做中文处理
  * @param {any} str 字符
- * @param {any} size  总字符长度
+ * @param {any} length  总字符长度
  * @returns 
  */
-function chuliStr(str, size) {
-  var length = size - str.length;
-  var addStr = "";
-  for (var i = 0; i < length; i++) {
-    addStr += " ";
+function normalStr(str, length) {
+  try {　　
+    //  做中文处理
+    let reg = new RegExp("[\\u4E00-\\u9FFF]+", "g");
+    let nowLen = str.length + (!!str.match(reg) ? str.match(reg).join('').length : 0);
+    return nowLen > length ? str : str + Array(length - nowLen).fill(" ").join('');
+  } catch (error) {　　
+    console.log(error);　　
   }
-  return str + addStr + "|";
 }
