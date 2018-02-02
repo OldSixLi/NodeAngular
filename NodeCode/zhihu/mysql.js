@@ -31,10 +31,13 @@ client.query("use " + TEST_DATABASE);
  * 后期移出 (统一以Promise方式回调)
  * @returns 
  */
-function insert(sql, param, callback) {
+function resloveSql(sql, param, callback) {
   let addSql = sql;
   return new Promise((resolve, reject) => {
     client.query(sql, param, (err, result) => {
+      //如果存在回调函数,则执行回调
+      callback && callback(err, result);
+      //promise 返回结果集
       if (err) {
         reject(err);
       } else {
@@ -107,7 +110,12 @@ function AddUser(userModel) {
       });
   });
 }
-
+/**
+ * 批量添加关注者信息
+ * 
+ * @param {array} arr  关注人的信息(多条)
+ * @returns 
+ */
 function addFollow(arr) {
   let sql = 'INSERT INTO user_follow(\
     userid,\
@@ -125,37 +133,52 @@ function addFollow(arr) {
         if (err) {
           reject(err);
         } else {
-          console.log("成功插入啊");
           resolve('插入成功');
         }
       });
   });
 }
-
+/**
+ * 从数据库获取关注者信息
+ * 
+ * @returns 
+ */
 function getFollow() {
-  let sql = "select CAST(userid AS CHAR) as source,CAST(followid AS CHAR) as target,followusername from user_follow limit 0,30000";
+  //将int类型转化为字符串类型
+  let sql = "select \
+  CAST(userid AS CHAR) as source,\
+  CAST(followid AS CHAR) as target,\
+  followusername from user_follow \
+  limit 0,30000";
   return new Promise(function(resolve, reject) {
-    client.query(sql, function(err, result) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
+    client.query(sql,
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
   });
 }
 
+/**
+ * 获取数据库中用户列表
+ * 
+ * @returns 
+ */
 function getUser() {
   let sql = "select id,userid,nickname as name ,level from music_users order by level limit 0,500";
   //返回一个promise对象才可以调用then等函数
   return new Promise(function(resolve, reject) {
-    client.query(sql, function(err, result) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
+    client.query(sql,
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
   });
 }
 
@@ -222,7 +245,13 @@ function finds(questionId, next) {
 }
 
 
-
+/**
+ * 分页获取网易云歌曲
+ * 
+ * @param {any} pageInedx 
+ * @param {any} pageNum 
+ * @param {any} next 
+ */
 function getMusicList(pageInedx, pageNum, next) {
   var start = (pageInedx - 1) * pageNum;
   var end = pageNum;
@@ -267,7 +296,12 @@ function updateMusic(model) {
     console.log('名称：' + getfullStr(model.id) + ",▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇评论量:" + model.total);
   });
 }
-
+/**
+ * 
+ * 
+ * @param {any} str 
+ * @returns 
+ */
 function getfullStr(str) {
   var a = (10 - str.length);
   var nullstr = "";
@@ -277,7 +311,11 @@ function getfullStr(str) {
   return str + nullstr;
 }
 
-
+/**
+ * 添加信息到网易云音乐
+ * 
+ * @param {any} model 
+ */
 function musicAdd(model) {
   // var findsql = 'select * from music where mid=' + model.mid;
   var sql = "insert  into music(mid,name,comment,collectid,createtime) values(?,?,?,?,NOW())";
@@ -302,15 +340,30 @@ function musicAdd(model) {
   // and id not in (select id from(select min(id) as id from  music  group by mid  having count(mid )>1) b)
 }
 //输出函数
-exports.start = start;
-exports.finds = finds;
-exports.listAdd = musicPayListAdd; //歌单添加内容
-exports.musicAdd = musicAdd;
-exports.getMusicList = getMusicList;
-exports.updateMusic = updateMusic;
-exports.getHighQualityMusicList = getHighQualityMusicList;
-exports.playList = playList;
-exports.addUser = AddUser;
-exports.addFollow = addFollow;
-exports.getUser = getUser;
-exports.getFollow = getFollow;
+// exports.start = start;
+// exports.finds = finds;
+// exports.listAdd = musicPayListAdd; //歌单添加内容
+// exports.musicAdd = musicAdd;
+// exports.getMusicList = getMusicList;
+// exports.updateMusic = updateMusic;
+// exports.getHighQualityMusicList = getHighQualityMusicList;
+// exports.playList = playList;
+// exports.addUser = AddUser;
+// exports.addFollow = addFollow;
+// exports.getUser = getUser;
+// exports.getFollow = getFollow;
+
+exports = {
+  start: start,
+  finds: finds,
+  listAdd: musicPayListAdd, //歌单添加内容
+  musicAdd: musicAdd,
+  getMusicList: getMusicList,
+  updateMusic: updateMusic,
+  getHighQualityMusicList: getHighQualityMusicList,
+  playList: playList,
+  addUser: AddUser,
+  addFollow: addFollow,
+  getUser: getUser,
+  getFollow: getFollow
+}

@@ -14,7 +14,6 @@
 
     <script src='./../Script/jquery-1.9.1.js'></script>
     <script src="/Script/echarts.js"></script>
-    <!-- <script src="./../../public/Script/dataTool.js"></script> -->
     <script>
       var myChart = echarts.init(document.getElementById('main'));
       var webkitDep = {};
@@ -25,8 +24,6 @@
         dataType: "json",
         success: function(data, textStatus, jqXHR) {
           if (data != null && data != "") {
-
-
             myChart.showLoading();
             webkitDep = {
               "type": "force",
@@ -41,11 +38,10 @@
               "links": data.follow
             };
             myChart.hideLoading();
-
-
+            //设置
             option = {
               legend: {
-                data: ['人物关系'] //此处的数据必须和关系网类别中name相对应
+                data: ['人物关系']
               },
               series: [{
                 type: 'graph',
