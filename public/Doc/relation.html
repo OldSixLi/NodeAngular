@@ -1,0 +1,85 @@
+<!-- 马少博  创建于 2018年2月2日13:25:18 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title> 标题</title>
+  </head>
+
+  <body>
+    <div id="main" style="width:3000px;height:3000px;"></div>
+
+    <script src='./../Script/jquery-1.9.1.js'></script>
+    <script src="/Script/echarts.js"></script>
+    <!-- <script src="./../../public/Script/dataTool.js"></script> -->
+    <script>
+      var myChart = echarts.init(document.getElementById('main'));
+      var webkitDep = {};
+      $.ajax({
+        type: "POST",
+        url: "/users/musicUsers",
+        data: {},
+        dataType: "json",
+        success: function(data, textStatus, jqXHR) {
+          if (data != null && data != "") {
+
+
+            myChart.showLoading();
+            webkitDep = {
+              "type": "force",
+              "categories": [ //关系网类别，可以写多组
+                {
+                  "name": "人物关系", //关系网名称
+                  "keyword": {},
+                  "base": "人物关系"
+                }
+              ],
+              "nodes": data.user,
+              "links": data.follow
+            };
+            myChart.hideLoading();
+
+
+            option = {
+              legend: {
+                data: ['人物关系'] //此处的数据必须和关系网类别中name相对应
+              },
+              series: [{
+                type: 'graph',
+                layout: 'force',
+                animation: false,
+                label: {
+                  normal: {
+                    show: true,
+                    position: 'right'
+                  }
+                },
+                draggable: true,
+                data: webkitDep.nodes.map(function(node, idx) {
+                  node.id = node.userid;
+                  return node;
+                }),
+                categories: webkitDep.categories,
+                force: {
+                  edgeLength: 105, //连线的长度
+                  repulsion: 100 //子节点之间的间距
+                },
+                edges: webkitDep.links
+              }]
+            };
+            myChart.setOption(option);
+          }
+        },
+        error: function(response) {
+
+          alert("提示", "请求服务失败,请重试!");
+        }
+      });
+    </script>
+
+  </body>
+
+</html>

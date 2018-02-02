@@ -31,6 +31,7 @@ client.query("use " + TEST_DATABASE);
  * 后期移出 (统一以Promise方式回调)
  * @returns 
  */
+
 function insert(sql, param, callback) {
   let addSql = sql;
   return new Promise((resolve, reject) => {
@@ -46,6 +47,7 @@ function insert(sql, param, callback) {
 
 //数据存储
 function start(questrionModel) {
+
   //语句
   var userAddSql = 'INSERT INTO Answers(QuestrionId,Question,AnswerUserName,AnswerUserLink,AnswerId,DianzanCount,Detail,CreateTime) VALUES(?,?,?,?,?,?,?,NOW())';
   //参数
@@ -58,6 +60,7 @@ function start(questrionModel) {
     questrionModel.DianzanCount,
     questrionModel.Detail
   ];
+
   //增 add
   client.query(userAddSql, userAddSqlParams, function(err, result) {
     if (err) {
@@ -68,7 +71,9 @@ function start(questrionModel) {
     console.log('作者：【' + questrionModel.AnswerUserName + '】,用户链接' + questrionModel.AnswerUserLink);
     console.log('INSERT ID:', result.insertId + ',Anserid:' + questrionModel.AnswerId + ' ,点赞数：【' + questrionModel.DianzanCount + '】 ');
     console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n');
+
   });
+
 }
 
 /**
@@ -113,11 +118,14 @@ function addFollow(arr) {
     userid,\
     followid,followusername) \
     VALUES';
+
   let str = "";
   let strArr = arr.map(x => {
     return '(' + x.userID + ',' + x.followID + ',"' + x.followUserName + '")';
   });
+
   params = strArr.join(',');
+
   return new Promise((resolve, reject) => {
     client.query(
       sql + params, null,
@@ -133,11 +141,12 @@ function addFollow(arr) {
 }
 
 function getFollow() {
-  let sql = "select CAST(userid AS CHAR) as source,CAST(followid AS CHAR) as target,followusername from user_follow limit 0,30000";
+  let sql = "select * from user_follow";
+  //返回一个promise对象才可以调用then等函数
   return new Promise(function(resolve, reject) {
-    client.query(sql, function(err, result) {
+    client.query(findSql, function(err, result) {
       if (err) {
-        reject(err);
+        reject(value);
       } else {
         resolve(result);
       }
@@ -145,19 +154,7 @@ function getFollow() {
   });
 }
 
-function getUser() {
-  let sql = "select id,userid,nickname as name ,level from music_users order by level limit 0,500";
-  //返回一个promise对象才可以调用then等函数
-  return new Promise(function(resolve, reject) {
-    client.query(sql, function(err, result) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-}
+getFollow().then(result => { console.log(result); })
 
 /**
  * 歌单插入数据库
@@ -202,8 +199,10 @@ function playList(next) {
   })
 }
 
+//查询当前的问题是否已经遍历过
 /**
- * 查询当前的问题是否已经遍历过
+ * 
+ * 
  * @param {any} questionId 
  * @param {any} next 
  */
@@ -312,5 +311,3 @@ exports.getHighQualityMusicList = getHighQualityMusicList;
 exports.playList = playList;
 exports.addUser = AddUser;
 exports.addFollow = addFollow;
-exports.getUser = getUser;
-exports.getFollow = getFollow;

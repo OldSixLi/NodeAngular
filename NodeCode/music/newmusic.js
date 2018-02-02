@@ -5,13 +5,11 @@
 
 var nodegrass = require('nodegrass');
 var cheerio = require('cheerio');
-var https = require("https");
 var fs = require("fs");
 var mysql = require('mysql');
 var Q = require('q');
 var path = require('path');
 var io = require('socket.io')();
-var xssEscape = require('xss-escape');
 var DbHelper = require('F:/PersonCodes/NodeAngular项目/NodeCode/zhihu/mysql.js');
 var async = require('async');
 

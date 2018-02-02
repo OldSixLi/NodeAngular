@@ -1,3 +1,5 @@
+// import { Promise } from './C:/Users/Administrator/AppData/Local/Microsoft/TypeScript/2.6/node_modules/@types/q';
+
 /*
  * users分类下请求处理(Node文件)
  * @Author:马少博 (ma.shaobo@qq.com)
@@ -13,6 +15,7 @@ var DBhelper = require('../mysql/sql.js');
 var multiparty = require('multiparty');
 var util = require('util');
 var path = require('path');
+var db = require('./../NodeCode/zhihu/mysql.js');
 //Express框架相关部分
 var app = express();
 var router = express.Router();
@@ -56,6 +59,28 @@ router.all('/users', function(req, res, next) {
     res.json(obj);
   }, 0);
 });
+
+
+
+//请求的是/users/musicUsers接口才会访问到此处
+router.all('/musicUsers', function(req, res, next) {
+  //允许跨域
+  res.header("Access-Control-Allow-Origin", "*");
+  // var absolutePath = path.resolve(__dirname, '../public/JSON/uu.json');
+  var sendObj = {};
+
+  Promise.all([db.getFollow(), db.getUser()]).then(
+    result => {
+      sendObj.user = result[1];
+      sendObj.follow = result[0];
+      res.json(sendObj);
+    }, err => {
+      console.log(err);
+      res.json(err);
+    }
+  )
+});
+
 //请求的是/users/users接口才会访问到此处
 router.post('/allUser', function(req, res, next) {
   var returnObj = {};

@@ -10,16 +10,19 @@ var fs = require('fs');
 var path = require('path');
 
 //在此输入路径
-var reslovePath = "F:/个人资料/图片/0524";
+var reslovePath = "F:/个人相关文件/表情包/35242408—拥有丰富的表情包是一种什么样的体验是种怎样的体验？";
 var filesList = geFileList(reslovePath);
 filesList.sort(_sortHandler);
 
-//循环写入文件
+/**
+ *  循环写入文件
+ * @returns 
+ */
 filesList.forEach(x => {
   var str = "文件名:" + normalStr(x.name, 50) + " " +
     "Size:" + normalStr((x.size / 1024).toFixed(2) + "/kb", 20) + " " +
     "路径:" + x.path + '\r\n';
-  writeFile(path.resolve(reslovePath, "当前路径.txt"), str);
+  writeFile(path.resolve(reslovePath, "当前记录.txt"), str);
 });
 
 //遍历文件夹，获取所有文件夹里面的文件信息
@@ -58,7 +61,7 @@ function writeFile(fileName, data) {
   fs.appendFile(fileName, data, 'utf-8');
   //写入文件
   // fs.writeFile(fileName, data, 'utf-8');
-  console.log(data);
+  // console.log(data);
 }
 
 function _sortHandler(a, b) {
@@ -78,7 +81,7 @@ function normalStr(str, length) {
     let reg = new RegExp("[\\u4E00-\\u9FFF]+", "g");
     let nowLen = str.length + (!!str.match(reg) ? str.match(reg).join('').length : 0);
     return nowLen > length ? str : str + Array(length - nowLen).fill(" ").join('');
-  } catch (error) {　　
-    console.log(error);　　
+  } catch (error) {
+    console.log(error);
   }
 }
