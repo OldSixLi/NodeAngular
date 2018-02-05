@@ -14,52 +14,16 @@
  var express = require('express');
  var router = express.Router();
 
-
- const email = '18222603560';
- const cookie = '';
- const md5sum = crypto.createHash('md5');
- const password = 'ma1136191854';
- md5sum.update(password)
- const data = {
-   phone: email,
-   password: md5sum.digest('hex'),
-   rememberLogin: 'true'
- };
-
-
- console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
- console.log(data.password);
- console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
- //  console.log(email, password);
-
- //  router.get('/', (req, res) => {
- //    const phone = req.query.phone
- //    const cookie = req.get('Cookie') ? req.get('Cookie') : ''
- //    const md5sum = crypto.createHash('md5')
- //    md5sum.update(req.query.password)
- //    const data = {
- //      phone: phone,
- //      password: md5sum.digest('hex'),
- //      rememberLogin: 'true'
- //    }
- //    createWebAPIRequest(
- //      'music.163.com',
- //      '/weapi/login/cellphone',
- //      'POST',
- //      data,
- //      cookie,
- //      (music_req, cookie) => {
- //        res.set({
- //          'Set-Cookie': cookie
- //        })
- //        res.send(music_req)
- //      },
- //      err => res.status(502).send('fetch error')
- //    )
- //  })
-
-
  router.get('/', (req, res) => {
+   const phone = req.query.phone
+   const cookie = req.get('Cookie') ? req.get('Cookie') : ''
+   const md5sum = crypto.createHash('md5')
+   md5sum.update(req.query.password)
+   const data = {
+     phone: phone,
+     password: md5sum.digest('hex'),
+     rememberLogin: 'true'
+   }
    createWebAPIRequest(
      'music.163.com',
      '/weapi/login/cellphone',
@@ -67,18 +31,29 @@
      data,
      cookie,
      (music_req, cookie) => {
-       // console.log(music_req)
        res.set({
          'Set-Cookie': cookie
        })
        res.send(music_req)
      },
      err => res.status(502).send('fetch error')
-   );
+   )
  })
+
  var index_num = 0;
 
- function createWebAPIRequest1(
+ /**
+  * 网易云音乐登陆接口
+  * 
+  * @param {any} host 域名
+  * @param {any} path 地址
+  * @param {any} method 请求方式
+  * @param {any} data 数据
+  * @param {any} cookie cookie
+  * @param {any} callback 回调函数
+  * @param {any} errorcallback 错误回调
+  */
+ function createWebAPIRequest(
    host,
    path,
    method,
@@ -137,136 +112,6 @@
        encSecKey: cryptoreq.encSecKey
      })
    )
-   http_client.end()
- }
-
- function createWebAPIRequest(
-   host,
-   path,
-   method,
-   data,
-   cookie,
-   callback,
-   errorcallback
- ) {
-   let music_req = ''
-   const cryptoreq = Encrypt(data)
-   const http_client = http.request({
-       hostname: host,
-       method: method,
-       path: path,
-       headers: {
-         Accept: '*/*',
-         'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
-         Connection: 'keep-alive',
-         'Content-Type': 'application/x-www-form-urlencoded',
-         Referer: 'http://music.163.com',
-         Host: 'music.163.com',
-         Cookie: cookie,
-         'User-Agent': randomUserAgent()
-       }
-     },
-     function(res) {
-       res.on('error', function(err) {
-         errorcallback(err)
-       })
-       res.setEncoding('utf8')
-       if (res.statusCode != 200) {
-         createWebAPIRequest(host, path, method, data, cookie, callback)
-         return
-       } else {
-         res.on('data', function(chunk) {
-           music_req += chunk
-         })
-         res.on('end', function() {
-           console.log("结束");
-           if (music_req == '') {
-             createWebAPIRequest(host, path, method, data, cookie, callback)
-             return
-           }
-           if (res.headers['set-cookie']) {
-             callback(music_req, res.headers['set-cookie'])
-           } else {
-             callback(music_req)
-           }
-         })
-       }
-     }
-   )
-
-   http_client.write(
-     querystring.stringify({
-       params: cryptoreq.params,
-       encSeckey: cryptoreq.encSecKey
-     })
-   );
-
-   http_client.end()
- }
-
-
-
- function createWebAPIRequest(
-   host,
-   path,
-   method,
-   data,
-   cookie,
-   callback,
-   errorcallback
- ) {
-   let music_req = ''
-   const cryptoreq = Encrypt(data)
-   const http_client = http.request({
-       hostname: host,
-       method: method,
-       path: path,
-       headers: {
-         Accept: '*/*',
-         'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
-         Connection: 'keep-alive',
-         'Content-Type': 'application/x-www-form-urlencoded',
-         Referer: 'http://music.163.com',
-         Host: 'music.163.com',
-         Cookie: cookie,
-         'User-Agent': randomUserAgent()
-       }
-     },
-     function(res) {
-       res.on('error', function(err) {
-         errorcallback(err)
-       })
-       res.setEncoding('utf8')
-       if (res.statusCode != 200) {
-         createWebAPIRequest(host, path, method, data, cookie, callback)
-         return
-       } else {
-         res.on('data', function(chunk) {
-           music_req += chunk
-         })
-         res.on('end', function() {
-           console.log("结束");
-           if (music_req == '') {
-             createWebAPIRequest(host, path, method, data, cookie, callback)
-             return
-           }
-           if (res.headers['set-cookie']) {
-             callback(music_req, res.headers['set-cookie'])
-           } else {
-             callback(music_req)
-           }
-         })
-       }
-     }
-   )
-
-   http_client.write(
-     querystring.stringify({
-       params: cryptoreq.params,
-       encSeckey: cryptoreq.encSecKey
-     })
-   );
-
    http_client.end()
  }
 
