@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+let music = require('./NodeCode/music/creatServer');
 var app = express();
 
 //设置跨域访问(此处设置请求头等内容，同时需要在接口中设置跨域属性，详见users/users接口)
@@ -37,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/music', music);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

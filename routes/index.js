@@ -75,7 +75,6 @@ router.post('/upload', function(req, res, next) {
         if (len > 0) {
           var inputFile = files.imageRes[0];
           var uploadedPath = inputFile.path;
-
           //再次将绝对路径转化为public下的相对路径：截取public后的内容
           uploadedPath = uploadedPath.substr(inputFile.path.indexOf('public') + 6);
           var obj = {
@@ -86,7 +85,6 @@ router.post('/upload', function(req, res, next) {
         }
       }
     });
-
   } catch (err) {
     console.log(err);
   }
