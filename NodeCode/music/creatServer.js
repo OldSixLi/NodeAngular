@@ -75,9 +75,7 @@ function start() {
 
 }
 // })
-function collect() {
 
-}
 var index_num = 0;
 
 /**
