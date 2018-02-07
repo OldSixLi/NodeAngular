@@ -1,5 +1,3 @@
-// import { log } from 'util';
-
 /*
  * 遍历某个目录下文件
  * @Author:马少博 (ma.shaobo@qq.com)

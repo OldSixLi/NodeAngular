@@ -3,156 +3,205 @@
  * @returns
  */
 
-var nodegrass = require('nodegrass');
-var cheerio = require('cheerio');
-var fs = require("fs");
-var mysql = require('mysql');
-var Q = require('q');
-var path = require('path');
-var io = require('socket.io')();
-var DbHelper = require('F:/PersonCodes/NodeAngular项目/NodeCode/zhihu/mysql.js');
-var async = require('async');
+const nodegrass = require('nodegrass');
+const cheerio = require('cheerio');
+const fs = require("fs");
+const mysql = require('mysql');
+const Q = require('q');
+const path = require('path');
+const io = require('socket.io')();
+const DbHelper = require('F:/PersonCodes/NodeAngular项目/NodeCode/zhihu/mysql.js');
+const async = require('async');
 
-var SPIDERINDEX = 1; //抓取到的数量
-var PAYLISTINDEX = 0; //可用的歌单
-var PAYLISTARR = [];
-
-getlist(1)
-
+let SPIDER_INDEX = 1; //抓取到的数量
+let PAYLIST_INDEX = 0; //可用的歌单
+let PAYLIST_ARR = [];　　　　　　　　　　　　　　　　　　　　　　　　　　
+// 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+// 　◆◆◆◆◆◆　◆　　　　　　　◆　　　　　◆　　　　　◆　　　　　　　◆　　　　　　　　　　　　　　　
+// 　　　　　◆　　◆　　　　　　　　◆　　　◆　　　　　　◆　　◆◆◆◆◆　　　　◆◆◆◆◆◆　　　　　　
+// 　◆◆◆　◆　　◆◆◆◆　　　◆◆◆◆◆◆◆◆◆　　　　◆　　◆　◆　◆　　　　　◆　　◆　◆◆◆◆　　
+// 　◆　◆　◆　　◆　　◆　　　◆　　　◆　　　◆　　　◆◆◆　◆　◆　◆　　　　　◆　　◆　　◆　◆　　
+// 　◆◆◆　◆　◆　　◆　　　　◆◆◆◆◆◆◆◆◆　　　　◆　　◆　◆　◆　　　　　◆◆◆◆　　◆　◆　　
+// 　　　　　　　　　　　　　　　◆　　　◆　　　◆　　　　◆　　◆　◆　◆　　　　　◆　　◆　　◆　◆　　
+// 　◆◆◆◆◆◆　　◆　　　　　◆◆◆◆◆◆◆◆◆　　　　◆◆　◆　◆　◆　　　　　◆◆◆◆　　◆　◆　　
+// 　　　　　◆　　　◆　　　　　　　　　◆　　　　　　　◆◆　　◆　◆　◆　　　　　◆　　◆　　◆　◆　　
+// 　◆◆◆　◆　　　◆　　　　◆◆◆◆◆◆◆◆◆◆◆　　　◆　　◆　◆　◆　　　　　◆　　◆◆　　◆　　　
+// 　◆　◆　◆　　◆　◆　　　　　　　　◆　　　　　　　　◆　　◆　◆　　◆　　　◆◆◆◆◆　　　◆　　　
+// 　◆◆◆　◆　　◆　◆　　　　　　　　◆　　　　　　　　◆　　◆　◆　　◆　　　　　　　◆　　◆　◆　　
+// 　　　　◆◆　◆　　　◆　　　　　　　◆　　　　　　　◆◆　◆　　◆　　　◆　　　　　　◆　◆　　　◆　　　　　　　　　　　　
+// getlist(1)
 /**
- * 生成随机数（不包含起止点）
+ * 抓取网易云音乐歌单页面
  * 
- * @param {any} start 起点
- * @param {any} end 终点
+ * @param {any} order 热门等类型
+ * @param {any} cat 歌单类型
+ * @param {any} index_num 第几页
  */
-function radomNum(start, end) {
-  end = start > end ? [start, start = end][0] : end; //保证End最大  
-  return parseInt(Math.random() * (end - start) + start + 1);
-}
-
-function getlist(num) {
-  nodegrass.get('http://music.163.com/discover/playlist/?order=hot&cat=%E5%85%A8%E9%83%A8&limit=35&offset=' + num * 35, function(data, status, headers) {
-    // console.log(data);
-    var $ = cheerio.load(data);
-
-    var resultArr = $("#m-disc-pl-c #m-pl-container").find("li");
-    if (resultArr.length > 0) {
-      $("#m-disc-pl-c #m-pl-container").find("li").each(function(i, item) {
-        var collectCount = $(this).find('.nb').text();
-        var tenThousandNum = 0;
-        if (collectCount.indexOf('万') > 0) {
-          tenThousandNum = collectCount.split('万')[0] > 50 ? collectCount.split('万')[0] : 0;
-        }
-        if (tenThousandNum > 0) {
-          console.log(tenThousandNum + "万");
-          var listHref = "http://localhost:9999/playlist" + $(this).find(".u-cover .msk").attr("href").replace('playlist', 'detail');
-
-          var playListObj = {
-            name: "",
-            collectCount: "",
-            imgSrc: "",
-            href: ""
+function getlist(index_num) {
+  nodegrass.get(
+    'http://music.163.com/discover/playlist/?order=hot&cat=%E5%8D%8E%E8%AF%AD&limit=35&offset=' + index_num * 35,
+    (data, status, headers) => {
+      var $ = cheerio.load(data);
+      var resultArr = $("#m-disc-pl-c #m-pl-container").find("li");
+      if (resultArr.length > 0) {
+        $("#m-disc-pl-c #m-pl-container").find("li").each(function(i, item) {
+          let collectCount = $(this).find('.nb').text();
+          let tenThousandNum = 0;
+          if (collectCount.indexOf('万') > 0) {
+            tenThousandNum = collectCount.split('万')[0] > 0 ? collectCount.split('万')[0] : 0;
           }
-          var paylistUrl = $(this).find(".u-cover .msk").attr("href");
-          playListObj.name = $(this).find(".u-cover .msk").attr("title").trim().replace(/[&\|\\\*^%$#@\-]/g, "");
-          playListObj.collectCount = tenThousandNum;
-          playListObj.imgSrc = $(this).find("img.j-flag").attr("src");
-          playListObj.href = paylistUrl;
-          playListObj.playId = paylistUrl.split('id=')[1];
-          DbHelper.listAdd(playListObj); //数据库添加 
-          //插入相关的列表数组
-          PAYLISTARR.push(listHref);
-        }
-      });
+          if (tenThousandNum > 0) {
+            console.log(tenThousandNum + "万");
 
-      setTimeout(function() {
-        num += 1;
-        console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-        console.log("第" + num + "页面");
-        console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-        getlist(num);
-      }, 1000)
+            // 声明歌单对象
+            let playListObj = {
+              name: "", //歌单名称
+              collectCount: "", //收藏量(w)
+              imgSrc: "", //歌单封面图片
+              href: "" //地址
+            };
 
-    } else {
-      console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-      console.log(PAYLISTARR.length);
-      console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-      beginMusic(5);
-    }
-  });
-}
+            let listHref = "http://localhost:9999/playlist" +
+              $(this).find(".u-cover .msk").attr("href").replace('playlist', 'detail');
+            let paylistUrl = $(this).find(".u-cover .msk").attr("href");
+            playListObj.name = $(this).find(".u-cover .msk").attr("title").trim().replace(/[&\|\\\*^%$#@\-]/g, "");
+            playListObj.collectCount = tenThousandNum;
+            playListObj.imgSrc = $(this).find("img.j-flag").attr("src");
+            playListObj.href = paylistUrl;
+            playListObj.playId = paylistUrl.split('id=')[1];
 
-/**
- * 开始收藏
- * 
- * @param {any} num  每次下载多少
- */
-function beginMusic(asyncNum) {
-  async.mapLimit(PAYLISTARR, asyncNum, function(href, callback) {
-    setTimeout(function() {
-      getPlayList(href + "&timestamp=" + new Date().getTime(), callback);
-    }, 10000);
-  }, function(err, result) {
-    if (err) {
-      console.log(err);
-    } else {
-      // console.log(result);<=会输出一个有2万多个“successful”字符串的数组
-      console.log("全部已下载完毕！");
-    }
-  });
-}
+            //数据库添加 
+            DbHelper.listAdd(playListObj);
+            //插入相关的列表数组
+            PAYLIST_ARR.push(listHref);
+          }
+        });
 
-/**获取歌单详情
- * 
- * 
- * @param {any} href 
- * @param {any} callback 
- */
-function getPlayList(href, callback) {
-  var playid = href.split("?id=")[1];
-  setTimeout(function() {
-    nodegrass.get(href, function(data) {
-      if (data && JSON.parse(data)) {
-        var payListJson = JSON.parse(data);
-        //存储歌曲信息进music表
-        for (var songIndex = 0; songIndex < payListJson.privileges.length; songIndex++) {
-          var element = payListJson.privileges[songIndex];
-          var model = { id: element.id, collectid: playid, name: "", comment: "" }
-          DbHelper.musicAdd(model); //数据库添加 
-          console.log(payListJson.playlist.name + "第" + SPIDERINDEX + "首:" + element.id);
-          SPIDERINDEX++;
-        }
-        callback(null, "successful !");
+        setTimeout(function() {
+          index_num++;
+          console.log("当前抓取的页面是:第" + index_num + "页面");
+          getlist(index_num);
+        }, 1000);
+
       } else {
-        console.log("请求失败...");
+        console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+        console.log("当前待抓取歌单数量为:" + PAYLIST_ARR.length);
+        console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+        beginGrapMusic(5);
       }
     });
-  }, 1000);
-
 }
-// getMusicList(1, 1000);
-var MUSICLIST = [];
 
-function getMusicList(pageIndex, pageNum) {
-  DbHelper.getMusicList(pageIndex, pageNum, function(result) {
-    if (result && result.length) {
-      //如果返回结果
-      for (var m = 0; m < result.length; m++) {
-        var element = result[m];
-        MUSICLIST.push(element);
-      }
-      console.log(pageIndex + "页面");
+/**
+ * 开始处理歌单列表(每次处理num条)
+ * 
+ * @param {any} asyncNum  每次下载多少
+ */
+function beginGrapMusic(asyncNum) {
+  async.mapLimit(
+    PAYLIST_ARR,
+    asyncNum,
+    (href, callback) => {
       setTimeout(function() {
-        pageIndex++;
-        getMusicList(pageIndex, 1000);
-      }, 500);
-    } else {
-      //进行请求操作
-      getMusic(3);
-    }
-  })
+        //开始获取歌单详情
+        getPlayListDetail(href + "&timestamp=" + new Date().getTime(), callback);
+      }, 10000);
+    },
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        //console.log(result);//会输出一个有上万个“successful”字符串的数组
+        console.log("全部已下载完毕！");
+      }
+    });
 }
 
+/**
+ * 获取歌单详情
+ * 
+ * @param {any} playListHref 歌单地址
+ * @param {any} callback 回调函数
+ */
+function getPlayListDetail(playListHref, callback) {
+  var playID = playListHref.split("?id=")[1];
+  setTimeout(
+    () => {
+      nodegrass.get(
+        playListHref,
+        data => {
+          if (data) {
+            var payListJson = JSON.parse(data);
+            //存储歌曲信息进music表
+            for (var songIndex = 0; songIndex < payListJson.privileges.length; songIndex++) {
+              var musicObj = payListJson.privileges[songIndex];
+              var model = { id: musicObj.id, collectid: playID, name: "", comment: "" };
+              //数据库添加 
+              DbHelper.musicAdd(model);
+              SPIDER_INDEX++;
+              console.log(payListJson.playlist.name + "第" + SPIDER_INDEX + "首:" + musicObj.id);
+            }
+            callback(null, "successful!");
+          } else {
+            console.log("请求失败...");
+          }
+        });
+    }, 1000);
+}
+
+
+// 　◆◆◆◆◆◆　◆　　　　　　　　　◆　　◆　　　　　　◆　　　　　　　　　　　◆　　　　　◆　　　　　
+// 　　　　　◆　　◆　　　　　　　　　◆　　◆　　　　　　　◆　　◆◆◆◆◆　　　　◆　　　　◆　　　　　
+// 　◆◆◆　◆　　◆◆◆◆　　　◆◆◆◆◆◆◆◆◆◆　　　　　　　　　◆　　　　　　　　　　◆　◆　　　　
+// 　◆　◆　◆　　◆　　◆　　　◆　　◆　　◆　　◆　　　　　　◆　　◆　　◆　　　　　　◆　　　◆　　　
+// 　◆◆◆　◆　◆　　◆　　　　◆　　◆　　◆　　◆　　◆◆◆　　◆　◆　　◆　　◆◆　◆　　　　　◆◆　
+// 　　　　　　　　　　　　　　　◆　　◆　　◆　　◆　　　　◆　　◆　◆　◆　　　　◆　　◆　　　　　　　
+// 　◆◆◆◆◆◆　　◆　　　　　◆◆◆◆◆◆◆◆◆◆　　　　◆　　　　◆　　　　　　◆　　◆　　　◆　　　
+// 　　　　　◆　　　◆　　　　　◆　　◆　　◆　　◆　　　　◆　◆◆◆◆◆◆◆　　　◆　　◆　◆◆　　　　
+// 　◆◆◆　◆　　　◆　　　　　◆　　◆　　◆　　◆　　　　◆　　　　◆　　　　　　◆　　◆◆　　　　　　
+// 　◆　◆　◆　　◆　◆　　　　◆　　◆　　◆　　◆　　　　◆◆　　　◆　　　　　　◆　　◆　　　　◆　　
+// 　◆◆◆　◆　　◆　◆　　　　◆◆◆◆◆◆◆◆◆◆　　　　◆　　　　◆　　　　　　◆◆　◆　　　　◆　　
+// 　　　　◆◆　◆　　　◆　　　◆　　　　　　　　◆　　　　　　　　　◆　　　　　　◆　　　◆◆◆◆◆　　
+
+//获取歌曲评论
+// getMusicList(1, 1000);
+// var MUSICLIST = [];
+
+/**
+ * 获取空评论列表并抓取数据填充进数据库中
+ * 
+ * @param {any} pageIndex 页码
+ * @param {any} pageNum 分页偏移量
+ */
+function getMusicList(pageIndex, pageNum) {
+  DbHelper.getEmptyCommentMusicList(
+    pageIndex,
+    pageNum,
+    result => {
+      if (result && result.length) {
+        //如果返回结果
+        for (var m = 0; m < result.length; m++) {
+          var element = result[m];
+          MUSICLIST.push(element);
+        }
+        //延时执行
+        setTimeout(
+          () => {
+            pageIndex++;
+            getMusicList(pageIndex, 1000);
+          }, 500);
+      } else {
+        //进行请求操作
+        getMusic(5);
+      }
+    });
+}
+
+/**
+ * 批量进行评论量请求
+ * 
+ * @param {any} asyncNum 每次请求的数量
+ */
 function getMusic(asyncNum) {
   console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
   console.log("开始进行请求");
@@ -169,6 +218,7 @@ function getMusic(asyncNum) {
     }
   });
 }
+
 /**
  * 获取单个歌曲的评论量
  * 
@@ -178,33 +228,174 @@ function getMusic(asyncNum) {
 function getSingleMusicComment(item, callback) {
   var musicId = item.mid; //歌曲ID
   var id = item.id; //主键
-  console.log(musicId);
   setTimeout(function() {
-    nodegrass.get("http://localhost:9999/comment/music?id=" + musicId + '&limit=1&offset=2', function(data) {
-      item.total = JSON.parse(data).total || 0;
-      DbHelper.updateMusic(item)
-      callback(null, 'success');
-    }).on('error', function(e) {
+    nodegrass.get(
+      "http://localhost:9999/comment/music?id=" + musicId + '&limit=1&offset=2',
+      data => {
+        item.total = JSON.parse(data).total || 0;
+        DbHelper.updateMusic(item)
+        callback(null, 'success');
+      }).on('error', function(e) {
       console.log("Got error: " + e.message);
       callback(null, 'success');
-    })
+    });
   }, 1000);
+}　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+// 　◆◆◆◆◆◆　◆　　　　　　　　　◆　　◆　　　　　　　　　◆　　　　　　　　　　　◆　　◆　　　　　
+// 　　　　　◆　　◆　　　　　　　　　◆　　◆　　　　　　　　　◆　　　　　　　　◆◆◆　　　◆　　　　　
+// 　◆◆◆　◆　　◆◆◆◆　　　◆◆◆◆◆◆◆◆◆◆　　　　　◆◆◆◆◆◆◆　　　　　◆　　　◆◆◆◆◆　
+// 　◆　◆　◆　　◆　　◆　　　◆　　◆　　◆　　◆　　　　◆　　　　　　◆　　　　　◆　　◆　　　　◆　
+// 　◆◆◆　◆　◆　　◆　　　　◆　　◆　　◆　　◆　　　◆　◆　　　　◆　　　　◆◆◆◆◆　　◆　◆　　
+// 　　　　　　　　　　　　　　　◆　　◆　　◆　　◆　　　　　　◆　◆◆　　　　　　　◆　　　　◆　　　　
+// 　◆◆◆◆◆◆　　◆　　　　　◆◆◆◆◆◆◆◆◆◆　　　　　　◆◆　　　　　　　　◆◆◆　◆　◆　◆　　
+// 　　　　　◆　　　◆　　　　　◆　　◆　　◆　　◆　　　　◆◆◆◆◆◆◆◆◆　　　◆◆　◆◆　◆　　◆　
+// 　◆◆◆　◆　　　◆　　　　　◆　　◆　　◆　　◆　　◆◆　◆　　　　　　◆　　◆　◆　　◆　◆　　◆　
+// 　◆　◆　◆　　◆　◆　　　　◆　　◆　　◆　　◆　　　　　◆　　　　　　◆　　　　◆　◆　　◆　　◆　
+// 　◆◆◆　◆　　◆　◆　　　　◆◆◆◆◆◆◆◆◆◆　　　　　◆◆◆◆◆◆◆◆　　　　◆　　　　◆　　　　
+// 　　　　◆◆　◆　　　◆　　　◆　　　　　　　　◆　　　　　◆　　　　　　◆　　　　◆　　　◆◆　 
+
+
+//获取歌曲名称
+getEmptyNameMusicList(1, 1000);
+var EMPTY_NAME_MUSIC_LIST = [];
+/**
+ * 获取空名称音乐列表
+ * 
+ * @param {any} pageIndex 
+ * @param {any} pageNum 
+ */
+function getEmptyNameMusicList(pageIndex, pageNum) {
+  DbHelper.getEmptyMusicList(pageIndex, pageNum,
+    result => {
+      if (result && result.length && pageIndex <= 10) {
+        //如果返回结果
+        for (var m = 0; m < result.length; m++) {
+          var element = result[m];
+          EMPTY_NAME_MUSIC_LIST.push(element);
+        }
+        console.log(pageIndex + "页面");
+        setTimeout(function() {
+          pageIndex++;
+          getEmptyNameMusicList(pageIndex, 1000);
+        }, 500);
+      } else {
+        //进行请求操作
+        getEmptyNameMusic(5);
+      }
+    })
 }
-// DbHelper.getHighQualityMusicList(function(result) {
-//   if (result) {
-//     console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-//     console.log(result.length);
-//     console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-//     var list = [];
-//     for (var index = 0; index < result.length; index++) {
-//       var element = result[index];
-//       list.push(element.mid);
-//     }
-//     console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-//     console.log(list.join(','));
-//     console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-//   }
-// });
+
+/**
+ * 开始批量抓取歌单详细信息
+ * 
+ * @param {any} asyncNum 每次操作的数量
+ */
+function getEmptyNameMusic(asyncNum) {
+  console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+  console.log("开始进行歌曲名称详情请求");
+  console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+  async.mapLimit(EMPTY_NAME_MUSIC_LIST, asyncNum,
+    (item, callback) => {
+      setTimeout(() => {
+        getSingleMusicName(item, callback);
+      }, 1000);
+    },
+    (err, result) => {
+      err && console.log(err);
+      !err && console.log("全部已下载完毕！");
+    });
+}
+
+/**
+ * 根据music相关信息进行某个歌曲的详情请求
+ * 
+ * @param {any} item 歌曲信息
+ * @param {any} callback 回调
+ */
+function getSingleMusicName(item, callback) {
+  var musicId = item.mid; //歌曲ID
+  var id = item.id; //主键 
+  setTimeout(
+    () => {
+      nodegrass.get(
+        "http://localhost:9999/song/detail?ids=" + musicId,
+        data => {
+          try {　　
+            let json_data = JSON.parse(data);
+            item.name = (json_data.songs && json_data.songs.length > 0) ? json_data.songs[0].name : ""; //名称
+            item.author = (json_data.songs && json_data.songs.length > 0 && json_data.songs[0].ar && json_data.songs[0].ar.length > 0) ? json_data.songs[0].ar[0].name : ""; //作者
+            if (item.name || item.author) {
+              //添加信息到数据库中
+              DbHelper.updateMusicName(item)
+            } else {
+              //查询不到的信息删除
+              DbHelper.deleteMusicById(item.id);
+            }
+            callback(null, 'success');
+          } catch (error) {　　
+            console.log(error);　　
+          }
+        }).on('error', function(e) {
+        console.log("Got error: " + e.message);
+        callback(null, 'success');
+      })
+    }, 1000);
+
+}
+
+/**
+ * 生成随机数（不包含起止点）
+ * 
+ * @param {any} start 起点
+ * @param {any} end 终点
+ */
+function radomNum(start, end) {
+  end = start > end ? [start, start = end][0] : end; //保证End最大  
+  return parseInt(Math.random() * (end - start) + start + 1);
+}
+
+
+// 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+// 　　　　　　◆　　　　　　　　◆　　　　　　　　　　　◆　　　　　◆　　　　　　　◆◆◆◆◆◆◆◆◆　　
+// 　◆◆◆◆◆◆◆◆◆◆◆　　　　◆　　◆◆◆◆◆　　　　◆　　　　◆　　　　　　　◆　　　◆　　　◆　　
+// 　　　　　　　　　　　　　　　　　　　　　◆　　　　　　　　　　◆　◆　　　　　　◆　　　　◆　　◆　　
+// 　　　◆◆◆◆◆◆◆　　　　　　　　◆　　◆　　◆　　　　　　◆　　　◆　　　　◆◆◆◆◆◆◆◆◆◆◆　
+// 　　　◆　　　　　◆　　　　◆◆◆　　◆　◆　　◆　　◆◆　◆　　　　　◆◆　　　◆　　　◆　　　◆　　
+// 　　　◆◆◆◆◆◆◆　　　　　　◆　　◆　◆　◆　　　　◆　　◆　　　　　　　　　◆◆◆◆◆◆◆◆◆　　
+// 　　　　　　　　　　　　　　　　◆　　　　◆　　　　　　◆　　◆　　　◆　　　　　◆　　　◆　　　◆　　
+// 　◆◆◆◆◆◆◆◆◆◆◆　　　　◆　◆◆◆◆◆◆◆　　　◆　　◆　◆◆　　　　　　◆◆◆◆◆◆◆◆◆　　
+// 　◆　　　　　　　　　◆　　　　◆　　　　◆　　　　　　◆　　◆◆　　　　　　　　　　　　◆　　　　　　
+// 　◆　　◆◆◆◆◆　　◆　　　　◆◆　　　◆　　　　　　◆　　◆　　　　◆　　　　◆◆◆◆◆◆◆◆◆　　
+// 　◆　　◆　　　◆　　◆　　　　◆　　　　◆　　　　　　◆◆　◆　　　　◆　　　　　　　　◆　　　　　　
+// 　◆　　◆◆◆◆◆　◆◆　　　　　　　　　◆　　　　　　◆　　　◆◆◆◆◆　　　◆◆◆◆◆◆◆◆◆◆◆　
+
+
+// getHighCommentMusicList(50000, 100000);
+/**
+ * 获取高评论量歌曲
+ * 
+ * @param {any} from 最低值
+ * @param {any} to 最高值
+ */
+function getHighCommentMusicList(from, to) {
+  DbHelper.getHighQualityMusicList(
+    from,
+    to,
+    result => {
+      if (result) {
+        console.log("当前获取到的数据有" + result.length + "条");
+        var list = [];
+        for (var index = 0; index < result.length; index++) {
+          var element = result[index];
+          list.push(element.mid);
+        }
+        console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+        console.log(list.join(','));
+        console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+
+      }
+    });
+}
 
 
 // nodegrass.get("http://localhost:9999/login/cellphone?phone=18222603560&password=ma18222603560", function(data) {
