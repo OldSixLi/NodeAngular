@@ -164,8 +164,8 @@ function getPlayListDetail(playListHref, callback) {
 // 　　　　◆◆　◆　　　◆　　　◆　　　　　　　　◆　　　　　　　　　◆　　　　　　◆　　　◆◆◆◆◆　　
 
 //获取歌曲评论
-// getMusicList(1, 1000);
-// var MUSICLIST = [];
+getMusicList(1, 1000);
+var MUSICLIST = [];
 
 /**
  * 获取空评论列表并抓取数据填充进数据库中
@@ -256,7 +256,7 @@ function getSingleMusicComment(item, callback) {
 
 
 //获取歌曲名称
-getEmptyNameMusicList(1, 1000);
+// getEmptyNameMusicList(1, 1000);
 var EMPTY_NAME_MUSIC_LIST = [];
 /**
  * 获取空名称音乐列表
@@ -280,7 +280,7 @@ function getEmptyNameMusicList(pageIndex, pageNum) {
         }, 500);
       } else {
         //进行请求操作
-        getEmptyNameMusic(5);
+        getEmptyNameMusic(3);
       }
     })
 }

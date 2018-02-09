@@ -10,7 +10,11 @@
   </head>
 
   <body>
-    <div id="main" style="width:3000px;height:3000px;"></div>
+
+    <button class="button-balanced" id="save">save</button>
+    <div id="main" style="width:4000px;height:4000px;"></div>
+
+    <img src="" id="save_img" />
 
     <script src='./../Script/jquery-1.9.1.js'></script>
     <script src="/Script/echarts.js"></script>
@@ -74,6 +78,32 @@
           alert("提示", "请求服务失败,请重试!");
         }
       });
+
+
+
+      function convertCanvasToImage(canvas) {
+        var image = new Image();
+        image.src = canvas.toDataURL("image/png");
+        return image;
+      }
+
+      // setTimeout(() => {
+      //   var canvas = document.getElementById("main");
+      //   convertCanvasToImage(canvas);
+      // }, 5000);
+
+
+      var butSave = document.getElementById("save");
+      butSave.onclick = function() {
+        var canvas = document.getElementsByTagName("canvas")[0];
+        /* 
+         * 传入对应想要保存的图片格式的mime类型 
+         * 常见：image/png，image/gif,image/jpg,image/jpeg 
+         */
+        var img = document.getElementById("save_img");
+        var tempSrc = canvas.toDataURL("image/png");
+        img.src = tempSrc;
+      };
     </script>
 
   </body>

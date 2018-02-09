@@ -162,7 +162,7 @@
   * @returns 
   */
  function getUser() {
-   let sql = "select id,userid,nickname as name ,level from music_users order by level limit 0,500";
+   let sql = "select id,userid,nickname as name ,level from music_users order by level limit 0,2000";
    //返回一个promise对象才可以调用then等函数
    return new Promise(function(resolve, reject) {
      client.query(sql,
@@ -249,7 +249,11 @@
  function getEmptyCommentMusicList(pageInedx, pageNum, next) {
    var start = (pageInedx - 1) * pageNum;
    var end = pageNum;
-   var sql = "select id,mid from music where comment=0  LIMIT " + start + "," + pageNum;
+   //  之前查询的评论为0的歌曲列表
+   //  var sql = "select id,mid from music where comment=0  LIMIT " + start + "," + pageNum;
+   //更新歌曲评论
+   var sql = "select id,mid from music order by comment desc LIMIT " + start + "," + pageNum;
+   //  'SELECT id, mid FROM music ORDER BY comment DESC LIMIT 0 ,100'
    client.query(sql, function(err, result) {
      if (!err) {
        next(result);
@@ -258,6 +262,8 @@
      }
    });
  }
+
+
  /**
   * 获取数据库中歌曲名为空的数据
   * 
@@ -296,7 +302,7 @@
        console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
        return;
      }
-     console.log('名称：' + getfullStr(item.id) + ",▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇歌曲名:" + item.name + '--' + item.author);
+     console.log('名称：' + getfullStr(item.id) + ",▇▇▇▇▇▇歌曲名:" + item.name + '--' + item.author);
    });
  }
  /**
@@ -322,13 +328,15 @@
   * @param {any} model 
   */
  function updateMusic(model) {
-   var sql = "update music set comment=" + model.total + "  where id=" + model.id + " and comment=0";
+   var sql = "update music set comment=" + model.total + "  where id=" + model.id;
    client.query(sql, function(err, result) {
      if (err) {
        console.log('[INSERT ERROR] - ', err.message);
        return;
+     } else {
+       console.log('名称：' + getfullStr(model.id) + ",▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇评论量:" + model.total);
+       //  console.log(result);
      }
-     console.log('名称：' + getfullStr(model.id) + ",▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇评论量:" + model.total);
    });
  }
  /**
