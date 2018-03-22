@@ -1,0 +1,81 @@
+<!-- 马少博  创建于 2018年3月5日16:54:06 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='https://raw.githubusercontent.com/OldSixLi/ListPage/master/public/images/my.ico' />
+    <title> 轮播</title>
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <style>
+      ul.block {
+        display: block;
+        padding: 0;
+        margin: 0;
+      }
+      
+      ul.block li {
+        width: 500px;
+        height: 500px;
+        float: left;
+        list-style: none;
+      }
+      
+      ul.block li img {
+        width: 500px;
+        height: 500px;
+      }
+      
+      .cont {
+        width: 500px;
+        height: 500px;
+        /* overflow: hidden; */
+        border: 1px solid #ddd;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="cont">
+      <ul class="block">
+        <li><img src="./../images/lunbo/a1 (1).jpg" alt=""></li>
+        <li><img src="./../images/lunbo/a1 (2).jpg" alt=""></li>
+        <li><img src="./../images/lunbo/a1 (3).jpg" alt=""></li>
+        <li><img src="./../images/lunbo/a1 (4).jpg" alt=""></li>
+        <li><img src="./../images/lunbo/a1 (5).jpg" alt=""></li>
+      </ul>
+    </div>
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+    <script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+    <script>
+      $(document).ready(function() {
+        var length = $('.block li').length;
+        console.log(length);
+        var img_width = $('.block li').width();
+        $('.block').width(img_width * length);
+        move(0);
+
+        function move(index) {
+
+          $('.block').animate({
+            marginLeft: 0 - img_width * index
+          }, 1000, function() {
+            var dom = $('.block li').eq(index).clone();
+            $('.block li').eq(index).remove();
+            $(".block").append(dom);
+            $(".block").css({
+              marginLeft: "0"
+            });
+            setTimeout(() => {
+              move(index)
+            }, 1000);
+          });
+        }
+
+      });
+    </script>
+  </body>
+
+</html>

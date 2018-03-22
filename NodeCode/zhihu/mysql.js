@@ -226,7 +226,6 @@
   */
  function finds(questionId, next) {
    if (questionId) {
-
      var userAddSql = 'select * from  Answers where QuestrionId="' + questionId + '"';
      client.query(userAddSql, function(err, result) {
        if (!err) {

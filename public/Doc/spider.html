@@ -112,18 +112,27 @@
 
         $("#container").on('click', 'img', function() {
           var src = $(this).attr('src');
+          var width = $(this).get(0).naturalWidth;
+          var height = $(this).get(0).naturalHeight;
+          var isHor = (width / height) > 1 //是否属于横向图片
           console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-          console.log(src);
+          console.log(width + '======' + height);
+          console.log(isHor);
           console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-          tool.confirm("图片详情", "<img src='" + src + "' style='width:100%' class='img-responsive img-thumbnail'>", function() {
-            // \images\zhihu_Down\55952517\147075281--8--4200211_r.jpg
-            var arr = src.split('zhihu_Down\\')[1].split('\\');
-            var queId = arr[0]; //问题ID
-            var ansId = arr[1].split('--')[0] //回答ID
-            var url = "https://www.zhihu.com/question/" + queId + "/answer/" + ansId;
-            // alert(answerId);
-            window.open(url);
-          }, function() {});
+          tool.confirm(
+            "图片详情",
+            "<img src='" + src + "' style='width:100%' class='img-responsive img-thumbnail'>",
+            function() {
+              // \images\zhihu_Down\55952517\147075281--8--4200211_r.jpg
+              var arr = src.split('zhihu_Down\\')[1].split('\\');
+              var queId = arr[0]; //问题ID
+              var ansId = arr[1].split('--')[0] //回答ID
+              var url = "https://www.zhihu.com/question/" + queId + "/answer/" + ansId;
+              // alert(answerId);
+              window.open(url);
+            },
+            function() {},
+            isHor);
         })
       });
 
@@ -173,7 +182,8 @@
         }
       }
 
-
+      // https://cdn.bootcss.com/jquery-confirm/3.2.3/jquery-confirm.min.js"
+      // https://cdn.bootcss.com/jquery-confirm/3.2.3/jquery-confirm.min.css
       var JSTOOL = function() {
         /* 弹窗 */
         this.alert = function(title, content, callback, className) {
@@ -201,15 +211,18 @@
             }]
           });
         };
-
-
-        this.confirm = function(title, content, okCallback, cancelCallback) {
+        this.confirm = function(title, content, okCallback, cancelCallback, isHor) {
           var confirm = okCallback && typeof okCallback === "function" ? okCallback : function() {};
           var cancel = cancelCallback && typeof cancelCallback === "function" ? cancelCallback : function() {};
+          var className = isHor ? 'col-md-10 col-md-offset-1' : 'col-md-8 col-md-offset-2';
+          console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+          console.log(className);
+          console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
           $.confirm({
             title: title,
             content: content,
             type: 'green',
+            columnClass: className,
             buttons: {
               ok: {
                 text: "查看原答案",
