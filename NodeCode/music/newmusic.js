@@ -12,6 +12,7 @@ const path = require('path');
 const io = require('socket.io')();
 const DbHelper = require('F:/PersonCodes/NodeAngular项目/NodeCode/zhihu/mysql.js');
 const async = require('async');
+// const fs = require('fs');
 
 let SPIDER_INDEX = 1; //抓取到的数量
 let PAYLIST_INDEX = 0; //可用的歌单
@@ -29,7 +30,7 @@ let PAYLIST_ARR = [];　　　　　　　　　　　　　　　　　　　�
 // 　◆　◆　◆　　◆　◆　　　　　　　　◆　　　　　　　　◆　　◆　◆　　◆　　　◆◆◆◆◆　　　◆　　　
 // 　◆◆◆　◆　　◆　◆　　　　　　　　◆　　　　　　　　◆　　◆　◆　　◆　　　　　　　◆　　◆　◆　　
 // 　　　　◆◆　◆　　　◆　　　　　　　◆　　　　　　　◆◆　◆　　◆　　　◆　　　　　　◆　◆　　　◆　　　　　　　　　　　　
-// getlist(1)
+// upVersionGetlist(0)
 /**
  * 抓取网易云音乐歌单页面
  * 
@@ -42,8 +43,12 @@ function getlist(index_num) {
     'http://music.163.com/discover/playlist/?order=hot&cat=%E5%8D%8E%E8%AF%AD&limit=35&offset=' + index_num * 35,
     (data, status, headers) => {
       var $ = cheerio.load(data);
+      console.log(data)
+      fs.writeFile(path.resolve(__dirname, "./a.txt"), data);
+      console.log($("#m-disc-pl-c #m-pl-container").html());
       var resultArr = $("#m-disc-pl-c #m-pl-container").find("li");
       if (resultArr.length > 0) {
+        console.log('调试结果:', resultArr.length);
         $("#m-disc-pl-c #m-pl-container").find("li").each(function(i, item) {
           let collectCount = $(this).find('.nb').text();
           let tenThousandNum = 0;
@@ -86,6 +91,59 @@ function getlist(index_num) {
       } else {
         console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
         console.log("当前待抓取歌单数量为:" + PAYLIST_ARR.length);
+        fs.writeFile(path.resolve(__dirname, "./a.txt"), "当前待抓取歌单数量为:" + PAYLIST_ARR.length)
+        console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+        beginGrapMusic(5);
+      }
+    });
+}
+
+function upVersionGetlist(index_num) {
+  nodegrass.get(
+    `http://localhost:9999/top/playlist/highquality?cat=%E7%B2%A4%E8%AF%AD&limit=30&offset=${index_num * 35}`,
+    (data, status, headers) => {
+
+      var resultArr = JSON.parse(data) && JSON.parse(data).playlists;
+      if (resultArr && resultArr.length > 0) {
+        console.log('调试结果:', resultArr.length);
+        resultArr.forEach(function(element, i, item) {
+          let collectCount = element.playCount; //播放次数
+          let tenThousandNum = Math.round(collectCount / 10000);
+          if (tenThousandNum > 0) {
+            console.log(tenThousandNum + "万");
+            // 声明歌单对象
+            let playListObj = {
+              name: "", //歌单名称
+              collectCount: "", //收藏量(w)
+              imgSrc: "", //歌单封面图片
+              href: "" //地址
+            };
+
+            let listHref = `http://localhost:9999/playlist/detail?id=${element.id}`;
+            let paylistUrl = `/playlist?id=${element.id}`;
+            playListObj.name = element.name;
+            playListObj.collectCount = tenThousandNum;
+            playListObj.imgSrc = element.coverImgUrl;
+            playListObj.href = paylistUrl;
+            playListObj.playId = element.id;
+
+            //数据库添加 
+            DbHelper.listAdd(playListObj);
+            //插入相关的列表数组
+            PAYLIST_ARR.push(listHref);
+          }
+        });
+
+        setTimeout(function() {
+          index_num++;
+          console.log("当前抓取的页面是:第" + index_num + "页面");
+          getlist(index_num);
+        }, 1000);
+
+      } else {
+        console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+        console.log("当前待抓取歌单数量为:" + PAYLIST_ARR.length);
+
         console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
         beginGrapMusic(5);
       }
@@ -164,7 +222,7 @@ function getPlayListDetail(playListHref, callback) {
 // 　　　　◆◆　◆　　　◆　　　◆　　　　　　　　◆　　　　　　　　　◆　　　　　　◆　　　◆◆◆◆◆　　
 
 //获取歌曲评论
-getMusicList(1, 1000);
+// getMusicList(1, 1000);
 var MUSICLIST = [];
 
 /**
@@ -256,7 +314,7 @@ function getSingleMusicComment(item, callback) {
 
 
 //获取歌曲名称
-// getEmptyNameMusicList(1, 1000);
+getEmptyNameMusicList(1, 1000);
 var EMPTY_NAME_MUSIC_LIST = [];
 /**
  * 获取空名称音乐列表
@@ -368,7 +426,6 @@ function radomNum(start, end) {
 // 　◆　　◆◆◆◆◆　　◆　　　　◆◆　　　◆　　　　　　◆　　◆　　　　◆　　　　◆◆◆◆◆◆◆◆◆　　
 // 　◆　　◆　　　◆　　◆　　　　◆　　　　◆　　　　　　◆◆　◆　　　　◆　　　　　　　　◆　　　　　　
 // 　◆　　◆◆◆◆◆　◆◆　　　　　　　　　◆　　　　　　◆　　　◆◆◆◆◆　　　◆◆◆◆◆◆◆◆◆◆◆　
-
 
 // getHighCommentMusicList(50000, 100000);
 /**

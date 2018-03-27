@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+      .bg {
+        background: #000;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      
+      ol,
+      ul {
+        list-style: none;
+      }
+      
+      #play {
+        width: 800px;
+        height: 532px;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      #play #ul {
+        position: absolute;
+      }
+      
+      #play #ul li {
+        float: left;
+      }
+      
+      #play #ul li img {
+        width: 800px;
+        height: 532px;
+      }
+      
+      #play #ol {
+        width: 100px;
+        position: absolute;
+        top: 500px;
+        left: 360px;
+      }
+      
+      #play #ol li {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        float: left;
+        margin: 3px;
+        border: 1px solid red;
+      }
+      
+      #play #prev {
+        display: none;
+        border: none;
+        position: absolute;
+        top: 250px;
+        width: 30px;
+        font-size: 40px;
+        left: 15px;
+        background: rgba(0, 0, 0, 0.5)
+      }
+      
+      #play #next {
+        display: none;
+        border: none;
+        position: absolute;
+        top: 250px;
+        width: 30px;
+        font-size: 40px;
+        right: 15px;
+        background: rgba(0, 0, 0, 0.5)
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="play">
+      <ul id="ul">
+        <li><img src="./../images/lunbo/a1 (1).jpg" alt=""></li>
+        <li><img src="./../images/lunbo/a1 (2).jpg" alt=""></li>
+        <li><img src="./../images/lunbo/a1 (3).jpg" alt=""></li>
+        <li><img src="./../images/lunbo/a1 (4).jpg" alt=""></li>
+      </ul>
+      <ol id="ol">
+        <li class="bg"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ol>
+      <button id="prev"><</button>
+      <button id="next">></button>
+    </div>
+    <script src='http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js'></script>
+    <script>
+      // 获取第一个图片 节点对象
+      var firstImg = $('#ul li').first().clone();
+      // 放在 ul 的最后
+      $('#ul').append(firstImg).width($('#ul li').length * $('#ul img').width());
+
+      var i = 0;
+
+      var timer;
+
+      autoPlay();
+
+      // 下一张
+      $('#next').click(function() {
+        i++;
+        moveImg(i);
+      })
+
+
+      // 上一张
+      $('#prev').click(function() {
+        i--;
+        moveImg(i);
+      })
+
+
+      // auto play
+      function autoPlay() {
+        timer = setInterval(function() {
+          i++;
+          moveImg(i);
+        }, 1000);
+
+      }
+
+
+      function moveImg(num) {
+        // 如果是最后一张图片我们怎么办
+        if (i == $('#ul li').length) {
+          i = 1;
+          $('#ul').css({
+            left: 0
+          });
+        }
+
+        // 是第一张
+        if (i == -1) {
+          i = $('#ul li').length - 2;
+          //<debug>
+          console.log('调试结果:', i);
+          //</debug>
+          $('#ul').css({
+            left: ($('#ul li').length - 1) * -800
+          });
+        }
+
+        // 移动图片
+        $('#ul').stop().animate({
+          left: i * -800
+        }, 400);
+
+        // 换小点的标记
+        if (i == ($('#ul li').length - 1)) {
+          $('#ol li').eq(0).addClass('bg').siblings().removeClass('bg');
+        } else {
+          $('#ol li').eq(i).addClass('bg').siblings().removeClass('bg');
+        }
+      }
+
+
+      $('#play').mouseover(function() {
+        $('#prev').show();
+        $('#next').show();
+        clearInterval(timer);
+      }).mouseout(function() {
+        $('#prev').hide();
+        $('#next').hide();
+        autoPlay();
+      })
+
+
+      // 点击小图标 跳转到指定的页面
+      $('#ol li').click(function() {
+        i = $(this).index();
+        moveImg(i);
+      })
+    </script>
+  </body>
+
+</html>
