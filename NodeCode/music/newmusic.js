@@ -352,6 +352,7 @@ function getEmptyNameMusic(asyncNum) {
   console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
   console.log("开始进行歌曲名称详情请求");
   console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+  // async.parallelLimit
   async.mapLimit(EMPTY_NAME_MUSIC_LIST, asyncNum,
     (item, callback) => {
       setTimeout(() => {
