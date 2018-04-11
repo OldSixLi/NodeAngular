@@ -70,58 +70,83 @@ function start() {
       )
     });
   }
-
-
-  //获取到cookie后 利用cookie收藏
   login(data, cookie).then((cookie) => {
-    // console.log('调试结果:', cookie);
-    var resultArr = [];
-    var SUM = 0;
-    for (let index = 1; index <= Math.ceil(arrayList.length / 50); index++) {
-      const arr = arrayList.slice((index - 1) * 50, index * 50);
-      (function(arr, index) {
-        let data = {
-          op: "add",
-          pid: 2153018777,
-          tracks: arr.join(','),
-          trackIds: JSON.stringify(arr),
-          csrf_token: ''
-        }
-        setTimeout(() => {
-          createWebAPIRequest(
-            'music.163.com',
-            '/weapi/playlist/manipulate/tracks?csrf_token=99be488f956715ac55a581399a691a1f',
-            'POST',
-            data,
-            cookie,
-            music_req => {
-              //如果成功收藏
-              if ((JSON.parse(music_req).code - 0) == 200) {
-                console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-                console.log(JSON.parse(music_req).trackIds);
-                console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-                resultArr.push.apply(resultArr, JSON.parse(JSON.parse(music_req).trackIds));
-                SUM++; //成功一次加一次
-                console.log('调试结果:', SUM);
-              }
-              if (SUM == Math.ceil(arrayList.length / 50)) {
-                console.log('调试结果:', "开始存储" + resultArr.join(','));
-                let diffArr = difference(arrayList, resultArr);
-                console.log('因版权限制无法添加的歌单列表为:', diffArr);
-                fs.appendFile(path.resolve(__dirname, "./musicListErr.txt"), '成功添加的歌单ID列表为\r\n' + resultArr.join(',') + '\r\n因版权限制无法添加的歌单列表为:\r\n' + diffArr.join(','));
-              }
-            },
-            err => {
-              console.log("fail");
-              fs.writeFile(path.resolve(__dirname, "./musicListErr.txt"), data.tracks + ',');
-            }
-          );
-        }, 2000 * index);
-
-      })(arr, index);
+    console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+    console.log(cookie);
+    console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+    let param = {
+      artistid: 6452
     }
-
+    createWebAPIRequest(
+      'music.163.com',
+      '/weapi/discovery/simiArtist?csrf_token=0b999d5580ebb3e955227767478aa513',
+      'POST',
+      param,
+      cookie,
+      (music_req, cookie) => {
+        // resolve(cookie);
+        console.log(music_req);
+      },
+      err => {
+        // reject(err);
+        console.log(err);
+      }
+    )
   });
+
+  /**
+   * 获取到cookie后 利用cookie收藏 
+   * @returns 
+   */
+  // login(data, cookie).then((cookie) => {
+  //   // console.log('调试结果:', cookie);
+  //   var resultArr = [];
+  //   var SUM = 0;
+  //   for (let index = 1; index <= Math.ceil(arrayList.length / 50); index++) {
+  //     const arr = arrayList.slice((index - 1) * 50, index * 50);
+  //     (function(arr, index) {
+  //       let data = {
+  //         op: "add",
+  //         pid: 2153018777,
+  //         tracks: arr.join(','),
+  //         trackIds: JSON.stringify(arr),
+  //         csrf_token: ''
+  //       }
+  //       setTimeout(() => {
+  //         createWebAPIRequest(
+  //           'music.163.com',
+  //           '/weapi/playlist/manipulate/tracks?csrf_token=99be488f956715ac55a581399a691a1f',
+  //           'POST',
+  //           data,
+  //           cookie,
+  //           music_req => {
+  //             //如果成功收藏
+  //             if ((JSON.parse(music_req).code - 0) == 200) {
+  //               console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  //               console.log(JSON.parse(music_req).trackIds);
+  //               console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  //               resultArr.push.apply(resultArr, JSON.parse(JSON.parse(music_req).trackIds));
+  //               SUM++; //成功一次加一次
+  //               console.log('调试结果:', SUM);
+  //             }
+  //             if (SUM == Math.ceil(arrayList.length / 50)) {
+  //               console.log('调试结果:', "开始存储" + resultArr.join(','));
+  //               let diffArr = difference(arrayList, resultArr);
+  //               console.log('因版权限制无法添加的歌单列表为:', diffArr);
+  //               fs.appendFile(path.resolve(__dirname, "./musicListErr.txt"), '成功添加的歌单ID列表为\r\n' + resultArr.join(',') + '\r\n因版权限制无法添加的歌单列表为:\r\n' + diffArr.join(','));
+  //             }
+  //           },
+  //           err => {
+  //             console.log("fail");
+  //             fs.writeFile(path.resolve(__dirname, "./musicListErr.txt"), data.tracks + ',');
+  //           }
+  //         );
+  //       }, 2000 * index);
+
+  //     })(arr, index);
+  //   }
+
+  // });
 
 }
 

@@ -222,7 +222,7 @@ function getPlayListDetail(playListHref, callback) {
 // 　　　　◆◆　◆　　　◆　　　◆　　　　　　　　◆　　　　　　　　　◆　　　　　　◆　　　◆◆◆◆◆　　
 
 //获取歌曲评论
-// getMusicList(1, 1000);
+getMusicList(1, 1000);
 var MUSICLIST = [];
 
 /**
@@ -286,6 +286,7 @@ function getMusic(asyncNum) {
 function getSingleMusicComment(item, callback) {
   var musicId = item.mid; //歌曲ID
   var id = item.id; //主键
+  // var name = item.name;
   setTimeout(function() {
     nodegrass.get(
       "http://localhost:9999/comment/music?id=" + musicId + '&limit=1&offset=2',
@@ -314,7 +315,7 @@ function getSingleMusicComment(item, callback) {
 
 
 //获取歌曲名称
-getEmptyNameMusicList(1, 1000);
+// getEmptyNameMusicList(1, 1000);
 var EMPTY_NAME_MUSIC_LIST = [];
 /**
  * 获取空名称音乐列表

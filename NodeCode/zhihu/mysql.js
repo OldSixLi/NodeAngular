@@ -249,7 +249,7 @@
    var start = (pageInedx - 1) * pageNum;
    var end = pageNum;
    //  之前查询的评论为0的歌曲列表
-   var sql = "select id,mid from music where comment=0  LIMIT " + start + "," + pageNum;
+   var sql = "select id,mid,name from music where comment=0  LIMIT " + start + "," + pageNum;
    //更新歌曲评论
    //  var sql = "select id,mid from music order by comment desc LIMIT " + start + "," + pageNum;
    //  'SELECT id, mid FROM music ORDER BY comment DESC LIMIT 0 ,100'
@@ -333,7 +333,8 @@
        console.log('[INSERT ERROR] - ', err.message);
        return;
      } else {
-       console.log('名称：' + getfullStr(model.id) + ",▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇评论量:" + model.total);
+       console.log('歌曲:《' + model.name + '》歌曲ID： ' + getfullStr(model.mid) + "评论量:" + model.total + ' 成功加入歌单');
+       console.log("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ");
        //  console.log(result);
      }
    });
