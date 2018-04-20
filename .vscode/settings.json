@@ -1,5 +1,6 @@
 {
   "eslint.enable": false,
   "tslint.enable": false,
-  "jshint.enable": false
+  "jshint.enable": false,
+  "es6-css-minify.minifyOnSave": false
 }

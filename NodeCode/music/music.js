@@ -29,9 +29,7 @@ function getlist(num) {
   nodegrass.get('http://music.163.com/discover/playlist/?order=hot&cat=%E5%85%A8%E9%83%A8&limit=35&offset=' + num * 35, function(data, status, headers) {
     var $ = cheerio.load(data);
     var resultArr = $("#m-disc-pl-c #m-pl-container").find("li");
-
     $("#m-disc-pl-c #m-pl-container").find("li").each(function(i, item) {
-
       var playListObj = {
         name: "",
         collectCount: "",
@@ -52,12 +50,10 @@ function getlist(num) {
         playListObj.href = paylistUrl;
         playListObj.playId = paylistUrl.split('id=')[1];
         DbHelper.listAdd(playListObj); //数据库添加 
-
       }
     })
   });
 }
-
 var LISTARR = [];
 
 function listarr() {

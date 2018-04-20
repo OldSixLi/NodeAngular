@@ -34,7 +34,7 @@ console.log(clc.bgWhiteBright.bgBlueBright('Text in red') + "LLLLLLLLLLLL");
 // console.log(clc.erase.lineLeft);
 
 function tolist(element, index) {
-  console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+  console.log("↓↓");
   console.log(element + ';;' + index);
   console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
 }
