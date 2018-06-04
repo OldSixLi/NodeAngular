@@ -57,7 +57,6 @@ function getlist(index_num) {
           }
           if (tenThousandNum > 0) {
             console.log(tenThousandNum + "万");
-
             // 声明歌单对象
             let playListObj = {
               name: "", //歌单名称
@@ -143,7 +142,6 @@ function upVersionGetlist(index_num) {
       } else {
         console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
         console.log("当前待抓取歌单数量为:" + PAYLIST_ARR.length);
-
         console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
         beginGrapMusic(5);
       }

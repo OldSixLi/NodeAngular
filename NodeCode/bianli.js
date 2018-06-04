@@ -83,3 +83,9 @@ function normalStr(str, length) {
     console.log(error);
   }
 }
+
+
+const arr = ['a', 'b', 'c'];
+for (const [index, elem] of arr.entries()) {
+  console.log(`index = ${index}, elem = ${elem}`);
+}

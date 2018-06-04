@@ -18,6 +18,7 @@ node_modules/
 *.lnk
 public/images/zhihu_Down
 public/images/upload
+NodeCode/async-zhihu/img
 # =========================
 # Operating System Files
 # =========================
