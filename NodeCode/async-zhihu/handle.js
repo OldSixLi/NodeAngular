@@ -99,6 +99,18 @@ class Handle {
   };
 
   /**
+   * 替换某个字符串为另外一个字符串函数
+   * 
+   * @param {any} bigStr  全部字符
+   * @param {any} str1 被替换的字符
+   * @param {any} str2 新字符
+   * @returns 新的字符串
+   */
+  static replaceAll(bigStr, str1, str2) { //把bigStr中的所有str1替换为str2
+    var reg = new RegExp(str1, 'gm');
+    return bigStr.replace(reg, str2);
+  };
+  /**
    *下载图片
    *
    * @static
@@ -108,6 +120,8 @@ class Handle {
    * @memberof Handle
    */
   static startDownloadTask(imgSrc, dirName, anstitle) {
+    dirName = this.replaceAll(dirName, '.jpg', '.gif')
+    imgSrc = this.replaceAll(imgSrc, '.jpg', '.gif')
     let self = this;
     //返回一个promise对象才可以调用then等函数
     return new Promise(function(resolve, reject) {
