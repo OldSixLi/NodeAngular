@@ -10,6 +10,9 @@ let Handler = require('./handle');
 let path = require('path');
 let fs = require("fs");
 
+let START_INDEX = 10; //从第几页开始请求
+let PAGE_COUNT = 10; //每次爬虫处理多少页
+
 getPage("https://www.zhihu.com/question/30502941").then(data => CircleGetAnswer(data));
 
 /*
@@ -62,8 +65,8 @@ async function CircleGetAnswer(pageInfo) {
   //创建目录
   let filePath = path.resolve(__dirname, './img/' + anstitle);
   Handler.createDir(filePath);
-  let startIndex = 0;
-  for (var json_index = startIndex; json_index < startIndex + 10; json_index++) {
+
+  for (var json_index = START_INDEX; json_index < START_INDEX + PAGE_COUNT; json_index++) {
     console.log(`index:${json_index}□□□□□□□□□`);
     await getAnswer(json_index, questionId, anstitle).then(async data => {
       for (let i = 0; i < data.length; i++) {
@@ -75,17 +78,19 @@ async function CircleGetAnswer(pageInfo) {
   };
 }
 async function ansList(obj, filePath, anstitle) {
-  for (let i = 0; i < obj.imgList.length; i += 2) {
-    let img = obj.imgList[i];
-    let img1 = obj.imgList[i + 1] || "";
-    let imgName = path.basename(img);
-    await Promise.all([
-        Handler.startDownloadTask(img, filePath + "\\" + obj.answerId + '--' + i + '--' + imgName.substr(-10), anstitle, true),
-        Handler.startDownloadTask(img1, filePath + "\\" + obj.answerId + '--' + (i + 1) + '--' + imgName.substr(-10), anstitle, true),
-      ]).then(() => { console.log("②②②②②②②②②②②完成俩②②②②②②②②②②②②"); }, (err) => {
-        console.log(err);
-      })
-      // await Handler.startDownloadTask(img, filePath + "\\" + obj.answerId + '--' + i + '--' + imgName.substr(-10), anstitle, true);
+  if (obj.imgList.length > 0) {
+    for (let i = 0; i < obj.imgList.length; i += 2) {
+      let img = obj.imgList[i];
+      let img1 = obj.imgList[i + 1] || "";
+      let imgName = path.basename(img);
+      await Promise.all([
+          Handler.startDownloadTask(img, filePath + "\\" + obj.answerId + '--' + i + '--' + imgName.substr(-10), anstitle, true),
+          Handler.startDownloadTask(img1, filePath + "\\" + obj.answerId + '--' + (i + 1) + '--' + imgName.substr(-10), anstitle, true),
+        ]).then(() => { console.log("②②②②②②②②②②②完成俩②②②②②②②②②②②②"); }, (err) => {
+          console.log(err);
+        })
+        // await Handler.startDownloadTask(img, filePath + "\\" + obj.answerId + '--' + i + '--' + imgName.substr(-10), anstitle, true);
+    }
   }
 }
 
