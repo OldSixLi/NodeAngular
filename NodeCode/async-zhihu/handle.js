@@ -111,23 +111,24 @@ class Handle {
     return bigStr.replace(reg, str2);
   };
   /**
-   *下载图片
-   *
+   * 下载图片
    * @static
    * @param {*} imgSrc 图片网络地址
    * @param {*} dirName 存储目录
    * @param {*} anstitle 问题名称
+   * @param {boolean} [isGif=false] 是否为Gif
+   * @returns
    * @memberof Handle
    */
-  static startDownloadTask(imgSrc, dirName, anstitle) {
-    dirName = this.replaceAll(dirName, '.jpg', '.gif')
-    imgSrc = this.replaceAll(imgSrc, '.jpg', '.gif')
+  static startDownloadTask(imgSrc, dirName, anstitle, isGif = false) {
+    if (isGif) {
+      dirName = this.replaceAll(dirName, '.jpg', '.gif')
+      imgSrc = this.replaceAll(imgSrc, '.jpg', '.gif')
+    }
     let self = this;
     //返回一个promise对象才可以调用then等函数
     return new Promise(function(resolve, reject) {
       setTimeout(() => {
-
-
         if (imgSrc.indexOf('http') !== -1) {
           //回调
           // let req = https.request(imgSrc, this.getHttpReqCallback(imgSrc, dirName, anstitle));
@@ -161,8 +162,10 @@ class Handle {
             reject("超时请求");
           });
           req.end();
+        } else {
+          reject("不存在值")
         };
-      }, 500);
+      }, 0);
     });
   };
   /**
