@@ -11,14 +11,14 @@ let fs = require("fs");
 var cheerio = require('cheerio');
 
 let START_INDEX = 0; //从第几页开始请求
-let PAGE_COUNT = 10; //每次爬虫处理多少页
+let PAGE_COUNT = 1; //每次爬虫处理多少页
 let IS_GIF = false; //是否为GIF格式下载
 let MIN_DIANZAN = 0; //最小点赞数
 let USER_INPUT = "41710758"; //用户输入内容
 
 //开始调用方法
-getPage(isNaN(USER_INPUT) ? USER_INPUT : `https://www.zhihu.com/question/${USER_INPUT}`).
-then(data => CircleGetAnswer(data), err => { console.log(err); });
+// getPage(isNaN(USER_INPUT) ? USER_INPUT : `https://www.zhihu.com/question/${USER_INPUT}`).
+// then(data => CircleGetAnswer(data), err => { console.log(err); });
 
 /*
 ███╗   ███╗███████╗████████╗██╗  ██╗ ██████╗ ██████╗ ███████╗
@@ -68,20 +68,27 @@ async function CircleGetAnswer(pageInfo) {
     questionId = pageInfo.questionId,
     anstitle = pageInfo.anstitle;
   //创建目录
-  let filePath = path.resolve(__dirname, './img/' + anstitle);
-  Handler.createDir(filePath);
   for (var json_index = START_INDEX; json_index < START_INDEX + PAGE_COUNT; json_index++) {
-    var data = await getAnswer(json_index, questionId, anstitle);
+    console.log("1");
+    var data = await getAnswer(json_index, 1);
     for (let i = 0; i < data.length; i++) {
-      await ansList(data[i], filePath, anstitle); // 针对每个回答的图片进行处理
+      let filePath = path.resolve(__dirname, './img/摄影/' + data[i].userName + '-' + data[i].answerId);
+      Handler.createDir(filePath);
+      try {　　
+        var imgList = await getImg2(data[i]);
+        for (var j = 0; j < imgList.length; j++) {
+          await Handler.startDownloadTask(imgList[j], filePath + '/' + data[i].userName + j + imgList[j].substr(-14, 11), data[i].userName, IS_GIF);
+        }
+      } catch (error) {　　
+        console.log(error);　　
+      }
+
     }
   };
 }
 
-
-/** 
+/**
  * 分页获取当前问题的答案
- *
  * @param {*} index
  * @param {*} questionId
  * @param {*} anstitle
@@ -102,6 +109,8 @@ function getAnswer(index, questionId, anstitle) {
     })
   });
 }
+
+CircleGetAnswer(1)
 
 /**
  * 下载单个答案中的图片
@@ -135,37 +144,47 @@ function parseResult(data) {
   let dataObj = JSON.parse(data);
   let $ = cheerio.load(data);
   //遍历JSON操作
-  if (dataObj.msg.length > 0) {
-    let msgArr = dataObj.msg;
+  if (dataObj.data && dataObj.data.length > 0) {
+    let arr = dataObj.data;
     var ansList = [];
-    for (let i = 0; i < dataObj.msg.length; i++) {
+
+    for (let i = 0; i < dataObj.data.length; i++) {
       //当前答案的点赞数量
-      let dianzanCount = $(msgArr[i]).find('.count').text();
-      if (dianzanCount >= MIN_DIANZAN) {
-        let answerId = $(msgArr[i]).find('.zm-item-rich-text').attr('data-entry-url');
-        answerId = answerId.substr(answerId.lastIndexOf('/') + 1);
-        let $imgDomList = $(msgArr[i]).find('.zm-editable-content').find("noscript").remove().end().find('img');
+      let obj = dataObj.data[i];
 
-        //输出当前答案的信息
-        console.log(`答案ID: ${answerId} ■■■ 点赞数： ${dianzanCount} ■■■ 图片数量： ${$imgDomList.length}`);
-
-        //处理每个答案的图片数量
-        let answerImgList = [];
-        $imgDomList.each(function(index, element) {
-          let imgUrl = Handler.handleImgUrl($(this).attr('data-original') || $(this).attr('data-actualsrc') || "");
-          answerImgList.push(imgUrl);
-        });
-
-        let ansObj = {
-          answerId: answerId,
-          dianzan: dianzanCount,
-          imgList: answerImgList
-        };
-        ansList.push(ansObj);
-      }
+      let ansObj = {
+        answerId: obj.id,
+        userName: obj.uploaderName,
+        imgUrl: `https://500px.me/community/tag?photoId=${obj.id}&startTime=&page=1&size=200&type=json`
+      };
+      ansList.push(ansObj);
     };
+
+    console.log("sss");
     return ansList;
   } else {
     return [];
   }
+}
+
+async function getImg2(obj) {
+  return new Promise(function(resolve, reject) {
+    nodegrass.get(obj.imgUrl, (data, status, headers) => {
+      if (data) {
+        resolve(parseResult2(data));
+      } else {
+        reject(`问题:答案获取失败,请检查程序`);
+      }
+    })
+  });
+}
+
+function parseResult2(data) {
+  var dataList = JSON.parse(data);
+  var arr = [];
+  dataList.forEach(obj => {
+    // console.log(obj.url.baseUrl + "!p5");
+    arr.push(obj.url.baseUrl + "!p5");
+  });
+  return arr;
 }

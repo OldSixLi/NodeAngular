@@ -8,7 +8,7 @@
  */
 /* jshint esversion: 6 */
 
-let https = require("http");
+let https = require("https");
 let fs = require("fs");
 let path = require('path');
 let colors = require('colors');
@@ -83,7 +83,7 @@ class Handle {
    * @memberof Handle
    */
   static getAnswerUrlByPageIndex(qId, index) {
-    return `https://www.zhihu.com/node/QuestionAnswerListV2?method=next&params={"url_token":${qId},"pagesize":10,"offset":${index * 10}}`;
+    return `https://500px.me/community/contest/cb9bea96466f4dc39f5d5fe2d927a5f8/photos?orderby=createdTime&type=json&page=${index+1}&size=20`;
   };
   /**
    * 获取处理后图片路径 
@@ -148,7 +148,7 @@ class Handle {
               fs.appendFile(dirName, totalBuff, err => {
                 if (err) {
                   reject(err);
-                  console.log(`路径：${imgSrc}获取答案出错' + err`);
+                  console.log(`路径：${imgSrc}获取答案出错:${err}`);
                 } else {
                   console.log(` ${++self.DOWNLOAD_INDEX_NUM} ■■ 问题:${anstitle}, ■■ 路径: ${dirName.substr(dirName.lastIndexOf('\\')+1)} ■■ download success！`);
                   resolve();
