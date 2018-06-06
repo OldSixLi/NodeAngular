@@ -150,7 +150,7 @@ class Handle {
                   reject(err);
                   console.log(`路径：${imgSrc}获取答案出错:${err}`);
                 } else {
-                  console.log(` ${++self.DOWNLOAD_INDEX_NUM} ■■ 问题:${anstitle}, ■■ 路径: ${dirName.substr(dirName.lastIndexOf('\\')+1)} ■■ download success！`);
+                  console.log(` ${++self.DOWNLOAD_INDEX_NUM} ■■ 标题:${anstitle}, ■■ 路径: ${dirName.substr(dirName.lastIndexOf('\\')+1)} ■■ download success！`);
                   resolve();
                 }
               });

@@ -10,7 +10,7 @@ let path = require('path');
 let fs = require("fs");
 var cheerio = require('cheerio');
 
-let START_INDEX = 0; //从第几页开始请求
+let START_INDEX = 2; //从第几页开始请求
 let PAGE_COUNT = 1; //每次爬虫处理多少页
 let IS_GIF = false; //是否为GIF格式下载
 let MIN_DIANZAN = 0; //最小点赞数
@@ -72,7 +72,8 @@ async function CircleGetAnswer(pageInfo) {
     console.log("1");
     var data = await getAnswer(json_index, 1);
     for (let i = 0; i < data.length; i++) {
-      let filePath = path.resolve(__dirname, './img/摄影/' + data[i].userName + '-' + data[i].answerId);
+      let filePath = path.resolve(__dirname, './img/摄影/' + data[i].userName);
+      // + '-' + data[i].answerId
       Handler.createDir(filePath);
       try {　　
         var imgList = await getImg2(data[i]);
@@ -111,11 +112,10 @@ function getAnswer(index, questionId, anstitle) {
 }
 
 CircleGetAnswer(1)
-
-/**
- * 下载单个答案中的图片
- * @returns 
- */
+  /**
+   * 下载单个答案中的图片
+   * @returns 
+   */
 async function ansList(obj, filePath, anstitle) {
   function getInfo(i) {
     return {

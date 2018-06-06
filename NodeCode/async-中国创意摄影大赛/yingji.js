@@ -1,6 +1,6 @@
 /*
  * @Author:马少博 (ma.shaobo@qq.com)
- * @note: async 版获取
+ * @note: 影集下载
  * @Last Modified by: 马少博
  * @Last Modified time:2018年6月4日11:26:56
  */
@@ -10,8 +10,8 @@ let path = require('path');
 let fs = require("fs");
 let cheerio = require('cheerio');
 
-const START_INDEX = 0; //从第几页开始请求
-const PAGE_COUNT = 10; //每次爬虫处理多少页
+const START_INDEX = 5; //从第几页开始请求
+const PAGE_COUNT = 1; //每次爬虫处理多少页
 const IS_GIF = false; //是否为GIF格式下载
 const MIN_DIANZAN = 0; //最小点赞数
 const USER_INPUT = "41710758"; //用户输入内容
@@ -25,28 +25,31 @@ startSpider();
  */
 async function startSpider(pageInfo) {
   for (let json_index = START_INDEX; json_index < START_INDEX + PAGE_COUNT; json_index++) {
-    let data = await getJSON('https://500px.me/community/contest/cb9bea96466f4dc39f5d5fe2d927a5f8/photos?orderby=createdTime&type=json&page=' + (json_index + 1) + '&size=20').then(data => JSON.parse(data).data);
+    let data = await getJSON(`https://500px.me/community/search/set?hasCover=1&orderby=rating&page=${json_index + 1}&size=20&type=json`).then(data => JSON.parse(data).data);
     for (let i = 0; i < data.length; i++) {
-      let obj = data[i];　
-      let url = `https://500px.me/community/tag?photoId=${obj.id}&startTime=&page=1&size=200&type=json`
-      let list = await getJSON(url).then(data => JSON.parse(data));
+      let obj = data[i];
+      let url = `https://500px.me/community/set/${obj.id}/photos?page=1&size=200&type=json`;
+      let filePath = `./img/影集/${Handler.handleTitle(obj.title)}`;
+      Handler.createDir(filePath);
+      let list = await getJSON(url).then(data => JSON.parse(data).data);
+      // Handler.log(list)
       let imgList = []
       Handler.createDir(`./img/临时存储`);
       list.forEach((element, index) => {
         imgList.push({
           url: element.url.baseUrl + '!p5',
-          path: path.resolve(__dirname, `./临时存储/${element.title}-${index}${element.url.baseUrl.substr(-10)}`),
+          path: path.resolve(__dirname, `${filePath}/${Handler.handleTitle(element.title)||"摄影"}-${index}-${element.url.baseUrl.substr(-10)}`),
           title: element.title
         });
       });
       try {　
         //并发抓取
-        await handleDown(imgList, 3);
+        await handleDown(imgList, 10);
       } catch (error) {　　
         console.log(`■■■当前捕捉到的错误为:\r\n${error}\r\n`);　　
       }
     }
-  };
+  }
 }
 
 
@@ -181,7 +184,7 @@ async function handleDown(list, num) {
     }
     try {　　
       await Promise.all(arr).then(
-        () => console.log(`✲✲✲✲✲✲✲✲✲完成 ${arr.length} 个✲✲✲✲✲✲✲✲✲✲✲`),
+        () => Handler.log(`✲✲✲✲✲✲✲✲✲完成 ${arr.length} 个✲✲✲✲✲✲✲✲✲✲✲`),
         err => console.log(err)
       );
     } catch (error) {　　
@@ -189,3 +192,11 @@ async function handleDown(list, num) {
     }
   }
 }
+
+// nodejs - 异常处理
+process.on('uncaughtException', function(err) {
+  //打印出错误
+  console.log(err);
+  //打印出错误的调用栈方便调试
+  console.log(err.stack);
+});
