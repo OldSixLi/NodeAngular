@@ -249,9 +249,9 @@
    var start = (pageInedx - 1) * pageNum;
    var end = pageNum;
    //  之前查询的评论为0的歌曲列表
-   var sql = "select id,mid,name from music where comment=0  LIMIT " + start + "," + pageNum;
+   //  var sql = "select id,mid,name from music where comment=0  LIMIT " + start + "," + pageNum;
    //更新歌曲评论
-   //  var sql = "select id,mid from music order by comment desc LIMIT " + start + "," + pageNum;
+   var sql = "select id,mid from music order by comment desc LIMIT " + start + "," + pageNum;
    //  'SELECT id, mid FROM music ORDER BY comment DESC LIMIT 0 ,100'
    client.query(sql, function(err, result) {
      if (!err) {
@@ -373,6 +373,7 @@
      }
      console.log('歌曲ID:▇▇▇▇▇▇▇▇' + model.id);
    });
+
    //   } else {
    //     console.log(model.id + '已存在此歌曲');
    //   }

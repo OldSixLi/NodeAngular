@@ -17,8 +17,9 @@ const MIN_DIANZAN = 0; //最小点赞数
 const USER_INPUT = "41710758"; //用户输入内容
 
 //开始调用方法
-startSpider();
+// startSpider();
 
+getJSON('https://music.163.com/discover/playlist/?cat=%E8%AF%B4%E5%94%B1', 'get').then(data => console.log(data));
 /**
  * 获取到问题基本信息后,开始遍历答案
  * @param {*} pageInfo 初步抓取页面获取到的信息

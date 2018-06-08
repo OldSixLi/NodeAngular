@@ -36,8 +36,8 @@ let arrayList = [
  * 
  */
 function start() {
-  const phone = '手机号'
-  const cookie = ''
+  const phone = '18222603560'
+  const cookie = 'ma1136191854.'
   const md5sum = crypto.createHash('md5')
   md5sum.update('密码')
   let data = {
@@ -84,11 +84,9 @@ function start() {
       param,
       cookie,
       (music_req, cookie) => {
-        // resolve(cookie);
         console.log(music_req);
       },
       err => {
-        // reject(err);
         console.log(err);
       }
     )
@@ -215,7 +213,6 @@ function createWebAPIRequest(
       }
     }
   )
-
 
   http_client.write(
     querystring.stringify({
