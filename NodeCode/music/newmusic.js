@@ -12,7 +12,6 @@ const path = require('path');
 const io = require('socket.io')();
 const DbHelper = require('F:/PersonCodes/NodeAngular项目/NodeCode/zhihu/mysql.js');
 const async = require('async');
-// const fs = require('fs');
 
 let SPIDER_INDEX = 1; //抓取到的数量
 let PAYLIST_INDEX = 0; //可用的歌单
@@ -93,6 +92,30 @@ function getlist(index_num) {
         beginGrapMusic(5);
       }
     });
+}
+
+
+
+
+
+/**
+ * 获取当天日期
+ * @param {规定只返回日期还是返回日期时间} dates
+ * @returns {}
+ */
+function getNowFormatDate(dates) {
+  var date = new Date(),
+    seperator1 = "-",
+    seperator2 = ":",
+    month = date.getMonth() + 1,
+    strDate = date.getDate();
+  if (month >= 1 && month <= 9)
+    month = "0" + month;
+  if (strDate >= 0 && strDate <= 9)
+    strDate = "0" + strDate;
+  //返回当前的日期（时间）
+  var currentdate = dates !== 'date' ? date.getFullYear() + seperator1 + month + seperator1 + strDate + " " + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds() : date.getFullYear() + seperator1 + month + seperator1 + strDate;
+  return currentdate;
 }
 
 function upVersionGetlist(index_num) {
