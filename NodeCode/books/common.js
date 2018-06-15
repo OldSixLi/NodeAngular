@@ -31,7 +31,7 @@ async function startSpider(pageInfo) {
 
   console.log(`文章名称:${TITLE}`);
 
-  let filePath = path.resolve(__dirname, `./${TITLE}.txt`); //存储目录
+  let filePath = path.resolve(__dirname, `./down/${TITLE}.txt`); //存储目录
   let htmlStr = '';
 
   for (let index = 0; index < data.length; index++) {
