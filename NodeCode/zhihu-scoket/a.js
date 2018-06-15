@@ -16,15 +16,15 @@ let IS_GIF = false; //是否为GIF格式下载
 let MIN_DIANZAN = 0; //最小点赞数
 let USER_INPUT = "266622943"; //用户输入内容
 
-
-//开始调用方法
-getPage(
-  isNaN(USER_INPUT) ?
-  USER_INPUT :
-  `https://www.zhihu.com/question/${USER_INPUT}`
-).
-then(data => CircleGetAnswer(data), err => { console.log(err); });
-
+function start(id, _scoket) {
+  //开始调用方法
+  getPage(
+    isNaN(USER_INPUT) ?
+    USER_INPUT :
+    `https://www.zhihu.com/question/${id}`
+  ).
+  then(data => CircleGetAnswer(data, _scoket), err => { console.log(err); });
+}
 /*
 ███╗   ███╗███████╗████████╗██╗  ██╗ ██████╗ ██████╗ ███████╗
 ████╗ ████║██╔════╝╚══██╔══╝██║  ██║██╔═══██╗██╔══██╗██╔════╝
@@ -68,12 +68,12 @@ function getPage(url) {
  * 获取到问题基本信息后,开始遍历答案
  * @param {*} pageInfo 初步抓取页面获取到的信息
  */
-async function CircleGetAnswer(pageInfo) {
+async function CircleGetAnswer(pageInfo, _scoket) {
   let ansCount = pageInfo.ansCount,
     questionId = pageInfo.questionId,
     anstitle = pageInfo.anstitle;
   //创建目录
-  let filePath = path.resolve(__dirname, './img/' + anstitle);
+  let filePath = path.resolve(__dirname, '../../public/images/zhihu_Down/' + anstitle);
   Handler.createDir(filePath);
   if (PAGE_COUNT == 0) {
     PAGE_COUNT = Math.ceil(pageInfo.ansCount / 10);
@@ -81,7 +81,7 @@ async function CircleGetAnswer(pageInfo) {
   for (var json_index = START_INDEX; json_index < START_INDEX + PAGE_COUNT; json_index++) {
     var data = await getAnswer(json_index, questionId, anstitle);
     for (let i = 0; i < data.length; i++) {
-      await ansList(data[i], filePath, anstitle); // 针对每个回答的图片进行处理
+      await ansList(data[i], filePath, anstitle, _scoket); // 针对每个回答的图片进行处理
     }
   };
 }
@@ -115,7 +115,7 @@ function getAnswer(index, questionId, anstitle) {
  * 下载单个答案中的图片
  * @returns 
  */
-async function ansList(obj, filePath, anstitle) {
+async function ansList(obj, filePath, anstitle, _scoket) {
   function getInfo(i) {
     return {
       url: obj.imgList[i] || "",
@@ -126,8 +126,8 @@ async function ansList(obj, filePath, anstitle) {
   if (obj.imgList.length > 0) {
     for (let i = 0; i < obj.imgList.length; i += 2) {
       await Promise.all([
-        Handler.startDownloadTask(getInfo(i).url, getInfo(i).path, anstitle, IS_GIF),
-        Handler.startDownloadTask(getInfo(i + 1).url, getInfo(i + 1).path, anstitle, IS_GIF),
+        Handler.startDownloadTask(getInfo(i).url, getInfo(i).path, anstitle, _scoket, IS_GIF),
+        Handler.startDownloadTask(getInfo(i + 1).url, getInfo(i + 1).path, anstitle, _scoket, IS_GIF),
       ]).
       then(() => console.log("✲✲✲✲✲✲✲✲✲完成两个✲✲✲✲✲✲✲✲✲✲✲"), err => console.log(err));
     }
@@ -177,3 +177,5 @@ function parseResult(data) {
     return [];
   }
 }
+
+exports.start = start;

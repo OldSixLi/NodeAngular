@@ -7,7 +7,7 @@
  */
 var io = require('socket.io')();
 var xssEscape = require('xss-escape');
-var answer = require('../NodeCode/zhihu/answer');
+var answer = require('../NodeCode/zhihu-scoket/a');
 var fileWatch = require('./watch');
 
 console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
@@ -27,9 +27,10 @@ io.on('connection', function(_socket) {
       fileWatch.watch(_socket, _nickname);
     } catch (error) {}
   });
+
   _socket.on('SpiderBegin', function(questionId) {
     try {
-      answer.getAnswer(questionId, _socket);
+      answer.start(questionId, _socket);
     } catch (error) {
       console.log(error);
     }
