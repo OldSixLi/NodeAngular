@@ -156,7 +156,6 @@ class Handle {
               });
             });
           });
-
           //报错
           req.on('error', function(error) { reject(error); });
           //超时
@@ -174,6 +173,75 @@ class Handle {
     });
   };
 
+
+  /**
+   * 并发下载文件
+   *
+   * @static
+   * @param {*} list 包含url,path,title属性
+   * @param {*} num 每次同时下载数量
+   * @memberof Handle
+   */
+  static async handleDown(list, num) {
+    Handler.log(`当前一共■■ ${list.length} ■■个文件,并发量为■■ ${num} ■■`);
+    for (let index = 0; index < list.length; index += num) {
+      let arr = [];
+      for (let i = 0; i < num; i++) {
+        let obj = list[index + i];
+        if (obj) {
+          arr.push(Handler.startDownloadTask(obj.url, obj.path, obj.title, IS_GIF));
+        }
+      }
+      try {　　
+        await Promise.all(arr).then(
+          () => console.log(`✲✲✲✲✲✲✲✲✲完成 ${arr.length} 个✲✲✲✲✲✲✲✲✲✲✲`),
+          err => console.log(err)
+        );
+      } catch (error) {　　
+        console.log(error);　　
+      }
+    }
+  }
+
+
+  /**
+   * 请求JSON时用到
+   *
+   * @param {*} { url = "", method = "post" } 传递地址和请求方式
+   * @returns
+   */
+  static getJSON(url = "", method = "post") {
+    //URL地址
+    return new Promise(function(resolve, reject) {
+      nodegrass[method](url, (data, status, headers) => {
+        if (data) {
+          resolve(data);
+        } else {
+          reject(`地址:${url}获取失败,请检查程序`);
+        }
+      })
+    });
+  }
+
+  /**
+   * 获取页面信息并返回
+   * @param {*} url 请求的页面地址
+   */
+  static getPage(url) {
+    //返回一个promise对象才可以调用then等函数
+    return new Promise(function(resolve, reject) {
+      let questionId = url.substr(url.lastIndexOf('/') + 1);
+      nodegrass.get(url, (data, status, headers) => {
+        if (!data) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
 }
 Handle.DOWNLOAD_INDEX_NUM = 0;
+
 module.exports = Handle;

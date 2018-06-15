@@ -1,6 +1,6 @@
 /*
  * @Author:马少博 (ma.shaobo@qq.com)
- * @note: async 版获取
+ * @note: async 版获取 纵横小说网免费小说下载
  * @Last Modified by: 马少博
  * @Last Modified time:2018年6月4日11:26:56
  */
@@ -15,8 +15,9 @@ let cheerio = require('cheerio');
 // const IS_GIF = false; //是否为GIF格式下载
 // const MIN_DIANZAN = 0; //最小点赞数
 // const USER_INPUT = "41710758"; //用户输入内容
+let TITLE = '';
+const BOOK_URL = 'http://book.zongheng.com/showchapter/97728.html';
 
-let filePath = path.resolve(__dirname, './catlog.txt'); //存储目录
 //开始调用方法
 startSpider();
 
@@ -25,22 +26,33 @@ startSpider();
  * @param {*} pageInfo 初步抓取页面获取到的信息
  */
 async function startSpider(pageInfo) {
-  let data = await getPage('http://www.wanjuanba.com/0/366/', true)
+  let data = await getPage(BOOK_URL)
     .then(data => parseBookPage(data));
+
+  console.log(`文章名称:${TITLE}`);
+
+  let filePath = path.resolve(__dirname, `./${TITLE}.txt`); //存储目录
   let htmlStr = '';
+
   for (let index = 0; index < data.length; index++) {
     const obj = data[index];
-    let word = await getPage(`http://www.wanjuanba.com/0/366/${obj.href}`, true)
+    let word = await getPage(obj.href)
       .then(
         data => parseSinglePage(data, obj.title),
         err => console.log(err)
       );
-    htmlStr += word;
-    if (index % 10 == 0) {
-      await appendFile(filePath, htmlStr);
-      htmlstr = '';
-    }
 
+    htmlStr += word;
+    //每十章存储一次,到不满十章的时候一次一存
+    if (index < data.length - 10) {
+      if (index % 10 == 0) {
+        await appendFile(filePath, htmlStr);
+        htmlStr = '';
+      }
+    } else {
+      await appendFile(filePath, htmlStr);
+      htmlStr = '';
+    }
   }
 }
 
@@ -87,12 +99,16 @@ function getPage(url, isGBK = false) {
 }
 
 function parseBookPage(data) {
+
   let $ = cheerio.load(data, { decodeEntities: false });
-  let $ul = $(data).find("#wjb_body ul");
-  console.log($ul.length);
+  let $ul = $(data).find(".booklist.tomeBean>table");
+  if (!TITLE) {
+    TITLE = $('.tc.txt').find('h1').text();
+  }
+  // console.log($ul.length);
   let htmlstr = '';
   let arr = [];
-  $ul.find('li a').each(function(index, element) {
+  $ul.find('td a').each(function(index, element) {
     arr.push({ href: $(element).attr('href'), title: $(element).text() });
   });
   return arr;
@@ -100,10 +116,15 @@ function parseBookPage(data) {
 
 
 async function parseSinglePage(data, title) {
-  console.log(`开始处理${title}`);
+  console.log(`■开始处理■■■■■${title}`);
   let $ = cheerio.load(data, { decodeEntities: false });
-  let word = $("#wjb_sbody #content").html();
-  let bookBody = title + '\r\n' + replaceAll(replaceAll(word, '&nbsp;&nbsp;&nbsp;&nbsp;', '　　'), '<br>', '\r\n') + '\r\n\r\n\r\n\r\n';
+  $("#readerFs").find('p').append('\r\n').prepend('　　');
+  let word = $("#readerFs").find('script').remove().end().text();
+  let bookBody =
+    `
+  ${title}
+  ${word}
+  `;
   return bookBody;
 }
 
