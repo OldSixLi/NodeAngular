@@ -50,6 +50,7 @@ class Handle {
     }
     return rs;
   };
+
   /**
    *创建目录
    * @static
@@ -114,7 +115,6 @@ class Handle {
   };
 
 
-
   /**
    * 下载图片
    * @static
@@ -150,12 +150,13 @@ class Handle {
                   reject(err);
                   console.log(`路径：${imgSrc}获取答案出错' + err`);
                 } else {
-                  console.log(dirName);
+                  // console.log(dirName);
                   console.log(` ${++self.DOWNLOAD_INDEX_NUM} ■■ 问题:${anstitle}, ■■ 路径: ${dirName.substr(dirName.lastIndexOf('\\')+1)} ■■ download success！`);
-                  resolve();
+
 
                   _scoket.emit('ImgData', dirName.substr(dirName.indexOf('public') + 6));
 
+                  resolve();
                   // var dirName = 'F:/PersonCodes/NodeAngular项目/NodeCode/zhihu-scoket/img'
                   // console.log(dirName.substr(dirName.indexOf('NodeCode/')));
                 }
