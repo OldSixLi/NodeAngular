@@ -24,11 +24,16 @@ startSpider();
  * 获取到问题基本信息后,开始遍历答案
  * @param {*} pageInfo 初步抓取页面获取到的信息
  */
+// http://xiaoguotu.to8to.com/list.php?a1=0&a2=0&a3=2&a4=&a5=&a6=&a7=&a8=2&a9=0&p=2
+// http://xiaoguotu.to8to.com/list.php?a1=0&a2=0&a3=2&a4=&a5=&a6=&a7=&a8=2&a9=0&p=1
+
+
+// getPage(``)
+
 async function startSpider(pageInfo) {
   for (let json_index = START_INDEX; json_index < START_INDEX + PAGE_COUNT; json_index++) {
     let data = await getJSON(`http://xiaoguotu.to8to.com/index/caselist/${json_index}`).
     then(data => JSON.parse(data).result);
-
     for (let i = 0; i < data.length; i++) {
       let obj = data[i];　
       let url = `http://xiaoguotu.to8to.com/case/list?a2=0&a12=&a11=${obj.oldCid}&a1=0&a17=1`
@@ -47,7 +52,6 @@ async function startSpider(pageInfo) {
           title: title
         });
       });
-
       try {　
         //并发抓取
         await handleDown(downList, 3);

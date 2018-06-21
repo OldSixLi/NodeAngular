@@ -8,7 +8,7 @@ var fs = require('fs');
 var path = require('path');
 
 //在此输入路径
-var reslovePath = "F:/个人相关文件/表情包/35242408—拥有丰富的表情包是一种什么样的体验是种怎样的体验？";
+var reslovePath = "F:/个人相关文件/表情包";
 var filesList = geFileList(reslovePath);
 filesList.sort(_sortHandler);
 
@@ -85,7 +85,7 @@ function normalStr(str, length) {
 }
 
 
-const arr = ['a', 'b', 'c'];
-for (const [index, elem] of arr.entries()) {
-  console.log(`index = ${index}, elem = ${elem}`);
-}
+// const arr = ['a', 'b', 'c'];
+// for (const [index, elem] of arr.entries()) {
+//   console.log(`index = ${index}, elem = ${elem}`);
+// }
