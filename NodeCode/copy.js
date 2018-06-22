@@ -1,7 +1,6 @@
 let fs = require('fs');
 let path = require('path');
 
-
 /**
  * 复制src目录中的所有文件
  *
@@ -9,17 +8,14 @@ let path = require('path');
  * @param {*} dst 新路径
  * @param {*} isIncludeChildDir 是否包含子目录(默认不包含)
  */
-let copy = function(src, dst, isIncludeChildDir = false) {
+let copy = (src, dst, isIncludeChildDir = false) => {
   let paths = fs.readdirSync(src); // 同步读取目录中的所有文件/目录
   //遍历文件
   paths.forEach(path => {
     let _src = src + '/' + path;
     let _dst = isIncludeChildDir ? (dst + '/' + path) : dst;
     fs.stat(_src, (err, st) => {
-      if (err) {
-        throw err;
-      }
-
+      if (err) { throw err; }
       // 判断是否为文件
       if (st.isFile()) {
         //如果完整映射 需去除此变量
@@ -33,22 +29,22 @@ let copy = function(src, dst, isIncludeChildDir = false) {
       }
     });
   });
-
 };
+
 /**
- * 注意此处如果想让目录一一对应,则需调整
+ * 注意此处如果想让目录一一对应,则需调整isFullCopy的值
  *
  * @param {*} src 被复制的路径
  * @param {*} dst 复制的路径
  * @param {*} isFullCopy 是否完整复制子路径
  */
-let startCopy = function(src, dst, isFullCopy = false) {
+let startCopy = (src, dst, isFullCopy = false) => {
   fs.exists(dst, function(exists) {
     // 已存在
     if (exists) {
       copy(src, dst, isFullCopy);
     }
-    // 不存在
+    // 不存在则创建此目录
     else {
       fs.mkdir(dst, function() {
         copy(src, dst, isFullCopy);
@@ -57,4 +53,5 @@ let startCopy = function(src, dst, isFullCopy = false) {
   });
 };
 
+//运行代码
 startCopy(path.resolve(__dirname, './tubatu/img2'), path.resolve(__dirname, './tubatu/ALL/'), false);
