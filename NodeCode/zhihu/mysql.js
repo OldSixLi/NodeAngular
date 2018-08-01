@@ -162,7 +162,7 @@
   * @returns 
   */
  function getUser() {
-   let sql = "select id,userid,nickname as name ,level from music_users order by level limit 0,2000";
+   let sql = "select id,userid,nickname as name ,level from music_users order by level limit 0,200";
    //返回一个promise对象才可以调用then等函数
    return new Promise(function(resolve, reject) {
      client.query(sql,
