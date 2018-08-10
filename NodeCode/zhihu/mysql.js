@@ -187,6 +187,10 @@
    var param = [model.playId, model.name, model.href, model.imgSrc, model.collectCount];
    //查
    client.query(findSql, function(err, result) {
+     if (err) {
+       console.log(err);
+       return;
+     }
      if (!err && result.length == 0) {
        //增 add
        client.query(sql, param, function(err, result) {
@@ -199,6 +203,10 @@
          console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n');
        });
      } else {
+       console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+       console.log(result);
+       console.log(model);
+       console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
        console.log(result.length + '个结果已存在');
      }
    });
@@ -250,8 +258,11 @@
    var end = pageNum;
    //  之前查询的评论为0的歌曲列表
    //  var sql = "select id,mid,name from music where comment=0  LIMIT " + start + "," + pageNum;
+
+   //2018年8月10日17:24:31 嘻哈
+   var sql = "select id,mid,name from music where createtime >'2018-06-18'and  comment=0  LIMIT " + start + "," + pageNum;
    //更新歌曲评论
-   var sql = "select id,mid,name from music order by comment desc LIMIT " + start + "," + pageNum;
+   //  var sql = "select id,mid,name from music order by comment desc LIMIT " + start + "," + pageNum;
    //  'SELECT id, mid FROM music ORDER BY comment DESC LIMIT 0 ,100'
    client.query(sql, function(err, result) {
      if (!err) {
@@ -378,10 +389,11 @@
    //     console.log(model.id + '已存在此歌曲');
    //   }
    // })
+   /*  delete from music
+   where mid  in(select mid from(select mid from  music  group by mid  having count(mid )>1) a)
+   and id not in (select id from(select min(id) as id from  music  group by mid  having count(mid )>1) b)
+   */
 
-   // delete from music
-   // where mid  in(select mid from(select mid from  music  group by mid  having count(mid )>1) a)
-   // and id not in (select id from(select min(id) as id from  music  group by mid  having count(mid )>1) b)
  }
 
  function deleteMusicById(id) {

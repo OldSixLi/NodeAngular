@@ -15,39 +15,34 @@ const async = require('async');
 
 let SPIDER_INDEX = 1; //抓取到的数量
 let PAYLIST_INDEX = 0; //可用的歌单
-let PAYLIST_ARR = [];　　　　　　　　　　　　　　　　　　　　　　　　　　
-// 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
-// 　◆◆◆◆◆◆　◆　　　　　　　◆　　　　　◆　　　　　◆　　　　　　　◆　　　　　　　　　　　　　　　
-// 　　　　　◆　　◆　　　　　　　　◆　　　◆　　　　　　◆　　◆◆◆◆◆　　　　◆◆◆◆◆◆　　　　　　
-// 　◆◆◆　◆　　◆◆◆◆　　　◆◆◆◆◆◆◆◆◆　　　　◆　　◆　◆　◆　　　　　◆　　◆　◆◆◆◆　　
-// 　◆　◆　◆　　◆　　◆　　　◆　　　◆　　　◆　　　◆◆◆　◆　◆　◆　　　　　◆　　◆　　◆　◆　　
-// 　◆◆◆　◆　◆　　◆　　　　◆◆◆◆◆◆◆◆◆　　　　◆　　◆　◆　◆　　　　　◆◆◆◆　　◆　◆　　
-// 　　　　　　　　　　　　　　　◆　　　◆　　　◆　　　　◆　　◆　◆　◆　　　　　◆　　◆　　◆　◆　　
-// 　◆◆◆◆◆◆　　◆　　　　　◆◆◆◆◆◆◆◆◆　　　　◆◆　◆　◆　◆　　　　　◆◆◆◆　　◆　◆　　
-// 　　　　　◆　　　◆　　　　　　　　　◆　　　　　　　◆◆　　◆　◆　◆　　　　　◆　　◆　　◆　◆　　
-// 　◆◆◆　◆　　　◆　　　　◆◆◆◆◆◆◆◆◆◆◆　　　◆　　◆　◆　◆　　　　　◆　　◆◆　　◆　　　
-// 　◆　◆　◆　　◆　◆　　　　　　　　◆　　　　　　　　◆　　◆　◆　　◆　　　◆◆◆◆◆　　　◆　　　
-// 　◆◆◆　◆　　◆　◆　　　　　　　　◆　　　　　　　　◆　　◆　◆　　◆　　　　　　　◆　　◆　◆　　
-// 　　　　◆◆　◆　　　◆　　　　　　　◆　　　　　　　◆◆　◆　　◆　　　◆　　　　　　◆　◆　　　◆　　　　　　　　　　　　
-upVersionGetlist(0)
+let PAYLIST_ARR = [];　　　　　
+
+/*
+:'######::'########::::'###::::'########::'########:
+'##... ##:... ##..::::'## ##::: ##.... ##:... ##..::
+ ##:::..::::: ##:::::'##:. ##:: ##:::: ##:::: ##::::
+. ######::::: ##::::'##:::. ##: ########::::: ##::::
+:..... ##:::: ##:::: #########: ##.. ##:::::: ##::::
+'##::: ##:::: ##:::: ##.... ##: ##::. ##::::: ##::::
+. ######::::: ##:::: ##:::: ##: ##:::. ##:::: ##::::
+:......::::::..:::::..:::::..::..:::::..:::::..:::::
+*/
+　　　　　　
+// upVersionGetlist(0)
 
 
 function upVersionGetlist(index_num) {
-  nodegrass.get(
-    `http://localhost:9999/top/playlist?order=new&limit=30&offset=${index_num * 35}`,
+  nodegrass.post(
+    `http://localhost:9999/top/playlist/highquality?order=new&limit=30&offset=${index_num * 35}&cat=%E8%AF%B4%E5%94%B1`,
     (data, status, headers) => {
-      // console.log(data);
       var resultArr = JSON.parse(data) && JSON.parse(data).playlists;
-      console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-      console.log(index_num);
-      console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-      if (resultArr && resultArr.length > 0 && index_num < 20) {
+      if (resultArr && resultArr.length > 0 && index_num < 5) {
         console.log('调试结果:', resultArr.length);
         resultArr.forEach(function(element, i, item) {
           let collectCount = element.playCount; //播放次数
           let tenThousandNum = 1;
           if (tenThousandNum > 0) {
-            console.log(tenThousandNum + "万");
+            // console.log(tenThousandNum + "万");
             // 声明歌单对象
             let playListObj = {
               name: "", //歌单名称
@@ -55,7 +50,7 @@ function upVersionGetlist(index_num) {
               imgSrc: "", //歌单封面图片
               href: "" //地址
             };
-
+            console.log(`${element.name}-${tenThousandNum}万`);
             let listHref = `http://localhost:9999/playlist/detail?id=${element.id}`;
             let paylistUrl = `/playlist?id=${element.id}`;
             playListObj.name = element.name;
@@ -143,22 +138,19 @@ function getPlayListDetail(playListHref, callback) {
     }, 1000);
 }
 
-
-// 　◆◆◆◆◆◆　◆　　　　　　　　　◆　　◆　　　　　　◆　　　　　　　　　　　◆　　　　　◆　　　　　
-// 　　　　　◆　　◆　　　　　　　　　◆　　◆　　　　　　　◆　　◆◆◆◆◆　　　　◆　　　　◆　　　　　
-// 　◆◆◆　◆　　◆◆◆◆　　　◆◆◆◆◆◆◆◆◆◆　　　　　　　　　◆　　　　　　　　　　◆　◆　　　　
-// 　◆　◆　◆　　◆　　◆　　　◆　　◆　　◆　　◆　　　　　　◆　　◆　　◆　　　　　　◆　　　◆　　　
-// 　◆◆◆　◆　◆　　◆　　　　◆　　◆　　◆　　◆　　◆◆◆　　◆　◆　　◆　　◆◆　◆　　　　　◆◆　
-// 　　　　　　　　　　　　　　　◆　　◆　　◆　　◆　　　　◆　　◆　◆　◆　　　　◆　　◆　　　　　　　
-// 　◆◆◆◆◆◆　　◆　　　　　◆◆◆◆◆◆◆◆◆◆　　　　◆　　　　◆　　　　　　◆　　◆　　　◆　　　
-// 　　　　　◆　　　◆　　　　　◆　　◆　　◆　　◆　　　　◆　◆◆◆◆◆◆◆　　　◆　　◆　◆◆　　　　
-// 　◆◆◆　◆　　　◆　　　　　◆　　◆　　◆　　◆　　　　◆　　　　◆　　　　　　◆　　◆◆　　　　　　
-// 　◆　◆　◆　　◆　◆　　　　◆　　◆　　◆　　◆　　　　◆◆　　　◆　　　　　　◆　　◆　　　　◆　　
-// 　◆◆◆　◆　　◆　◆　　　　◆◆◆◆◆◆◆◆◆◆　　　　◆　　　　◆　　　　　　◆◆　◆　　　　◆　　
-// 　　　　◆◆　◆　　　◆　　　◆　　　　　　　　◆　　　　　　　　　◆　　　　　　◆　　　◆◆◆◆◆　　
+/*
+:'######:::'#######::'##::::'##:'##::::'##:'########:'##::: ##:'########:
+'##... ##:'##.... ##: ###::'###: ###::'###: ##.....:: ###:: ##:... ##..::
+ ##:::..:: ##:::: ##: ####'####: ####'####: ##::::::: ####: ##:::: ##::::
+ ##::::::: ##:::: ##: ## ### ##: ## ### ##: ######::: ## ## ##:::: ##::::
+ ##::::::: ##:::: ##: ##. #: ##: ##. #: ##: ##...:::: ##. ####:::: ##::::
+ ##::: ##: ##:::: ##: ##:.:: ##: ##:.:: ##: ##::::::: ##:. ###:::: ##::::
+. ######::. #######:: ##:::: ##: ##:::: ##: ########: ##::. ##:::: ##::::
+:......::::.......:::..:::::..::..:::::..::........::..::::..:::::..:::::
+*/
 
 //获取歌曲评论
-// getMusicList(1, 1000);
+getMusicList(1, 1000);
 var MUSICLIST = [];
 
 /**
