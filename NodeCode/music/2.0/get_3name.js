@@ -10,7 +10,7 @@ const mysql = require('mysql');
 const Q = require('q');
 const path = require('path');
 const io = require('socket.io')();
-const DbHelper = require('./../zhihu/mysql.js');
+const DbHelper = require('./../../zhihu/mysql.js');
 const async = require('async');
 
 let SPIDER_INDEX = 1; //抓取到的数量
@@ -28,79 +28,84 @@ let PAYLIST_ARR = [];　　　　　
 :......::::::..:::::..:::::..::..:::::..:::::..:::::
 */
 　　　　　　
-// upVersionGetlist(0)
+// playList(0);
+
+// function playList(str) { console.log(str); }
 
 
-function upVersionGetlist(index_num) {
+
+
+// playListSet(0)
+
+function playListSet(index_page_num) {
+  console.log(index_page_num);
   nodegrass.post(
-    `http://localhost:9999/top/playlist/highquality?order=new&limit=30&offset=${index_num * 35}&cat=%E8%AF%B4%E5%94%B1`,
-    (data, status, headers) => {
-      var resultArr = JSON.parse(data) && JSON.parse(data).playlists;
-      if (resultArr && resultArr.length > 0 && index_num < 5) {
-        console.log('调试结果:', resultArr.length);
-        resultArr.forEach(function(element, i, item) {
-          let collectCount = element.playCount; //播放次数
-          let tenThousandNum = 1;
-          if (tenThousandNum > 0) {
-            // console.log(tenThousandNum + "万");
-            // 声明歌单对象
-            let playListObj = {
-              name: "", //歌单名称
-              collectCount: "", //收藏量(w)
-              imgSrc: "", //歌单封面图片
-              href: "" //地址
-            };
-            console.log(`${element.name}-${tenThousandNum}万`);
-            let listHref = `http://localhost:9999/playlist/detail?id=${element.id}`;
-            let paylistUrl = `/playlist?id=${element.id}`;
-            playListObj.name = element.name;
-            playListObj.collectCount = tenThousandNum;
-            playListObj.imgSrc = element.coverImgUrl;
-            playListObj.href = paylistUrl;
-            playListObj.playId = element.id;
+    `http://localhost:9999/top/playlist/highquality?limit=30&offset=${index_page_num * 35}&cat=%E8%AF%B4%E5%94%B1`,
+    (data, err) => {
+      let resultArr = [];
+      //获取数据
+      try {　　
+        resultArr = JSON.parse(data) && JSON.parse(data).playlists;
+      } catch (error) {　　
+        console.log(error);　　
+      }
 
-            //数据库添加 
-            DbHelper.listAdd(playListObj);
-            //插入相关的列表数组
-            PAYLIST_ARR.push(listHref);
-          }
+      if (resultArr.length > 0 && index_page_num < 20) {
+        console.log(`第【${index_page_num}】页,有 #${resultArr.length}# 条结果`);
+
+        //遍历数组
+        resultArr.forEach(element => {
+          // 声明歌单对象
+          let playListObj = {
+            playId: element.id,
+            name: element.name || "", //歌单名称
+            collectCount: element.playCount || 0, //收藏量(w)
+            imgSrc: element.coverImgUrl || "", //歌单封面图片
+            href: `/playlist?id=${element.id}` //地址
+          };
+
+          console.log(`歌单【${element.name}】---- 播放量:${element.playCount}万`);
+
+          DbHelper.listAdd(playListObj); //数据库添加 
+
+          PAYLIST_ARR.push(`http://localhost:9999/playlist/detail?id=${element.id}`); //插入相关的列表数组
         });
-
+        //抓取
         setTimeout(function() {
-          index_num++;
-          console.log("当前抓取的页面是:第" + index_num + "页面");
-          upVersionGetlist(index_num);
-        }, 1000);
+          index_page_num++;
+          playListSet(index_page_num);
+        }, 3000);
 
       } else {
-        console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-        console.log("当前待抓取歌单数量为:" + PAYLIST_ARR.length);
-        console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-        beginGrapMusic(5);
+        console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+        console.log(`当前待抓取歌单数量为: ${PAYLIST_ARR.length}`);
+        console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+        //开始处理歌单
+        // startResolvePlayListArr(5);
       }
     });
 }
+
 
 /**
  * 开始处理歌单列表(每次处理num条)
  * 
  * @param {any} asyncNum  每次下载多少
  */
-function beginGrapMusic(asyncNum) {
+function startResolvePlayListArr(asyncNum) {
   async.mapLimit(
     PAYLIST_ARR,
     asyncNum,
     (href, callback) => {
-      setTimeout(function() {
+      setTimeout(() => {
         //开始获取歌单详情
         getPlayListDetail(href + "&timestamp=" + new Date().getTime(), callback);
       }, 10000);
     },
-    (err, result) => {
+    err => {
       if (err) {
         console.log(err);
       } else {
-        //console.log(result);//会输出一个有上万个“successful”字符串的数组
         console.log("全部已下载完毕！");
       }
     });
@@ -120,11 +125,22 @@ function getPlayListDetail(playListHref, callback) {
         playListHref,
         data => {
           if (data) {
-            var payListJson = JSON.parse(data);
+            var payListJson = {};
+            try {　　
+              payListJson = JSON.parse(data);
+            } catch (error) {　　
+              console.log(error);　　
+            }
+
             //存储歌曲信息进music表
             for (var songIndex = 0; songIndex < payListJson.privileges.length; songIndex++) {
               var musicObj = payListJson.privileges[songIndex];
-              var model = { id: musicObj.id, collectid: playID, name: "", comment: "" };
+              var model = {
+                id: musicObj.id,
+                collectid: playID,
+                name: "",
+                comment: ""
+              };
               //数据库添加 
               DbHelper.musicAdd(model);
               SPIDER_INDEX++;
@@ -137,7 +153,73 @@ function getPlayListDetail(playListHref, callback) {
         });
     }, 1000);
 }
+/*
+'########::'##::::::::::'###::::'##:::'##:'##:::::::'####::'######::'########:
+ ##.... ##: ##:::::::::'## ##:::. ##:'##:: ##:::::::. ##::'##... ##:... ##..::
+ ##:::: ##: ##::::::::'##:. ##:::. ####::: ##:::::::: ##:: ##:::..::::: ##::::
+ ########:: ##:::::::'##:::. ##:::. ##:::: ##:::::::: ##::. ######::::: ##::::
+ ##.....::: ##::::::: #########:::: ##:::: ##:::::::: ##:::..... ##:::: ##::::
+ ##:::::::: ##::::::: ##.... ##:::: ##:::: ##:::::::: ##::'##::: ##:::: ##::::
+ ##:::::::: ########: ##:::: ##:::: ##:::: ########:'####:. ######::::: ##::::
+..:::::::::........::..:::::..:::::..:::::........::....:::......::::::..:::::
+*/
+// getHipHop()
 
+async function getHipHop() {
+  let playIdList = await DbHelper.getHipHop();
+  console.log(playIdList.length + "个歌单");
+  //循环遍历歌单
+  for (let i = 0; i < playIdList.length; i++) {
+
+    await playList(playIdList[i].playid).then(
+      data => {
+        console.log(`第${i}条处理结果是:■■■■【 ${data} 】■■■■`);
+        console.log();
+      }
+    );
+  }
+}
+
+
+async function playList(playId) {
+  // let playId = 2119440255;
+  // console.log(playId);
+  let playUrl = `http://localhost:9999/playlist/detail?id=${playId}`
+  return new Promise(function(resolve, reject) {
+    nodegrass.get(playUrl, data => {
+      // console.log(data);
+      let playObj = {};
+      try {　　
+        playObj = data && JSON.parse(data);
+      } catch (error) {　　
+        console.log(error);　　
+      }
+      let musicArr = playObj.privileges || [];
+      if (musicArr.length > 0) {
+        // let sql = "INSERT INTO music (name, address) VALUES ?";
+        let musicObjArr = [];
+        musicArr.forEach(musicObj => musicObjArr.push([musicObj.id, "", "", playId, getNowFormatDate()]));
+
+        DbHelper.multiAddMusic(musicObjArr)
+          .then(
+            data => {
+
+              console.log(`歌单【${playObj.playlist.name}】--- # ${data.affectedRows} #条数据已插入数据库中`);
+              resolve("处理完成")
+
+
+            },
+            err => {
+              console.log(`歌单【${playObj.playlist.name}】出现错误:${err}`);
+              resolve(`歌单【${playObj.playlist.name}】插入数据库出现错误:${err}`)
+            }
+          )
+      } else {
+        resolve(`${playId}--Empty Value`)
+      }
+    })
+  });
+}
 /*
 :'######:::'#######::'##::::'##:'##::::'##:'########:'##::: ##:'########:
 '##... ##:'##.... ##: ###::'###: ###::'###: ##.....:: ###:: ##:... ##..::
@@ -150,7 +232,7 @@ function getPlayListDetail(playListHref, callback) {
 */
 
 //获取歌曲评论
-getMusicList(1, 1000);
+// getMusicList(1, 1000);
 var MUSICLIST = [];
 
 /**
@@ -228,19 +310,16 @@ function getSingleMusicComment(item, callback) {
     });
   }, 1000);
 }　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
-// 　◆◆◆◆◆◆　◆　　　　　　　　　◆　　◆　　　　　　　　　◆　　　　　　　　　　　◆　　◆　　　　　
-// 　　　　　◆　　◆　　　　　　　　　◆　　◆　　　　　　　　　◆　　　　　　　　◆◆◆　　　◆　　　　　
-// 　◆◆◆　◆　　◆◆◆◆　　　◆◆◆◆◆◆◆◆◆◆　　　　　◆◆◆◆◆◆◆　　　　　◆　　　◆◆◆◆◆　
-// 　◆　◆　◆　　◆　　◆　　　◆　　◆　　◆　　◆　　　　◆　　　　　　◆　　　　　◆　　◆　　　　◆　
-// 　◆◆◆　◆　◆　　◆　　　　◆　　◆　　◆　　◆　　　◆　◆　　　　◆　　　　◆◆◆◆◆　　◆　◆　　
-// 　　　　　　　　　　　　　　　◆　　◆　　◆　　◆　　　　　　◆　◆◆　　　　　　　◆　　　　◆　　　　
-// 　◆◆◆◆◆◆　　◆　　　　　◆◆◆◆◆◆◆◆◆◆　　　　　　◆◆　　　　　　　　◆◆◆　◆　◆　◆　　
-// 　　　　　◆　　　◆　　　　　◆　　◆　　◆　　◆　　　　◆◆◆◆◆◆◆◆◆　　　◆◆　◆◆　◆　　◆　
-// 　◆◆◆　◆　　　◆　　　　　◆　　◆　　◆　　◆　　◆◆　◆　　　　　　◆　　◆　◆　　◆　◆　　◆　
-// 　◆　◆　◆　　◆　◆　　　　◆　　◆　　◆　　◆　　　　　◆　　　　　　◆　　　　◆　◆　　◆　　◆　
-// 　◆◆◆　◆　　◆　◆　　　　◆◆◆◆◆◆◆◆◆◆　　　　　◆◆◆◆◆◆◆◆　　　　◆　　　　◆　　　　
-// 　　　　◆◆　◆　　　◆　　　◆　　　　　　　　◆　　　　　◆　　　　　　◆　　　　◆　　　◆◆　 
-
+/*
+'##::: ##::::'###::::'##::::'##:'########:
+ ###:: ##:::'## ##::: ###::'###: ##.....::
+ ####: ##::'##:. ##:: ####'####: ##:::::::
+ ## ## ##:'##:::. ##: ## ### ##: ######:::
+ ##. ####: #########: ##. #: ##: ##...::::
+ ##:. ###: ##.... ##: ##:.:: ##: ##:::::::
+ ##::. ##: ##:::: ##: ##:::: ##: ########:
+..::::..::..:::::..::..:::::..::........::
+*/
 
 //获取歌曲名称
 // getEmptyNameMusicList(1, 1000);
@@ -342,22 +421,18 @@ function radomNum(start, end) {
   return parseInt(Math.random() * (end - start) + start + 1);
 }
 
+/*
+'##::: ##:'####::'######::'########:
+ ###:: ##:. ##::'##... ##: ##.....::
+ ####: ##:: ##:: ##:::..:: ##:::::::
+ ## ## ##:: ##:: ##::::::: ######:::
+ ##. ####:: ##:: ##::::::: ##...::::
+ ##:. ###:: ##:: ##::: ##: ##:::::::
+ ##::. ##:'####:. ######:: ########:
+..::::..::....:::......:::........::
+*/
 
-// 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
-// 　　　　　　◆　　　　　　　　◆　　　　　　　　　　　◆　　　　　◆　　　　　　　◆◆◆◆◆◆◆◆◆　　
-// 　◆◆◆◆◆◆◆◆◆◆◆　　　　◆　　◆◆◆◆◆　　　　◆　　　　◆　　　　　　　◆　　　◆　　　◆　　
-// 　　　　　　　　　　　　　　　　　　　　　◆　　　　　　　　　　◆　◆　　　　　　◆　　　　◆　　◆　　
-// 　　　◆◆◆◆◆◆◆　　　　　　　　◆　　◆　　◆　　　　　　◆　　　◆　　　　◆◆◆◆◆◆◆◆◆◆◆　
-// 　　　◆　　　　　◆　　　　◆◆◆　　◆　◆　　◆　　◆◆　◆　　　　　◆◆　　　◆　　　◆　　　◆　　
-// 　　　◆◆◆◆◆◆◆　　　　　　◆　　◆　◆　◆　　　　◆　　◆　　　　　　　　　◆◆◆◆◆◆◆◆◆　　
-// 　　　　　　　　　　　　　　　　◆　　　　◆　　　　　　◆　　◆　　　◆　　　　　◆　　　◆　　　◆　　
-// 　◆◆◆◆◆◆◆◆◆◆◆　　　　◆　◆◆◆◆◆◆◆　　　◆　　◆　◆◆　　　　　　◆◆◆◆◆◆◆◆◆　　
-// 　◆　　　　　　　　　◆　　　　◆　　　　◆　　　　　　◆　　◆◆　　　　　　　　　　　　◆　　　　　　
-// 　◆　　◆◆◆◆◆　　◆　　　　◆◆　　　◆　　　　　　◆　　◆　　　　◆　　　　◆◆◆◆◆◆◆◆◆　　
-// 　◆　　◆　　　◆　　◆　　　　◆　　　　◆　　　　　　◆◆　◆　　　　◆　　　　　　　　◆　　　　　　
-// 　◆　　◆◆◆◆◆　◆◆　　　　　　　　　◆　　　　　　◆　　　◆◆◆◆◆　　　◆◆◆◆◆◆◆◆◆◆◆　
-
-// getHighCommentMusicList(50000, 100000);
+getHighCommentMusicList(100000, 10000000);
 /**
  * 获取高评论量歌曲
  * 
@@ -379,25 +454,32 @@ function getHighCommentMusicList(from, to) {
         console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
         console.log(list.join(','));
         console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-
+        loginC(list);
       }
     });
 }
 
 
-// nodegrass.get("http://localhost:9999/login/cellphone?phone=18222603560&password=ma18222603560", function(data) {
-//   if (data) {
-//     var jsondata = JSON.parse(data);
-//     console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-//     console.log(jsondata.profile.signature);
-//     console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-//   }
-// });
+function loginC(arr) {
+  nodegrass.get("http://localhost:9999/login/cellphone?phone=18222223333&password=ma18222223333", function(data) {
+    if (data) {
+      var jsondata = JSON.parse(data);
+      let cookie = jsondata.cookie;
+      nodegrass.get(`http://localhost:9999/playlist/tracks?op=add&pid=2361504712&tracks=${arr.join(',')}`, function(data) {
+        if (data) {
+          var jsondata = JSON.parse(data);
+          console.log(data)
+          console.log(jsondata.count);
+        }
+      }, { 'Cookie': cookie });
+    }
+  });
 
-// nodegrass.get("http://localhost:9999/playlist/tracks?op=add&pid=909675332&tracks=208889", function(data) {
-//   if (data) {
-//     var jsondata = JSON.parse(data);
-//     console.log(data)
-//     console.log(jsondata.count);
-//   }
-// });
+  // nodegrass.get("http://localhost:9999/playlist/tracks?op=add&pid=909675332&tracks=523251474,1297486087,1296583188,504017347,526307800,574566207,1294899063,478303470,33887645,28885472,518076124,507116418,443875380,520458481,1293951677,525278524,569214247,574921549,557584658", function(data) {
+  //   if (data) {
+  //     var jsondata = JSON.parse(data);
+  //     console.log(data)
+  //     console.log(jsondata.count);
+  //   }
+  // });
+}

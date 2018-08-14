@@ -30,6 +30,7 @@ filesList.forEach(x => {
 function geFileList(path) {
   var filesList = [];
   readFile(path, filesList);
+  console.log(path);
   return filesList;
 }
 

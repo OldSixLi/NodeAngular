@@ -175,17 +175,24 @@
        });
    });
  }
-
+ var NUMBERS = 0;
  /**
   * 歌单插入数据库
   * 
   * @param {any} model 
   */
  function musicPayListAdd(model) {
-   var findSql = "select * from paylist where playid=" + model.playId;
-   var sql = "insert  into paylist(playId,name,href,src,collectnum,createtime) values(?,?,?,?,?,NOW())";
-   var param = [model.playId, model.name, model.href, model.imgSrc, model.collectCount];
+   let findSql = "select * from paylist where playid=" + model.playId;
+   let sql = "insert  into paylist(playId,name,href,src,collectnum,createtime) values(?,?,?,?,?,NOW())";
+   let param = [
+     model.playId,
+     model.name,
+     model.href,
+     model.imgSrc,
+     model.collectCount
+   ];
    //查
+
    client.query(findSql, function(err, result) {
      if (err) {
        console.log(err);
@@ -198,18 +205,95 @@
            console.log('[INSERT ERROR] - ', err.message);
            return;
          }
-         console.log('~~~~~~~~~~~~~~~~~~~数据插入成功~~~~~~~~~~~~~~~~~~~~~~~');
-         console.log('名称：' + model.name);
-         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n');
+         console.log(`数据库插入歌单数据成功,歌单ID:${model.playId},歌单名称:${model.name}`);
        });
      } else {
-       console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-       console.log(result);
-       console.log(model);
-       console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-       console.log(result.length + '个结果已存在');
+       console.log(`${model.name}已经存在于歌单数据库表中`);
      }
    });
+ }
+
+
+ /**
+  * 歌单插入数据库
+  * 
+  * @param {any} modelList 
+  */
+ function multiPlayListAdd(modelList) {
+
+   //返回一个promise对象才可以调用then等函数
+   return new Promise(function(resolve, reject) {
+     let sql = "insert  into paylist(playId,name,href,src,collectnum,createtime) values ?";
+     let param = modelList;
+
+     //批量增 add
+     client.query(sql, [param], function(err, result) {
+       if (err) {
+         reject(err);
+       } else {
+         resolve(result);
+       }
+     });
+   });
+
+
+ }
+
+
+ function deleteRepeatPlayList() {
+   return new Promise(function(resolve, reject) {
+     let sql = `delete from paylist
+     where playid  in(select playid from(select playid from  paylist  group by playid  having count(playid )>1) a)
+     and id not in (select id from(select min(id) as id from  paylist  group by playid  having count(playid )>1) b)`;
+
+     //批量增 add
+     client.query(sql, function(err, result) {
+       if (err) {
+         reject(err);
+       } else {
+         resolve(result);
+       }
+     });
+   });
+ }
+
+ /**
+  * 数据库中日期大于2018-06-07的都是hiphop歌单
+  * 截止至2018年8月13日10:13:07 是这样
+  *
+  */
+ function getHipHopPlayList() {
+   return new Promise(function(resolve, reject) {
+     let sql = "select  playid from paylist where id>2471 and createtime<'2018-08-14'";
+     client.query(sql, function(err, result) {
+       if (!err) {
+         resolve(result);
+       } else {
+         resolve([]);
+       }
+     })
+   });
+
+ }
+
+
+
+ function multiAddMusic(musicArr) {
+   //  console.log(musicArr);
+   //返回一个promise对象才可以调用then等函数
+   return new Promise(function(resolve, reject) {
+     let sql = "INSERT INTO music (mid,name,author,comment,collectid,createtime) VALUES ?";
+     let param = musicArr;
+     // NOTE注意此处的param一定要被[]包裹起来
+     client.query(sql, [param], (err, result) => {
+       if (!err) {
+         resolve(result);
+       } else {
+         reject(err);
+       }
+     })
+   });
+
  }
 
  /**
@@ -260,7 +344,7 @@
    //  var sql = "select id,mid,name from music where comment=0  LIMIT " + start + "," + pageNum;
 
    //2018年8月10日17:24:31 嘻哈
-   var sql = "select id,mid,name from music where createtime >'2018-06-18'and  comment=0  LIMIT " + start + "," + pageNum;
+   var sql = "select id,mid,name from music where   comment=0  LIMIT " + start + "," + pageNum;
    //更新歌曲评论
    //  var sql = "select id,mid,name from music order by comment desc LIMIT " + start + "," + pageNum;
    //  'SELECT id, mid FROM music ORDER BY comment DESC LIMIT 0 ,100'
@@ -284,7 +368,10 @@
  function getEmptyMusicList(pageInedx, pageNum, next) {
    var start = (pageInedx - 1) * pageNum;
    var end = pageNum;
-   var sql = "select id,mid from music where name=''  LIMIT " + start + "," + pageNum;
+   //  var sql = "select id,mid from music where name=''  LIMIT " + start + "," + pageNum;
+
+
+   var sql = "select id,mid from music where createtime >'2018-06-18' and name=''  LIMIT " + start + "," + pageNum;
    client.query(sql, function(err, result) {
      if (!err) {
        next(result);
@@ -322,7 +409,7 @@
   */
  function getHighQualityMusicList(fromNum, toNum, next) {
    // var sql = "select mid from music where COMMENT>100000";
-   var sql = "select * from music where comment>=" + fromNum + " and comment<=" + toNum + " order by id ";
+   var sql = "select * from music where comment>=" + fromNum + " and comment<=" + toNum + " and createtime>'2018-06-08 16:24:17' order by id ";
    // and COMMENT<=50000 order by id limit 1400,200
    client.query(sql, function(err, result) {
      if (!err) {
@@ -349,6 +436,45 @@
        //  console.log(result);
      }
    });
+ }
+
+
+
+
+
+ /**
+  * 批量更新评论数量以及歌曲名称
+  * 
+  * @param {any} model 
+  */
+ function multiUpdateMusic(arr) {
+   return new Promise(function(resolve, reject) {
+
+     //  var sql = "update music set comment=" + model.total + "  where id=" + model.id;
+     if (!arr.length) {
+       reject(0);
+     }
+     let str = arr.reduce((p, n) => { return p += `WHEN ${n.mid} THEN ${n.total} `; }, '');
+     let idstr = arr.reduce((p, n) => { return p += `${n.mid},`; }, '');
+     let sql = `
+     UPDATE music SET comment = CASE mid 
+     ${str}
+     END
+     WHERE mid IN (${idstr.slice(0,-1)})
+     `;
+     console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+     console.log(sql);
+     console.log(arr);
+     console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+     client.query(sql, function(err, result) {
+       if (err) {
+         reject(err)
+       } else {
+         resolve(result);
+       }
+     });
+   });
+
  }
  /**
   * 
@@ -424,5 +550,10 @@
    resloveSql: resloveSql,
    getEmptyMusicList: getEmptyMusicList,
    updateMusicName: updateMusicName,
-   deleteMusicById: deleteMusicById
+   deleteMusicById: deleteMusicById,
+   getHipHop: getHipHopPlayList,
+   multiAddMusic: multiAddMusic,
+   multiPlayListAdd: multiPlayListAdd,
+   deleteRepeatPlayList,
+   multiUpdateMusic
  }
