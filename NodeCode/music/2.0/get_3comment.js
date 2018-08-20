@@ -41,6 +41,7 @@ async function getMusicList(pageIndex, pageNum) {
         for (var m = 0; m < result.length; m++) {
           var element = result[m];
           MUSICLIST.push(element);
+          // await getMusic(1);
         }
         //延时执行
         setTimeout(
@@ -50,7 +51,8 @@ async function getMusicList(pageIndex, pageNum) {
           }, 500);
       } else {
         //进行请求操作
-        await getMusic(10);
+
+        await getMusic(1);
       }
     });
 }
@@ -90,12 +92,13 @@ async function getMusic(num) {
     }
   }
 }
-
 async function getCommentById(mid) {
   return new Promise(function(resolve, reject) {
+
     nodegrass.get(
         "http://localhost:9999/comment/music?id=" + mid + '&limit=1&offset=2',
         data => {
+          // console.log(data);
           let total = JSON.parse(data).total || -1;
           resolve({
             mid,

@@ -344,7 +344,7 @@
    //  var sql = "select id,mid,name from music where comment=0  LIMIT " + start + "," + pageNum;
 
    //2018年8月10日17:24:31 嘻哈
-   var sql = "select id,mid,name from music where   comment=0  LIMIT " + start + "," + pageNum;
+   var sql = "select id,mid,name from music where   comment=-1  ORDER by createtime desc  LIMIT " + start + "," + pageNum;
    //更新歌曲评论
    //  var sql = "select id,mid,name from music order by comment desc LIMIT " + start + "," + pageNum;
    //  'SELECT id, mid FROM music ORDER BY comment DESC LIMIT 0 ,100'
@@ -409,7 +409,7 @@
   */
  function getHighQualityMusicList(fromNum, toNum, next) {
    // var sql = "select mid from music where COMMENT>100000";
-   var sql = "select * from music where comment>=" + fromNum + " and comment<=" + toNum + " and createtime>'2018-06-08 16:24:17' order by id ";
+   var sql = "select * from music where comment>=" + fromNum + " and comment<=" + toNum + "  order by id ";
    // and COMMENT<=50000 order by id limit 1400,200
    client.query(sql, function(err, result) {
      if (!err) {

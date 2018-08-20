@@ -81,6 +81,47 @@ router.all('/musicUsers', function(req, res, next) {
   )
 });
 
+
+
+/**
+ * 获取评论量多的音乐人的评论超出1w的数量
+ * @returns
+ */
+router.all('/GetUserMusicCount', function(req, res, next) {
+  //允许跨域
+  res.header("Access-Control-Allow-Origin", "*");
+  // var absolutePath = path.resolve(__dirname, '../public/JSON/uu.json');
+  var sendObj = {};
+
+  db.resloveSql(` select author,m.authorId,c from music m right join  (
+    select authorId,c from (select count(authorId) as c ,authorId from music where comment>10000 and authorId!=0 GROUP BY authorid )a where c>1 order by c desc
+     )d on m.authorId=d.authorId group by authorid order by c desc,m.authorId`).then(
+    data => {
+      res.json(data);
+    },
+    err => {
+      res.json(err);
+    }
+
+  )
+
+  // Promise.all([db.getFollow(), db.getUser()]).then(
+  //   result => {
+  //     sendObj.user = result[1];
+  //     sendObj.follow = result[0];
+  //     res.json(sendObj);
+  //   }, err => {
+  //     console.log(err);
+  //     res.json(err);
+  //   }
+  // )
+});
+
+
+
+
+
+
 //请求的是/users/users接口才会访问到此处
 router.post('/allUser', function(req, res, next) {
   var returnObj = {};

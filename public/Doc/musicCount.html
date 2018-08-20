@@ -1,0 +1,145 @@
+<!-- 马少博  创建于 2018年2月2日13:25:18 -->
+<!DOCTYPE html>
+<html lang='en'>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title> 标题</title>
+  </head>
+
+  <body>
+
+    <button class="button-balanced" id="save">save</button>
+    <div id="main" style="width:1000px;height:1000px;"></div>
+
+    <img src="" id="save_img" />
+
+    <script src='./../Script/jquery-1.9.1.js'></script>
+    <!-- <script src="/Script/echarts.js"></script> -->
+    <script src="https://cdn.bootcss.com/echarts/3.2.2/echarts.simple.js"></script>
+    <script src="https://ecomfe.github.io/echarts-wordcloud/dist/echarts-wordcloud.js"></script>
+
+
+    <script>
+      var myChart = echarts.init(document.getElementById('main'));
+      var webkitDep = {};
+      $.ajax({
+        type: "POST",
+        url: "/users/GetUserMusicCount",
+        data: {},
+        dataType: "json",
+        success: function(data, textStatus, jqXHR) {
+          if (data != null && data != "") {
+
+            function createRandomItemStyle() {
+              return {
+                normal: {
+                  color: 'rgb(' + [
+                    Math.round(Math.random() * 160),
+                    Math.round(Math.random() * 160),
+                    Math.round(Math.random() * 160)
+                  ].join(',') + ')'
+                }
+              };
+            }
+
+            let dataArr = [];
+            data.forEach(element => {
+              dataArr.push({
+                name: element.author,
+                value: element.c,
+                // Style of single text
+                textStyle: {
+                  normal: {},
+                  emphasis: {}
+                },
+                itemStyle: createRandomItemStyle()
+              })
+            });
+            console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+            console.log(data);
+            console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+            option = {
+              backgroundColor: "#fff",
+              title: {
+                text: '网易云歌手评论权重图',
+                link: 'http://www.google.com/trends/hottrends'
+              },
+              tooltip: {
+                show: true
+              },
+              series: [{
+                type: 'wordCloud',
+                shape: 'circle',
+                left: 'center',
+                top: 'center',
+                width: '90%',
+                height: '90%',
+                right: null,
+                bottom: null,
+                sizeRange: [12, 60],
+                rotationRange: [0, 0],
+                rotationStep: 90,
+                gridSize: 8,
+                drawOutOfBound: false,
+                textStyle: {
+                  normal: {
+                    fontFamily: 'sans-serif',
+                    fontWeight: 'bold',
+                    color: function() {
+                      return 'rgb(' + [
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160)
+                      ].join(',') + ')';
+                    }
+                  },
+                  emphasis: {
+                    shadowBlur: 10,
+                    shadowColor: '#333'
+                  }
+                },
+                data: dataArr
+              }]
+            };
+
+            myChart.setOption(option);
+          }
+        },
+        error: function(response) {
+          alert("提示", "请求服务失败,请重试!");
+        }
+      });
+
+
+
+      function convertCanvasToImage(canvas) {
+        var image = new Image();
+        image.src = canvas.toDataURL("image/png");
+        return image;
+      }
+
+      // setTimeout(() => {
+      //   var canvas = document.getElementById("main");
+      //   convertCanvasToImage(canvas);
+      // }, 5000);
+
+
+      var butSave = document.getElementById("save");
+      butSave.onclick = function() {
+        var canvas = document.getElementsByTagName("canvas")[0];
+        /* 
+         * 传入对应想要保存的图片格式的mime类型 
+         * 常见：image/png，image/gif,image/jpg,image/jpeg 
+         */
+        var img = document.getElementById("save_img");
+        var tempSrc = canvas.toDataURL("image/png");
+        img.src = tempSrc;
+      };
+    </script>
+
+  </body>
+
+</html>

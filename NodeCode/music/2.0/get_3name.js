@@ -440,32 +440,55 @@ getHighCommentMusicList(100000, 10000000);
  * @param {any} to 最高值
  */
 function getHighCommentMusicList(from, to) {
-  DbHelper.getHighQualityMusicList(
-    from,
-    to,
-    result => {
-      if (result) {
-        console.log("当前获取到的数据有" + result.length + "条");
-        var list = [];
-        for (var index = 0; index < result.length; index++) {
-          var element = result[index];
-          list.push(element.mid);
+  // DbHelper.getHighQualityMusicList(
+  //   from,
+  //   to,
+  //   result => {
+  //     if (result) {
+  //       console.log("当前获取到的数据有" + result.length + "条");
+  //       var list = [];
+  //       for (var index = 0; index < result.length; index++) {
+  //         var element = result[index];
+  //         list.push(element.mid);
+  //       }
+  //       console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  //       console.log(list.join(','));
+  //       console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  //       loginC(list);
+  //     }
+  //   });
+
+  // 
+  DbHelper
+    .resloveSql(`select  mid  from music where  comment >50000 and comment<=100000 order  by comment `)
+    .then(
+      result => {
+        if (result) {
+          console.log("当前获取到的数据有" + result.length + "条");
+          var list = [];
+          for (var index = 0; index < result.length; index++) {
+            var element = result[index];
+            list.push(element.mid);
+          }
+          console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+          console.log(list.join(','));
+          console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+          // loginC(list.reverse());
         }
-        console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-        console.log(list.join(','));
-        console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-        loginC(list);
-      }
-    });
+
+      })
 }
 
 
+
+// loginC();
+
 function loginC(arr) {
-  nodegrass.get("http://localhost:9999/login/cellphone?phone=18222223333&password=ma18222223333", function(data) {
+  nodegrass.get("http://localhost:9999/login/cellphone?phone=12222222222&password=ma12222222222", function(data) {
     if (data) {
       var jsondata = JSON.parse(data);
       let cookie = jsondata.cookie;
-      nodegrass.get(`http://localhost:9999/playlist/tracks?op=add&pid=2361504712&tracks=${arr.join(',')}`, function(data) {
+      nodegrass.get(`http://localhost:9999/playlist/tracks?op=add&pid=2152848849&tracks=186139,276294,28248872,108251,27583305,1293951677,25727803,17753288,579954,29460377,141664,28830411,480353,29567192,21803760,437859519,31654478,32341324,185868,458238990,444269135,31654343,38358820,29713754,28949843,17194024,35528482,28665224,557581284,448184048,4132379,2313544,26625301,1934649,27808044,451169473,29818120,448144319,514235010,357126,463157222,1371159,504835560,27946894,408332757,33291435,17996972,477251491,17177324,482988834,21311956,28563317,30064263,29019227,407679465,5253801,33887645,435288399,526307800,26508240,515453363,27552544,20953761,461519272,347230,4386589,32957955,430685732,569214247,316654,407761576,28639182,185904,27876900,26830666,425828457,469699266,186125,2001320,426881506,479598964,472045959,399354289,3986017,287063,27646196,27406244,483937795,5260494,1217823,465677131,86369,443875380,402073807,22712173,415792563,478303470,167975,470759757,224000,33937527,26508242,1491585,36492599,169185,1210496,25731320,423228325,586299,63650,26830207,35403523,490602750,29431066,25906124,28188171,423849475,1696373,29814898,29572804,448393515,27901832,27955654,35847388,41500546,405597568,27890306,437387277,557584658,432506809,26060065,26620756,27867140,526464145,175072,79938,26199445,167876,518686034,489998494,25718007,562594267,506092019,27646199,185924,449577226`, function(data) {
         if (data) {
           var jsondata = JSON.parse(data);
           console.log(data)

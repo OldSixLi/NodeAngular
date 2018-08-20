@@ -28,7 +28,7 @@ var MAX_RESULT_NUM = 500; //最大抓取数量
 //#region 创建当天的文件夹
 // var imageFile = './public/images/zhihu_Down';
 // if (!fs.existsSync(imageFile)) {
-//   fs.mkdirSync(imageFile, 0777); //创建目录
+//   fs.mkdirSync(imageFile, 0777); //创建目录``
 //   console.log(imageFile + '文件夹已成功创建！');
 // }
 // var date_file = imageFile + "/" + getNowFormatDate('date');
