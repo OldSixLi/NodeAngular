@@ -6,7 +6,7 @@
   */
 
  var mysql = require('mysql');
- var TEST_DATABASE = 'nodesql';
+ var TEST_DATABASE = 'music';
  var TEST_TABLE = 'user';
 
  //创建连接
@@ -264,7 +264,7 @@
   */
  function getHipHopPlayList() {
    return new Promise(function(resolve, reject) {
-     let sql = "select  playid from paylist where id>2471 and createtime<'2018-08-14'";
+     let sql = "select  playid from paylist where id>11263";
      client.query(sql, function(err, result) {
        if (!err) {
          resolve(result);
@@ -282,7 +282,7 @@
    //  console.log(musicArr);
    //返回一个promise对象才可以调用then等函数
    return new Promise(function(resolve, reject) {
-     let sql = "INSERT INTO music (mid,name,author,comment,collectid,createtime) VALUES ?";
+     let sql = "INSERT INTO music (mid,name,author,authorid,comment,collectid,createtime) VALUES ?";
      let param = musicArr;
      // NOTE注意此处的param一定要被[]包裹起来
      client.query(sql, [param], (err, result) => {
@@ -344,7 +344,7 @@
    //  var sql = "select id,mid,name from music where comment=0  LIMIT " + start + "," + pageNum;
 
    //2018年8月10日17:24:31 嘻哈
-   var sql = "select id,mid,name from music where   comment=-1  ORDER by createtime desc  LIMIT " + start + "," + pageNum;
+   var sql = "select id,mid,name from music where   comment=0  ORDER by createtime desc  LIMIT " + start + "," + pageNum;
    //更新歌曲评论
    //  var sql = "select id,mid,name from music order by comment desc LIMIT " + start + "," + pageNum;
    //  'SELECT id, mid FROM music ORDER BY comment DESC LIMIT 0 ,100'
@@ -454,8 +454,12 @@
      if (!arr.length) {
        reject(0);
      }
-     let str = arr.reduce((p, n) => { return p += `WHEN ${n.mid} THEN ${n.total} `; }, '');
-     let idstr = arr.reduce((p, n) => { return p += `${n.mid},`; }, '');
+     let str = arr.reduce((p, n) => {
+       return p += `WHEN ${n.mid} THEN ${n.total} `;
+     }, '');
+     let idstr = arr.reduce((p, n) => {
+       return p += `${n.mid},`;
+     }, '');
      let sql = `
      UPDATE music SET comment = CASE mid 
      ${str}

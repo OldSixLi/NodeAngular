@@ -4,12 +4,6 @@
  */
 
 const nodegrass = require('nodegrass');
-const cheerio = require('cheerio');
-const fs = require("fs");
-const mysql = require('mysql');
-const Q = require('q');
-const path = require('path');
-const io = require('socket.io')();
 const DbHelper = require('./../../zhihu/mysql.js');
 const async = require('async');
 

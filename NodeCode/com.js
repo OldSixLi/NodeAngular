@@ -16,7 +16,7 @@ async function getUrl(url) {
   })
 }
 
-const TOKEN = `0g9chnESSCHL34CfA6tZ5Q6aBkVcWNM7ynPsPX3MSTOgpM0x3FemQWsICLUQNYVs6JemeyVSp6-MZAemvTn4cfdN335BqqqITW3nSjpUhTR7M2K8VtEfy_eSou3hcGW-ljS8RgG2JI_nFINa8cCWsrXHnf596Szp4E0S5OoTSDQ95DwPMMYEPptTnsDx4iyEgbSYQ2MFsOtvHq3lEB6lcw`;
+const TOKEN = `zin6ppMNNgzoMwCgf11ZZfFNoHw_cz1RW-OF81yQVrqJJBg-lG6IpuAVEHiszW_-Xaxo-MUEC3_zricOPD4zFQKquiXKJMs8EUMHOhBPh9O4w6nMl8ubmBBMWmbpkJzZt_lNfcHuCCM8WhBlhpBHJd1LzJS9D4Un-_9zz9ivWHSKa5SaIGY-8XtL6eOJWU_gb6R1Pv4OzklGrv8EVKOIjg`;
 
 /**
  * NOTE :第一步,获取TOKEN  
@@ -26,7 +26,6 @@ getUrl(`https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wxa059996e5d72516b&c
   .then(data => {
     // console.log(data);
     let jsondata = JSON.parse(data);
-    // console.log(`token:${jsondata.access_token}`);
     return jsondata.access_token;
   })
   .then(
@@ -43,7 +42,7 @@ getUrl(`https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wxa059996e5d72516b&c
  * @returns 
  */
 
-// getUrl(`https://qyapi.weixin.qq.com/cgi-bin/user/simplelist?access_token=${TOKEN}&department_id=1&fetch_child=0`).then(
+// getUrl(`https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=${token}`).then(
 //   data => {
 //     console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 //     console.log(data);

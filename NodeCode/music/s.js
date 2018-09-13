@@ -35,7 +35,7 @@ let PAYLIST_ARR = [];　　　　　
 
 
 
-playListSet(0)
+// playListSet(0)
 
 function playListSet(index_page_num) {
   console.log(index_page_num);
@@ -232,7 +232,7 @@ async function playList(playId) {
 */
 
 //获取歌曲评论
-// getMusicList(1, 1000);
+getMusicList(1, 1000);
 var MUSICLIST = [];
 
 /**
@@ -248,19 +248,22 @@ function getMusicList(pageIndex, pageNum) {
     result => {
       if (result && result.length) {
         //如果返回结果
+        console.log(result.length);
         for (var m = 0; m < result.length; m++) {
           var element = result[m];
           MUSICLIST.push(element);
         }
+
+        getMusic(3);
         //延时执行
-        setTimeout(
-          () => {
-            pageIndex++;
-            getMusicList(pageIndex, 1000);
-          }, 500);
+        // setTimeout(
+        //   () => {
+        //     pageIndex++;
+        //     getMusicList(pageIndex, 1000);
+        //   }, 500);
       } else {
         //进行请求操作
-        getMusic(5);
+        // getMusic(3);
       }
     });
 }

@@ -8,8 +8,7 @@ const DbHelper = require('./../../zhihu/mysql.js');
 
 const SPIDER_INDEX = 1; // 开始请求的页面
 const TOTAL_PLAY_PAGE = 60; //总页数
-const SONG_CAT = "说唱"; //类别 (从官网上看)
-
+const SONG_CAT = "摇滚"; //类别 (从官网上看)
 
 /*
 '##::::'##:'########::'##::::'##:'########:'########:::'######::'####::'#######::'##::: ##:
@@ -71,34 +70,7 @@ async function getPlayLists(index_page_num) {
     nodegrass.post(
       `http://localhost:9999/top/playlist/highquality?limit=30&offset=${index_page_num * 35}&cat=${encodeURI(SONG_CAT)}`,
       (data, err) => {
-        let resultArr = [];
-        //获取数据
-        try {　　
-          resultArr = JSON.parse(data) && JSON.parse(data).playlists;
-        } catch (error) {　　
-          console.log(error);　　
-        }
-        //判断当前页面能请求到几条歌单数据
-        if (resultArr.length == 0) {
-          resolve({ affectedRows: -1 });
-        }
-
-        console.log(`第【${index_page_num}】页,有 #${resultArr.length}# 条结果`);
-
-        //遍历数组,将数据插入arr中用于数组批量保存
-        let arr = [];
-        resultArr.forEach(element => {
-          // console.log(`歌单【${element.name}】---- 播放量:${element.playCount}万`);
-          arr.push(
-            [element.id,
-              element.name || "",
-              `/playlist?id=${element.id}`,
-              element.coverImgUrl || "",
-              element.playCount || 0,
-              getNowFormatDate()
-            ]);
-        });
-
+        let arr = resolveResult(data, resolve);
         //执行批量添加操作
         DbHelper.multiPlayListAdd(arr)
           .then(
@@ -107,6 +79,34 @@ async function getPlayLists(index_page_num) {
           );
       });
   });
+
+  function resolveResult(data, resolve) {
+    let resultArr = [];
+    //获取数据
+    try {
+      resultArr = JSON.parse(data) && JSON.parse(data).playlists;
+    } catch (error) {
+      console.log(error);
+    }
+    //判断当前页面能请求到几条歌单数据
+    if (resultArr.length == 0) {
+      resolve({ affectedRows: -1 });
+    }
+    console.log(`第【${index_page_num}】页,有 #${resultArr.length}# 条结果`);
+    //遍历数组,将数据插入arr中用于数组批量保存
+    let arr = [];
+    resultArr.forEach(element => {
+      // console.log(`歌单【${element.name}】---- 播放量:${element.playCount}万`);
+      arr.push([element.id,
+        element.name || "",
+        `/playlist?id=${element.id}`,
+        element.coverImgUrl || "",
+        element.playCount || 0,
+        getNowFormatDate()
+      ]);
+    });
+    return arr;
+  }
 }
 
 /**
@@ -115,6 +115,7 @@ async function getPlayLists(index_page_num) {
  * @returns {}
  */
 function getNowFormatDate(dates) {
+
   var date = new Date(),
     seperator1 = "-",
     seperator2 = ":",
@@ -127,4 +128,6 @@ function getNowFormatDate(dates) {
   //返回当前的日期（时间）
   var currentdate = dates !== 'date' ? date.getFullYear() + seperator1 + month + seperator1 + strDate + " " + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds() : date.getFullYear() + seperator1 + month + seperator1 + strDate;
   return currentdate;
+
+
 }
