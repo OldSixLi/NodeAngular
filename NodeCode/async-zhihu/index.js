@@ -24,17 +24,14 @@ const TOKEN = `0g9chnESSCHL34CfA6tZ5Q6aBkVcWNM7ynPsPX3MSTOgpM0x3FemQWsICLUQNYVs6
  */
 getUrl(`https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wxa059996e5d72516b&corpsecret=dyVJZt6tqSkKH8w8goXFH8yRV_dbIi_d0wX1_vPnXsE`)
   .then(data => {
-    // console.log(data);
     let jsondata = JSON.parse(data);
-    // console.log(`token:${jsondata.access_token}`);
     return jsondata.access_token;
   })
   .then(
     token => {
       console.log(
         `TOKEN:
-      ${token}
-    `)
+                ${token}`)
     }
   )
 
