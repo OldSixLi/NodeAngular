@@ -36,8 +36,8 @@ let arrayList = [
  * 
  */
 function start() {
-  const phone = '18222223333'
-  const cookie = 'ma1136191854.'
+  const phone = 'phonenumber'
+  const cookie = 'password'
   const md5sum = crypto.createHash('md5')
   md5sum.update('密码')
   let data = {
