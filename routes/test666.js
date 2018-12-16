@@ -50,7 +50,7 @@ var data = {
       "name": "第1页",
       "rowCount": 24,
       "columnCount": 14,
-      "activeRow": 2,
+      "activeRow": 3,
       "activeCol": 1,
       "theme": "Office",
       "data": {
@@ -2360,7 +2360,7 @@ var data = {
               }
             },
             "4": {
-              "value": "其中：出租房产原值",
+              "value": "其中：出租房产原值\r\n",
               "style": {
                 "backColor": "#a6caf0",
                 "foreColor": "#000000",
@@ -7467,7 +7467,7 @@ var data = {
       }],
       "selections": {
         "0": {
-          "row": 2,
+          "row": 3,
           "rowCount": 1,
           "col": 1,
           "colCount": 12
@@ -7497,6 +7497,7 @@ var data = {
           "kind": 9
         }
       },
+      "isProtected": true,
       "gridline": {
         "showHorizontalGridline": false,
         "showVerticalGridline": false
