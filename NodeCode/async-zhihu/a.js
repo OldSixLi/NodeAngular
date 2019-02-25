@@ -14,20 +14,20 @@ let START_INDEX = 0; //从第几页开始请求
 let PAGE_COUNT = 0; //每次爬虫处理多少页,设置为0就自动根据答案页数计算
 let IS_GIF = false; //是否为GIF格式下载
 let MIN_DIANZAN = 0; //最小点赞数
-let USER_INPUT = "56185788"; //用户输入内容
+let USER_INPUT = "309298287"; //用户输入内容
 
 
-// //开始调用方法
-// getPage(
-//   isNaN(USER_INPUT) ?
-//   USER_INPUT :
-//   `https://www.zhihu.com/question/${USER_INPUT}`
-// ).
-// then(data => CircleGetAnswer(data), err => { console.log(err); });
+//开始调用方法
+getPage(
+  isNaN(USER_INPUT) ?
+  USER_INPUT :
+  `https://www.zhihu.com/question/${USER_INPUT}`
+).
+then(data => CircleGetAnswer(data), err => { console.log(err); });
 
-nodegrass.get(`https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=eEt7kk9N9kMzl5KAbXXR4p7ps5xACqtnv1MsQNBGDpI&id=1`, data => {
-  console.log(data)
-})
+// nodegrass.get(`https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=eEt7kk9N9kMzl5KAbXXR4p7ps5xACqtnv1MsQNBGDpI&id=1`, data => {
+//   console.log(data)
+// })
 
 
 /*
