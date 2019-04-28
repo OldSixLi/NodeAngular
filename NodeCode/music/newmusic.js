@@ -10,12 +10,12 @@ const mysql = require('mysql');
 const Q = require('q');
 const path = require('path');
 const io = require('socket.io')();
-const DbHelper = require('F:/PersonCodes/NodeAngular项目/NodeCode/zhihu/mysql.js');
+const DbHelper = require('./../zhihu/mysql.js');
 const async = require('async');
 
 let SPIDER_INDEX = 1; //抓取到的数量
 let PAYLIST_INDEX = 0; //可用的歌单
-let PAYLIST_ARR = [];　　　　　　　　　　　　　　　　　　　　　　　　　　
+let PAYLIST_ARR = [];
 /*
 '########::'##::::::::::'###::::'##:::'##:'##:::::::'####::'######::'########:
  ##.... ##: ##:::::::::'## ##:::. ##:'##:: ##:::::::. ##::'##... ##:... ##..::
@@ -26,7 +26,7 @@ let PAYLIST_ARR = [];　　　　　　　　　　　　　　　　　　　�
  ##:::::::: ########: ##:::: ##:::: ##:::: ########:'####:. ######::::: ##::::
 ..:::::::::........::..:::::..:::::..:::::........::....:::......::::::..:::::
 */
-　　　　　　　　
+
 // upVersionGetlist(0)
 /**
  * 抓取网易云音乐歌单页面
@@ -46,7 +46,7 @@ function getlist(index_num) {
       var resultArr = $("#m-disc-pl-c #m-pl-container").find("li");
       if (resultArr.length > 0) {
         console.log('调试结果:', resultArr.length);
-        $("#m-disc-pl-c #m-pl-container").find("li").each(function(i, item) {
+        $("#m-disc-pl-c #m-pl-container").find("li").each(function (i, item) {
           let collectCount = $(this).find('.nb').text();
           let tenThousandNum = 0;
           if (collectCount.indexOf('万') > 0) {
@@ -78,7 +78,7 @@ function getlist(index_num) {
           }
         });
 
-        setTimeout(function() {
+        setTimeout(function () {
           index_num++;
           console.log("当前抓取的页面是:第" + index_num + "页面");
           getlist(index_num);
@@ -130,7 +130,7 @@ function upVersionGetlist(index_num) {
       console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
       if (resultArr && resultArr.length > 0) {
         console.log('调试结果:', resultArr.length);
-        resultArr.forEach(function(element, i, item) {
+        resultArr.forEach(function (element, i, item) {
           let collectCount = element.playCount; //播放次数
           let tenThousandNum = Math.round(collectCount / 10000);
           if (tenThousandNum > 0) {
@@ -158,7 +158,7 @@ function upVersionGetlist(index_num) {
           }
         });
 
-        setTimeout(function() {
+        setTimeout(function () {
           index_num++;
           console.log("当前抓取的页面是:第" + index_num + "页面");
           upVersionGetlist(index_num);
@@ -183,7 +183,7 @@ function beginGrapMusic(asyncNum) {
     PAYLIST_ARR,
     asyncNum,
     (href, callback) => {
-      setTimeout(function() {
+      setTimeout(function () {
         //开始获取歌单详情
         getPlayListDetail(href + "&timestamp=" + new Date().getTime(), callback);
       }, 10000);
@@ -283,11 +283,11 @@ function getMusic(asyncNum) {
   console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
   console.log("开始进行请求");
   console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-  async.mapLimit(MUSICLIST, asyncNum, function(item, callback) {
-    setTimeout(function() {
+  async.mapLimit(MUSICLIST, asyncNum, function (item, callback) {
+    setTimeout(function () {
       getSingleMusicComment(item, callback);
     }, 1000);
-  }, function(err, result) {
+  }, function (err, result) {
     if (err) {
       console.log(err);
     } else {
@@ -306,19 +306,19 @@ function getSingleMusicComment(item, callback) {
   var musicId = item.mid; //歌曲ID
   var id = item.id; //主键
   // var name = item.name;
-  setTimeout(function() {
+  setTimeout(function () {
     nodegrass.get(
       "http://localhost:9999/comment/music?id=" + musicId + '&limit=1&offset=2',
       data => {
         item.total = JSON.parse(data).total || 0;
         DbHelper.updateMusic(item)
         callback(null, 'success');
-      }).on('error', function(e) {
-      console.log("Got error: " + e.message);
-      callback(null, 'success');
-    });
+      }).on('error', function (e) {
+        console.log("Got error: " + e.message);
+        callback(null, 'success');
+      });
   }, 1000);
-}　　　　　　　　
+}
 /*
 '##::: ##::::'###::::'##::::'##:'########:
  ###:: ##:::'## ##::: ###::'###: ##.....::
@@ -349,7 +349,7 @@ function getEmptyNameMusicList(pageIndex, pageNum) {
           EMPTY_NAME_MUSIC_LIST.push(element);
         }
         console.log(pageIndex + "页面");
-        setTimeout(function() {
+        setTimeout(function () {
           pageIndex++;
           getEmptyNameMusicList(pageIndex, 1000);
         }, 500);
@@ -396,7 +396,7 @@ function getSingleMusicName(item, callback) {
       nodegrass.get(
         "http://localhost:9999/song/detail?ids=" + musicId,
         data => {
-          try {　　
+          try {
             let json_data = JSON.parse(data);
             item.name = (json_data.songs && json_data.songs.length > 0) ? json_data.songs[0].name : ""; //名称
             item.author = (json_data.songs && json_data.songs.length > 0 && json_data.songs[0].ar && json_data.songs[0].ar.length > 0) ? json_data.songs[0].ar[0].name : ""; //作者
@@ -408,13 +408,13 @@ function getSingleMusicName(item, callback) {
               DbHelper.deleteMusicById(item.id);
             }
             callback(null, 'success');
-          } catch (error) {　　
-            console.log(error);　　
+          } catch (error) {
+            console.log(error);
           }
-        }).on('error', function(e) {
-        console.log("Got error: " + e.message);
-        callback(null, 'success');
-      })
+        }).on('error', function (e) {
+          console.log("Got error: " + e.message);
+          callback(null, 'success');
+        })
     }, 1000);
 
 }
@@ -467,14 +467,15 @@ function getHighCommentMusicList(from, to) {
 }
 
 
-// nodegrass.get("http://localhost:9999/login/cellphone?phone=18222223333&password=ma18222223333", function(data) {
-//   if (data) {
-//     var jsondata = JSON.parse(data);
-//     console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-//     console.log(jsondata.profile.signature);
-//     console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
-//   }
-// });
+nodegrass.get("http://localhost:9999/login/cellphone?phone=18222603560&password=ma1136191854.", function (data) {
+  if (data) {
+    var jsondata = JSON.parse(data);
+    console.log("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+    console.log(data);
+    // console.log(jsondata.profile.signature);
+    console.log("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+  }
+});
 
 // nodegrass.get("http://localhost:9999/playlist/tracks?op=add&pid=909675332&tracks=208889", function(data) {
 //   if (data) {

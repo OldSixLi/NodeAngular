@@ -66,7 +66,7 @@ async function getPlayListByPage() {
  * @returns
  */
 async function getPlayLists(index_page_num) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     nodegrass.post(
       `http://localhost:9999/top/playlist/highquality?limit=30&offset=${index_page_num * 35}&cat=${encodeURI(SONG_CAT)}`,
       (data, err) => {
@@ -98,11 +98,11 @@ async function getPlayLists(index_page_num) {
     resultArr.forEach(element => {
       // console.log(`歌单【${element.name}】---- 播放量:${element.playCount}万`);
       arr.push([element.id,
-        element.name || "",
-        `/playlist?id=${element.id}`,
-        element.coverImgUrl || "",
-        element.playCount || 0,
-        getNowFormatDate()
+      element.name || "",
+      `/playlist?id=${element.id}`,
+      element.coverImgUrl || "",
+      element.playCount || 0,
+      getNowFormatDate()
       ]);
     });
     return arr;

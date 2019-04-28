@@ -13,7 +13,7 @@ let fs = require("fs");
 let cheerio = require('cheerio');
 let NUM = 1;
 
-// collect();
+collect();
 
 async function collect() {
   let htmlStr = '';

@@ -14,16 +14,25 @@ let START_INDEX = 0; //从第几页开始请求
 let PAGE_COUNT = 0; //每次爬虫处理多少页,设置为0就自动根据答案页数计算
 let IS_GIF = false; //是否为GIF格式下载
 let MIN_DIANZAN = 0; //最小点赞数
-let USER_INPUT = "309298287"; //用户输入内容
+// let USER_INPUT = "305114445"; //用户输入内容
+const array = [...process.argv]
+
+const [systemNode, systemPath, ...userInputParams] = [...process.argv];
+console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+console.log(userInputParams);
+console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+let USER_INPUT = userInputParams && userInputParams.length > 0 ? userInputParams[0] : "";
+if (!USER_INPUT) {
+  console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  console.log("请输入问题的ID");
+  console.log("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  return;
+}
+// let USER_INPUT = array.length > 2 ? array.splice(2, 1)[0] : "305114445";
 
 
 //开始调用方法
-getPage(
-  isNaN(USER_INPUT) ?
-  USER_INPUT :
-  `https://www.zhihu.com/question/${USER_INPUT}`
-).
-then(data => CircleGetAnswer(data), err => { console.log(err); });
+// getPage(isNaN(USER_INPUT) ? USER_INPUT : `https://www.zhihu.com/question/${USER_INPUT}`).then(data => CircleGetAnswer(data), err => { console.log(err); });
 
 // nodegrass.get(`https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=eEt7kk9N9kMzl5KAbXXR4p7ps5xACqtnv1MsQNBGDpI&id=1`, data => {
 //   console.log(data)
@@ -44,8 +53,9 @@ then(data => CircleGetAnswer(data), err => { console.log(err); });
  * @param {*} url 请求的页面地址
  */
 function getPage(url) {
+  console.log(url);
   //返回一个promise对象才可以调用then等函数
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     let questionId = url.substr(url.lastIndexOf('/') + 1);
     nodegrass.get(url, (data, status, headers) => {
       if (!data) {
@@ -105,7 +115,7 @@ function getAnswer(index, questionId, anstitle) {
   Handler.log(`请求第${index}页`)
   var posturl = Handler.getAnswerUrlByPageIndex(questionId, index);
   //返回一个promise对象才可以调用then等函数
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     nodegrass.post(posturl, (data, status, headers) => {
       if (data) {
         resolve(parseResult(data));
@@ -134,7 +144,7 @@ async function ansList(obj, filePath, anstitle) {
         Handler.startDownloadTask(getInfo(i).url, getInfo(i).path, anstitle, IS_GIF),
         Handler.startDownloadTask(getInfo(i + 1).url, getInfo(i + 1).path, anstitle, IS_GIF),
       ]).
-      then(() => console.log("✲✲✲✲✲✲✲✲✲完成两个✲✲✲✲✲✲✲✲✲✲✲"), err => console.log(err));
+        then(() => console.log("✲✲✲✲✲✲✲✲✲完成两个✲✲✲✲✲✲✲✲✲✲✲"), err => console.log(err));
     }
   }
 }
@@ -165,7 +175,7 @@ function parseResult(data) {
         //处理每个答案的图片数量
         let answerImgList = [];
 
-        $imgDomList.each(function(index, element) {
+        $imgDomList.each(function (index, element) {
           let imgUrl = Handler.handleImgUrl($(this).attr('data-original') || $(this).attr('data-actualsrc') || "");
           answerImgList.push(imgUrl);
         });

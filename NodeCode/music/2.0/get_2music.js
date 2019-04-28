@@ -8,9 +8,10 @@ const DbHelper = require('./../../zhihu/mysql.js');
 const async = require('async');
 
 let SPIDER_INDEX = 1; //抓取到的数量
-let PAYLIST_ARR = [];　　　　　
+let PAYLIST_ARR = ['2163404529', '2230318386', '2325284160'];
 
 
+// startResolvePlayListArr(3)
 /**
  * 开始处理歌单列表(每次处理num条)
  * 
@@ -50,10 +51,10 @@ function getPlayListDetail(playListHref, callback) {
         data => {
           if (data) {
             var payListJson = {};
-            try {　　
+            try {
               payListJson = JSON.parse(data);
-            } catch (error) {　　
-              console.log(error);　　
+            } catch (error) {
+              console.log(error);
             }
 
             //存储歌曲信息进music表
@@ -108,14 +109,14 @@ async function playList(playId) {
   // let playId = 2119440255;
   // console.log(playId);
   let playUrl = `http://localhost:9999/playlist/detail?id=${playId}`
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     nodegrass.get(playUrl, data => {
       //获取到数据
       let playObj = {};
-      try {　　
+      try {
         playObj = data && JSON.parse(data);
-      } catch (error) {　　
-        console.error(error);　　
+      } catch (error) {
+        console.error(error);
       }
 
       //获取到列表
@@ -127,12 +128,12 @@ async function playList(playId) {
         musicArr.forEach((musicObj) => {
           musicObjArr.push(
             [musicObj.id,
-              musicObj && musicObj.name || "",
-              musicObj && musicObj.ar && musicObj.ar[0] && musicObj.ar[0].name || "",
-              musicObj && musicObj.ar && musicObj.ar[0] && musicObj.ar[0].id || 0,
+            musicObj && musicObj.name || "",
+            musicObj && musicObj.ar && musicObj.ar[0] && musicObj.ar[0].name || "",
+            musicObj && musicObj.ar && musicObj.ar[0] && musicObj.ar[0].id || 0,
               0,
               playId,
-              getNowFormatDate()
+            getNowFormatDate()
             ])
         });
 
@@ -172,7 +173,7 @@ async function playList(playId) {
 //   update music set music.name=((select * from music
 //  where mid  in(select mid from(select mid from  music where createtime >'2018-08-13 12:28:02'   group by mid  having count(mid )>1) a)
 //  and id  in (select id from(select max(id) as id from  music  group by mid  having count(mid )>1) b)) c).name where music.id=c.mid;
-　
+
 /*
 '##::: ##:'####::'######::'########:
  ###:: ##:. ##::'##... ##: ##.....::

@@ -7,15 +7,10 @@ Desktop.ini
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
-node_modules/
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
+/**/node_modules
+# Windows Installer files * .cab * .msi * .msm * .msp
 
-# Windows shortcuts
-*.lnk
+# Windows shortcuts * .lnk
 public/images/zhihu_Down
 public/images/upload
 NodeCode/async-zhihu/img
@@ -23,25 +18,26 @@ NodeCode/tubatu/img
 NodeCode/tubatu/ALL
 NodeCode/tubatu/img2
 NodeCode/books/down
-NodeCode/async-中国创意摄影大赛/img
-# =========================
+NodeCode/async-中国创意摄影大赛/img/
+
+# ========================= 
 # Operating System Files
-# =========================
+# ========================= 
 
 # OSX
-# =========================
+# ========================= 
 
 .DS_Store
 .AppleDouble
 .LSOverride
 
 # Thumbnails
-._*
+._ * 
 
 # Files that might appear in the root of a volume
-.DocumentRevisions-V100
+.DocumentRevisions - V100
 .fseventsd
-.Spotlight-V100
+.Spotlight - V100
 .TemporaryItems
 .Trashes
 .VolumeIcon.icns
@@ -52,3 +48,4 @@ NodeCode/async-中国创意摄影大赛/img
 Network Trash Folder
 Temporary Items
 .apdisk
+.vscode/launch.json
