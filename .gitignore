@@ -19,6 +19,7 @@ NodeCode/tubatu/ALL
 NodeCode/tubatu/img2
 NodeCode/books/down
 NodeCode/async-中国创意摄影大赛/img/
+NodeCode/weibo-spider/spider-of-weibo-master/img_download/img
 
 # ========================= 
 # Operating System Files
@@ -35,9 +36,9 @@ NodeCode/async-中国创意摄影大赛/img/
 ._ * 
 
 # Files that might appear in the root of a volume
-.DocumentRevisions - V100
+.DocumentRevisions-V100
 .fseventsd
-.Spotlight - V100
+.Spotlight-V100
 .TemporaryItems
 .Trashes
 .VolumeIcon.icns
